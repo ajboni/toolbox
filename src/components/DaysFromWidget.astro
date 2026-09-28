@@ -1,12 +1,15 @@
 ---
 import { addDays, humanizeDays, toISODate } from '../lib/dates';
+import { accentClasses, type AccentName, DEFAULT_ACCENT } from '../data/site';
 
 interface Props {
   mode?: 'picker' | 'offset';
   days?: number;
+  accent?: AccentName;
 }
 
-const { mode = 'picker', days = 30 } = Astro.props;
+const { mode = 'picker', days = 30, accent = DEFAULT_ACCENT } = Astro.props;
+const accentColor = accentClasses(accent).text;
 
 const start = new Date();
 const result = addDays(start, days);
@@ -35,24 +38,24 @@ const detail =
   data-days-from
   data-mode={mode}
   data-days={days}
-  class="rounded-2xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900/50"
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
 >
   {
     mode === 'picker' && (
       <div class="mx-auto grid max-w-md gap-4 sm:grid-cols-2">
         <label class="flex flex-col gap-1">
-          <span class="text-sm font-medium text-slate-600 dark:text-slate-400">
+          <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
             Start date
           </span>
           <input
             type="date"
             data-from-input
             value={toISODate(start)}
-            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 focus:border-slate-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            class="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </label>
         <label class="flex flex-col gap-1">
-          <span class="text-sm font-medium text-slate-600 dark:text-slate-400">
+          <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
             Days
           </span>
           <input
@@ -60,7 +63,7 @@ const detail =
             data-days-input
             value={days}
             step="1"
-            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 focus:border-slate-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            class="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </label>
       </div>
@@ -70,13 +73,13 @@ const detail =
   <div class="mt-8 text-center">
     <p
       data-result-date
-      class="text-3xl font-bold tracking-tight sm:text-4xl"
+      class:list={['text-3xl font-bold tracking-tight sm:text-4xl', accentColor]}
     >
       {resultLong}
     </p>
     <p
       data-result-detail
-      class="mx-auto mt-4 max-w-md text-sm text-slate-600 dark:text-slate-400"
+      class="mx-auto mt-4 max-w-md text-sm text-zinc-600 dark:text-zinc-400"
     >
       {detail}
     </p>
@@ -86,7 +89,7 @@ const detail =
     <button
       type="button"
       data-share
-      class="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium transition hover:border-slate-500 dark:border-slate-700 dark:hover:border-slate-500"
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
     >
       Copy link
     </button>

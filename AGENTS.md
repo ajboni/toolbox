@@ -40,10 +40,10 @@ considering a change done.
 astro.config.mjs        # site URL, sitemap, tailwind vite plugin
 public/                 # static assets, CNAME, robots.txt, favicon
 src/
-  data/                 # site config, tools registry, occasions
+  data/                 # site config, tools registry, occasions, offsets
   lib/                  # pure logic + helpers (tests live next to them)
-  layouts/BaseLayout    # <html>, head/SEO, header, footer
-  components/           # Header, Footer, SeoHead, ToolCard, DaysUntilWidget
+  layouts/BaseLayout    # <html>, head/SEO, sidebar, footer
+  components/           # Sidebar, Header, Footer, SeoHead, ToolCard, widgets
   scripts/              # client-side entrypoints imported by components
   pages/                # file-based routes (one file = one URL)
   styles/global.css     # Tailwind entrypoint
@@ -53,6 +53,14 @@ tasks/                  # todo / done / ideas notes
 ## Conventions
 
 - Content and UI copy are in **English**.
+- Base color palette is **zinc** (neutral, no blue tint); dark mode is the
+  automatic `prefers-color-scheme` variant with a `zinc-950` background.
+- Each category has an `accent` (Tailwind color name) in `src/data/site.ts`.
+  Accent classes are literal strings in `ACCENT_CLASSES` so Tailwind detects
+  them. Use `accentClasses(category.accent)` instead of hardcoding colors.
+- Navigation is data-driven: `Sidebar.astro` renders `CATEGORIES` and
+  `toolsInCategory()`. New tools appear automatically once registered in
+  `src/data/tools.ts`.
 - URLs are organized by category: `/<category>/<tool>/` (e.g.
   `/dates/days-until/`). Always use trailing slashes in links.
 - Keep JavaScript on the client to a minimum; use a plain `<script>` module,

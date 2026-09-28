@@ -1,17 +1,28 @@
 ---
+import { accentClasses, type AccentName, DEFAULT_ACCENT } from '../data/site';
+
 interface Props {
   title: string;
   description: string;
   href: string;
+  accent?: AccentName;
 }
 
-const { title, description, href } = Astro.props;
+const { title, description, href, accent = DEFAULT_ACCENT } = Astro.props;
+const colors = accentClasses(accent);
 ---
 
 <a
   href={href}
-  class="block rounded-xl border border-slate-200 p-5 transition hover:border-slate-400 hover:shadow-sm dark:border-slate-800 dark:hover:border-slate-600"
+  class:list={[
+    'block rounded-xl border border-zinc-200 p-5 transition hover:shadow-sm dark:border-zinc-800',
+    colors.borderHover,
+  ]}
 >
-  <h3 class="text-base font-semibold">{title}</h3>
-  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{description}</p>
+  <h3 class="flex items-center gap-2 text-base font-semibold">
+    <span class:list={['h-2 w-2 rounded-full', colors.bg]} aria-hidden="true"
+    ></span>
+    {title}
+  </h3>
+  <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
 </a>

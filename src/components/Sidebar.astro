@@ -1,0 +1,105 @@
+---
+import { CATEGORIES, SITE, accentClasses } from '../data/site';
+import { toolsInCategory } from '../data/tools';
+
+const pathname = Astro.url.pathname;
+const isHome = pathname === '/';
+const isActive = (path: string) =>
+  pathname === path || (path !== '/' && pathname.startsWith(path));
+---
+
+<aside
+  id="sidebar"
+  data-sidebar
+  class="fixed inset-y-0 left-0 z-40 flex w-72 -translate-x-full flex-col overflow-y-auto border-r border-zinc-200 bg-white px-4 py-5 transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 dark:border-zinc-800 dark:bg-zinc-950"
+>
+  <a
+    href="/"
+    class="mb-6 px-2 text-lg font-semibold tracking-tight hover:opacity-80"
+  >
+    {SITE.name}
+  </a>
+
+  <nav aria-label="Tools" class="flex flex-col gap-1 text-sm">
+    <a
+      href="/"
+      aria-current={isHome ? 'page' : undefined}
+      class:list={[
+        'rounded-lg px-3 py-2 font-medium',
+        isHome
+          ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100'
+          : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100',
+      ]}
+    >
+      Home
+    </a>
+
+    {
+      CATEGORIES.map((category) => {
+        const tools = toolsInCategory(category.slug);
+        const accent = accentClasses(category.accent);
+        const categoryPath = `/${category.slug}/`;
+        const categoryOverviewActive = pathname === categoryPath;
+        return (
+          <details open={isActive(categoryPath)} class="group">
+            <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900 [&::-webkit-details-marker]:hidden">
+              <span>{category.name}</span>
+              <svg
+                class="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-90"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.17 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </summary>
+            <ul class="mt-1 space-y-0.5 pb-1 pl-3">
+              <li>
+                <a
+                  href={categoryPath}
+                  aria-current={categoryOverviewActive ? 'page' : undefined}
+                  class:list={[
+                    'block rounded-lg px-3 py-1.5',
+                    categoryOverviewActive
+                      ? `${accent.bgSoft} ${accent.text} font-medium`
+                      : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100',
+                  ]}
+                >
+                  Overview
+                </a>
+              </li>
+              {tools.map((tool) => {
+                const toolActive = isActive(tool.path);
+                return (
+                  <li>
+                    <a
+                      href={tool.path}
+                      aria-current={toolActive ? 'page' : undefined}
+                      class:list={[
+                        'block rounded-lg px-3 py-1.5',
+                        toolActive
+                          ? `${accent.bgSoft} ${accent.text} font-medium`
+                          : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100',
+                      ]}
+                    >
+                      {tool.title}
+                    </a>
+                  </li>
+                );
+              })}
+              {tools.length === 0 && (
+                <li class="px-3 py-1.5 text-zinc-400 dark:text-zinc-600">
+                  Coming soon
+                </li>
+              )}
+            </ul>
+          </details>
+        );
+      })
+    }
+  </nav>
+</aside>

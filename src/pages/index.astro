@@ -23,7 +23,7 @@ const jsonLd = [
 >
   <section>
     <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{SITE.name}</h1>
-    <p class="mt-4 max-w-xl text-slate-600 dark:text-slate-400">
+    <p class="mt-4 max-w-xl text-zinc-600 dark:text-zinc-400">
       {SITE.tagline} Every tool lives on its own page — open it, get your answer,
       close it. No accounts, no clutter.
     </p>
@@ -43,12 +43,12 @@ const jsonLd = [
               </h2>
               <a
                 href={`/${category.slug}/`}
-                class="text-sm text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                class="text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               >
                 View all
               </a>
             </div>
-            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               {category.description}
             </p>
             {tools.length > 0 ? (
@@ -58,11 +58,12 @@ const jsonLd = [
                     title={tool.title}
                     description={tool.description}
                     href={tool.path}
+                    accent={category.accent}
                   />
                 ))}
               </div>
             ) : (
-              <p class="mt-3 text-sm text-slate-500 dark:text-slate-500">
+              <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-500">
                 More tools coming soon.
               </p>
             )}
