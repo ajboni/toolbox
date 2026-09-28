@@ -1,0 +1,27 @@
+---
+import { CATEGORIES, SITE } from '../data/site';
+---
+
+<header class="border-b border-slate-200 dark:border-slate-800">
+  <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-4">
+    <a href="/" class="text-lg font-semibold tracking-tight hover:opacity-80">
+      {SITE.name}
+    </a>
+    <nav aria-label="Categories">
+      <ul class="flex items-center gap-4 text-sm">
+        {
+          CATEGORIES.map((category) => (
+            <li>
+              <a
+                href={`/${category.slug}/`}
+                class="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+              >
+                {category.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,103 @@
+---
+import {
+  daysUntil,
+  humanizeDays,
+  nextAnnualOccurrence,
+  nextNewYear,
+  toISODate,
+} from '../lib/dates';
+
+interface Props {
+  mode?: 'picker' | 'annual';
+  month?: number;
+  day?: number;
+}
+
+const { mode = 'picker', month, day } = Astro.props;
+
+const target =
+  mode === 'annual' && month != null && day != null
+    ? nextAnnualOccurrence(month, day)
+    : nextNewYear();
+
+const days = daysUntil(target);
+const { weeks, remainderDays, months } = humanizeDays(days);
+const targetLong = target.toLocaleDateString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+let label = days === 1 ? 'day' : 'days';
+let detail =
+  days > 0
+    ? `That's about ${weeks} weeks and ${remainderDays} days, or roughly ${months} months. Target: ${targetLong}.`
+    : days === 0
+      ? `It's today — ${targetLong}.`
+      : `That date was ${targetLong}.`;
+if (days < 0) label = 'days ago';
+
+const number = Math.abs(days);
+---
+
+<div
+  data-days-until
+  data-mode={mode}
+  data-annual-month={month}
+  data-annual-day={day}
+  class="rounded-2xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900/50"
+>
+  {
+    mode === 'picker' && (
+      <label class="mx-auto flex max-w-xs flex-col gap-1">
+        <span class="text-sm font-medium text-slate-600 dark:text-slate-400">
+          Pick a date
+        </span>
+        <input
+          type="date"
+          data-date-input
+          value={toISODate(target)}
+          class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 focus:border-slate-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+        />
+      </label>
+    )
+  }
+
+  <div class="mt-8 text-center">
+    <p class="flex flex-wrap items-baseline justify-center gap-2">
+      <span
+        data-result-days
+        class="text-6xl font-bold tabular-nums tracking-tight sm:text-7xl"
+      >
+        {number}
+      </span>
+      <span
+        data-result-label
+        class="text-xl font-medium text-slate-600 dark:text-slate-400"
+      >
+        {label}
+      </span>
+    </p>
+    <p
+      data-result-detail
+      class="mx-auto mt-4 max-w-md text-sm text-slate-600 dark:text-slate-400"
+    >
+      {detail}
+    </p>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium transition hover:border-slate-500 dark:border-slate-700 dark:hover:border-slate-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/days-until';
+</script>
