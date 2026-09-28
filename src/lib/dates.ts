@@ -34,6 +34,11 @@ export function daysUntil(target: Date, now: Date = new Date()): number {
   return Math.round(diff / MS_PER_DAY);
 }
 
+export function addDays(date: Date, days: number): Date {
+  const base = startOfDay(date);
+  return new Date(base.getFullYear(), base.getMonth(), base.getDate() + Math.trunc(days));
+}
+
 export function nextAnnualOccurrence(
   month: number,
   day: number,

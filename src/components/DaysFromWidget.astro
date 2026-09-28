@@ -1,0 +1,98 @@
+---
+import { addDays, humanizeDays, toISODate } from '../lib/dates';
+
+interface Props {
+  mode?: 'picker' | 'offset';
+  days?: number;
+}
+
+const { mode = 'picker', days = 30 } = Astro.props;
+
+const start = new Date();
+const result = addDays(start, days);
+const resultLong = result.toLocaleDateString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const startLong = start.toLocaleDateString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const { weeks, remainderDays, days: absDays } = humanizeDays(days);
+const detail =
+  days > 0
+    ? `${days} days from ${startLong} — about ${weeks} weeks and ${remainderDays} days.`
+    : days < 0
+      ? `${absDays} days before ${startLong} — about ${weeks} weeks and ${remainderDays} days.`
+      : `Same day as ${startLong}.`;
+---
+
+<div
+  data-days-from
+  data-mode={mode}
+  data-days={days}
+  class="rounded-2xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900/50"
+>
+  {
+    mode === 'picker' && (
+      <div class="mx-auto grid max-w-md gap-4 sm:grid-cols-2">
+        <label class="flex flex-col gap-1">
+          <span class="text-sm font-medium text-slate-600 dark:text-slate-400">
+            Start date
+          </span>
+          <input
+            type="date"
+            data-from-input
+            value={toISODate(start)}
+            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 focus:border-slate-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </label>
+        <label class="flex flex-col gap-1">
+          <span class="text-sm font-medium text-slate-600 dark:text-slate-400">
+            Days
+          </span>
+          <input
+            type="number"
+            data-days-input
+            value={days}
+            step="1"
+            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 focus:border-slate-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </label>
+      </div>
+    )
+  }
+
+  <div class="mt-8 text-center">
+    <p
+      data-result-date
+      class="text-3xl font-bold tracking-tight sm:text-4xl"
+    >
+      {resultLong}
+    </p>
+    <p
+      data-result-detail
+      class="mx-auto mt-4 max-w-md text-sm text-slate-600 dark:text-slate-400"
+    >
+      {detail}
+    </p>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium transition hover:border-slate-500 dark:border-slate-700 dark:hover:border-slate-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/days-from';
+</script>

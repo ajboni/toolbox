@@ -15,6 +15,14 @@ export const TOOLS: Tool[] = [
       'Count the days, weeks and months between today and any date you pick.',
     path: '/dates/days-until/',
   },
+  {
+    slug: 'days-from',
+    category: 'dates',
+    title: 'Days From Today',
+    description:
+      'Find the exact date that falls a given number of days from today or from any start date.',
+    path: '/dates/days-from/',
+  },
 ];
 
 export function toolsInCategory(category: string): Tool[] {

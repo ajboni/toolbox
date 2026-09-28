@@ -4,6 +4,7 @@ import ToolCard from '../../components/ToolCard.astro';
 import { CATEGORIES } from '../../data/site';
 import { toolsInCategory } from '../../data/tools';
 import { OCCASIONS } from '../../data/occasions';
+import { OFFSETS } from '../../data/offsets';
 import { breadcrumbs, webApplication } from '../../lib/jsonld';
 
 const category = CATEGORIES.find((item) => item.slug === 'dates')!;
@@ -68,6 +69,27 @@ const jsonLd = [
               class="inline-block rounded-full border border-slate-300 px-4 py-1.5 text-sm transition hover:border-slate-500 dark:border-slate-700 dark:hover:border-slate-500"
             >
               Days until {occasion.shortName}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="text-xl font-semibold tracking-tight">Dates from today</h2>
+    <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+      Common offsets forward from today, each recalculated on load.
+    </p>
+    <ul class="mt-4 flex flex-wrap gap-2">
+      {
+        OFFSETS.map((offset) => (
+          <li>
+            <a
+              href={`/dates/days-from/${offset.slug}/`}
+              class="inline-block rounded-full border border-slate-300 px-4 py-1.5 text-sm transition hover:border-slate-500 dark:border-slate-700 dark:hover:border-slate-500"
+            >
+              {offset.label} from today
             </a>
           </li>
         ))

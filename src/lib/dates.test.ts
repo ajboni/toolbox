@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  addDays,
   daysUntil,
   humanizeDays,
   nextAnnualOccurrence,
@@ -41,6 +42,24 @@ describe('daysUntil', () => {
   it('handles leap years', () => {
     expect(daysUntil(new Date(2028, 2, 1), new Date(2028, 1, 28))).toBe(2);
     expect(daysUntil(new Date(2026, 2, 1), new Date(2026, 1, 28))).toBe(1);
+  });
+});
+
+describe('addDays', () => {
+  it('adds and subtracts whole days', () => {
+    expect(toISODate(addDays(new Date(2026, 0, 1), 30))).toBe('2026-01-31');
+    expect(toISODate(addDays(new Date(2026, 0, 31), 1))).toBe('2026-02-01');
+    expect(toISODate(addDays(new Date(2026, 5, 15), -20))).toBe('2026-05-26');
+  });
+
+  it('rolls over years', () => {
+    expect(toISODate(addDays(new Date(2026, 11, 25), 10))).toBe('2027-01-04');
+    expect(toISODate(addDays(new Date(2026, 0, 1), 0))).toBe('2026-01-01');
+  });
+
+  it('handles leap years', () => {
+    expect(toISODate(addDays(new Date(2028, 1, 28), 1))).toBe('2028-02-29');
+    expect(toISODate(addDays(new Date(2026, 1, 28), 1))).toBe('2026-03-01');
   });
 });
 
