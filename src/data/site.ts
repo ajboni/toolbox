@@ -108,6 +108,12 @@ export const CATEGORIES: Category[] = [
     description: 'Countdowns, day counters and other quick date math.',
     accent: 'violet',
   },
+  {
+    slug: 'math',
+    name: 'Math & Numbers',
+    description: 'Percentages, proportions and everyday number crunching.',
+    accent: 'emerald',
+  },
 ];
 
 export function findCategory(slug: string): Category | undefined {

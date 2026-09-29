@@ -1,0 +1,237 @@
+---
+import { accentClasses, type AccentName, DEFAULT_ACCENT } from '../data/site';
+import {
+  PERCENT_DEFAULTS,
+  renderPercent,
+  type PercentMode,
+} from '../lib/percentView';
+
+interface Props {
+  mode: PercentMode;
+  accent?: AccentName;
+}
+
+const { mode, accent = DEFAULT_ACCENT } = Astro.props;
+const accentColor = accentClasses(accent).text;
+const defaults = PERCENT_DEFAULTS[mode];
+const initial = renderPercent(mode, defaults);
+
+const inputClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+---
+
+<div
+  data-percent-widget
+  data-mode={mode}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="mx-auto grid max-w-lg gap-4 sm:grid-cols-2">
+    {
+      mode === 'percent-of' && (
+        <>
+          <label class={labelClass}>
+            <span class={labelText}>Percent (%)</span>
+            <input
+              type="number"
+              step="any"
+              data-field="p"
+              value={defaults.p}
+              class={inputClass}
+            />
+          </label>
+          <label class={labelClass}>
+            <span class={labelText}>Value</span>
+            <input
+              type="number"
+              step="any"
+              data-field="v"
+              value={defaults.v}
+              class={inputClass}
+            />
+          </label>
+        </>
+      )
+    }
+
+    {
+      mode === 'what-percent' && (
+        <>
+          <label class={labelClass}>
+            <span class={labelText}>Part</span>
+            <input
+              type="number"
+              step="any"
+              data-field="part"
+              value={defaults.part}
+              class={inputClass}
+            />
+          </label>
+          <label class={labelClass}>
+            <span class={labelText}>Whole</span>
+            <input
+              type="number"
+              step="any"
+              data-field="whole"
+              value={defaults.whole}
+              class={inputClass}
+            />
+          </label>
+        </>
+      )
+    }
+
+    {
+      mode === 'change' && (
+        <>
+          <label class={labelClass}>
+            <span class={labelText}>From</span>
+            <input
+              type="number"
+              step="any"
+              data-field="from"
+              value={defaults.from}
+              class={inputClass}
+            />
+          </label>
+          <label class={labelClass}>
+            <span class={labelText}>To</span>
+            <input
+              type="number"
+              step="any"
+              data-field="to"
+              value={defaults.to}
+              class={inputClass}
+            />
+          </label>
+        </>
+      )
+    }
+
+    {
+      mode === 'add-subtract' && (
+        <>
+          <label class={labelClass}>
+            <span class={labelText}>Value</span>
+            <input
+              type="number"
+              step="any"
+              data-field="v"
+              value={defaults.v}
+              class={inputClass}
+            />
+          </label>
+          <label class={labelClass}>
+            <span class={labelText}>Percent (%)</span>
+            <input
+              type="number"
+              step="any"
+              data-field="p"
+              value={defaults.p}
+              class={inputClass}
+            />
+          </label>
+          <label class={labelClass}>
+            <span class={labelText}>Operation</span>
+            <select data-field="op" class={inputClass}>
+              <option value="add">Add (+)</option>
+              <option value="subtract">Subtract (−)</option>
+            </select>
+          </label>
+        </>
+      )
+    }
+
+    {
+      mode === 'rule-of-three' && (
+        <>
+          <label class={labelClass}>
+            <span class={labelText}>Solve for</span>
+            <select data-field="unknown" class={inputClass}>
+              <option value="x">X</option>
+              <option value="a">A</option>
+              <option value="b">B</option>
+              <option value="c">C</option>
+            </select>
+          </label>
+          <span class="hidden sm:block" />
+          <label class={labelClass}>
+            <span class={labelText}>A</span>
+            <input
+              type="number"
+              step="any"
+              data-field="a"
+              value={defaults.a}
+              class={inputClass}
+            />
+          </label>
+          <label class={labelClass}>
+            <span class={labelText}>B</span>
+            <input
+              type="number"
+              step="any"
+              data-field="b"
+              value={defaults.b}
+              class={inputClass}
+            />
+          </label>
+          <label class={labelClass}>
+            <span class={labelText}>C</span>
+            <input
+              type="number"
+              step="any"
+              data-field="c"
+              value={defaults.c}
+              class={inputClass}
+            />
+          </label>
+          <label class={labelClass}>
+            <span class={labelText}>X</span>
+            <input type="number" step="any" data-field="x" class={inputClass} />
+          </label>
+        </>
+      )
+    }
+  </div>
+
+  <div class="mt-8 text-center">
+    <p class="flex flex-wrap items-baseline justify-center gap-2">
+      <span
+        data-result-value
+        class:list={[
+          'text-5xl font-bold tabular-nums tracking-tight sm:text-6xl',
+          accentColor,
+        ]}
+      >
+        {initial.value}
+      </span>
+      <span
+        data-result-unit
+        class="text-xl font-medium text-zinc-600 dark:text-zinc-400"
+      >
+        {initial.unit}
+      </span>
+    </p>
+    <p
+      data-result-detail
+      class="mx-auto mt-4 max-w-md text-sm text-zinc-600 dark:text-zinc-400"
+    >
+      {initial.detail}
+    </p>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/percent';
+</script>

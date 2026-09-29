@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PercentWidget from '../../components/PercentWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/math/percent-of/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Percent Of Calculator',
+    description:
+      'Work out X percent of any number and share the exact result with a link.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Math & Numbers', path: '/math/' },
+    { name: 'Percent Of', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Percent Of Calculator — What Is X% of Y?"
+  description="Work out X percent of any number. Enter a percentage and a value to get the exact amount instantly. Free, fast and shareable — no sign-up."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/math/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Math &amp; Numbers</a>
+    <span class="mx-2">/</span>
+    <span>Percent Of</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">What is X% of Y?</h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Enter a percentage and a value and the result updates instantly. Your inputs
+    are saved in the URL, so you can copy the link and share the exact numbers.
+  </p>
+
+  <div class="mt-8">
+    <PercentWidget mode="percent-of" accent="emerald" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      To find X percent of a value, divide the percentage by 100 and multiply it
+      by the value. For example, 20% of 25,000 is 25,000 × 0.20 = 5,000.
+    </p>
+  </section>
+
+  <RelatedTools category="math" current={canonicalPath} />
+</BaseLayout>

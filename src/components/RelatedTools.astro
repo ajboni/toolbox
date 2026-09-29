@@ -1,0 +1,31 @@
+---
+import { toolsInCategory } from '../data/tools';
+
+interface Props {
+  category: string;
+  current: string;
+}
+
+const { category, current } = Astro.props;
+const others = toolsInCategory(category).filter((tool) => tool.path !== current);
+---
+
+{
+  others.length > 0 && (
+    <section class="mt-12">
+      <h2 class="text-xl font-semibold tracking-tight">Related tools</h2>
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {others.map((tool) => (
+          <li>
+            <a
+              href={tool.path}
+              class="inline-block rounded-full border border-zinc-300 px-4 py-1.5 text-sm transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+            >
+              {tool.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

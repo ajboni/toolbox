@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PercentWidget from '../../components/PercentWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/math/what-percent/';
+
+const jsonLd = [
+  webApplication({
+    name: 'What Percent Calculator',
+    description:
+      'Find out what percentage one number is of another and share the result with a link.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Math & Numbers', path: '/math/' },
+    { name: 'X Is What Percent of Y?', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="X Is What Percent of Y? — Percent Calculator"
+  description="Find out what percentage one number is of another. Enter the part and the whole to get the answer as a percentage. Free and shareable."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/math/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Math &amp; Numbers</a>
+    <span class="mx-2">/</span>
+    <span>X Is What Percent of Y?</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    X is what percent of Y?
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Enter a part and a whole to express the part as a percentage of the whole.
+    The values are saved in the URL so the answer can be shared as a link.
+  </p>
+
+  <div class="mt-8">
+    <PercentWidget mode="what-percent" accent="emerald" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      Divide the part by the whole and multiply by 100. For example, 25,000 out
+      of 10,000 is (25,000 ÷ 10,000) × 100 = 250%. Results above 100% simply mean
+      the part is larger than the whole.
+    </p>
+  </section>
+
+  <RelatedTools category="math" current={canonicalPath} />
+</BaseLayout>

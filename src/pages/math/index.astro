@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { CATEGORIES } from '../../data/site';
+import { toolsInCategory } from '../../data/tools';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const category = CATEGORIES.find((item) => item.slug === 'math')!;
+const tools = toolsInCategory('math');
+const canonicalPath = '/math/';
+
+const jsonLd = [
+  webApplication({
+    name: category.name,
+    description: category.description,
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: category.name, path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title={category.name}
+  description={`${category.description} Free, instant and no sign-up required.`}
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <span>{category.name}</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    {category.name}
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    {category.description}
+  </p>
+
+  <section class="mt-8 grid gap-4 sm:grid-cols-2">
+    {
+      tools.map((tool) => (
+        <ToolCard
+          title={tool.title}
+          description={tool.description}
+          href={tool.path}
+          accent={category.accent}
+        />
+      ))
+    }
+  </section>
+</BaseLayout>
