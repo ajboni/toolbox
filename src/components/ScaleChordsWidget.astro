@@ -1,0 +1,80 @@
+---
+import ScaleChordsPanel from './ScaleChordsPanel.astro';
+import { SCALES } from '../lib/music/scales';
+import { ROOTS } from '../lib/music/notes';
+import { renderScaleChords, SCALE_CHORD_DEFAULTS } from '../lib/music/view';
+
+const initial = renderScaleChords(SCALE_CHORD_DEFAULTS);
+
+const selectClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+---
+
+<div
+  data-scale-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label class={labelClass}>
+      <span class={labelText}>Root</span>
+      <select data-field="root" class={selectClass}>
+        {
+          ROOTS.map((root) => (
+            <option value={root.name} selected={root.name === SCALE_CHORD_DEFAULTS.root}>
+              {root.name}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+    <label class={labelClass}>
+      <span class={labelText}>Scale</span>
+      <select data-field="scale" class={selectClass}>
+        {
+          SCALES.map((scale) => (
+            <option value={scale.id} selected={scale.id === SCALE_CHORD_DEFAULTS.scale}>
+              {scale.name}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+  </div>
+
+  <label class="mt-4 flex cursor-pointer items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+    <input
+      type="checkbox"
+      data-field="sev"
+      class="h-4 w-4 rounded border-zinc-300 text-fuchsia-600 focus:ring-fuchsia-500 dark:border-zinc-700 dark:bg-zinc-900"
+    />
+    Show seventh chords
+  </label>
+
+  <div class="mt-6">
+    <ScaleChordsPanel view={initial} />
+  </div>
+
+  <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <button
+      type="button"
+      data-play-scale
+      aria-pressed="false"
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Play scale
+    </button>
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/chordFinder';
+</script>

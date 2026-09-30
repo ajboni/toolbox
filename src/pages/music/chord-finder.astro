@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ScaleChordsWidget from '../../components/ScaleChordsWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/music/chord-finder/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Scale & Chord Finder',
+    description:
+      'Pick a root and a scale to see its notes and the seven diatonic chords, with correct spellings and shareable links.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Music', path: '/music/' },
+    { name: 'Scale & Chord Finder', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Scale & Chord Finder — Diatonic Chords in Any Key"
+  description="Choose a root note and a scale to see all seven diatonic chords, their roman numerals and notes. Supports major, minor, the modes and more. Free, fast and shareable."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/music/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Music</a>
+    <span class="mx-2">/</span>
+    <span>Scale &amp; Chord Finder</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Scale &amp; Chord Finder
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Pick a root and a scale and the seven diatonic chords update instantly, with
+    roman numerals, chord symbols and notes. Toggle seventh chords for the richer
+    voicings. Your selection is saved in the URL, so you can copy the link and
+    share the exact key.
+  </p>
+
+  <div class="mt-8">
+    <ScaleChordsWidget />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      A scale has seven notes, and a chord is built on each of them by stacking
+      every other note (a third and a fifth above the root). The quality of each
+      chord — major, minor, diminished or augmented — comes from the intervals
+      inside the scale, and the roman numeral shows its position (I to VII).
+    </p>
+    <p class="text-sm leading-relaxed">
+      Note spellings follow the key signature: F&#9839; major writes E&#9839;,
+      D&#9837; major writes G&#9837;, and so on.
+    </p>
+  </section>
+
+  <RelatedTools category="music" current={canonicalPath} />
+</BaseLayout>

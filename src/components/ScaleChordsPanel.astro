@@ -1,0 +1,84 @@
+---
+import type { ScaleChordView } from '../lib/music/view';
+
+interface Props {
+  view: ScaleChordView;
+}
+
+const { view } = Astro.props;
+
+const cardClass = [
+  'rounded-xl border p-4 transition-colors',
+  'border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/60',
+  'data-[kind=major]:border-fuchsia-400/60 data-[kind=major]:bg-fuchsia-50 dark:data-[kind=major]:border-fuchsia-500/40 dark:data-[kind=major]:bg-fuchsia-950/30',
+  'data-[kind=minor]:border-sky-400/60 data-[kind=minor]:bg-sky-50 dark:data-[kind=minor]:border-sky-500/40 dark:data-[kind=minor]:bg-sky-950/30',
+  'data-[kind=diminished]:border-zinc-400/60 data-[kind=diminished]:bg-zinc-100 dark:data-[kind=diminished]:border-zinc-600/60 dark:data-[kind=diminished]:bg-zinc-800/60',
+  'data-[kind=augmented]:border-amber-400/60 data-[kind=augmented]:bg-amber-50 dark:data-[kind=augmented]:border-amber-500/40 dark:data-[kind=augmented]:bg-amber-950/30',
+  'data-[playing]:ring-2 data-[playing]:ring-zinc-400 dark:data-[playing]:ring-zinc-500',
+].join(' ');
+
+const playButtonClass =
+  'w-full cursor-pointer rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 disabled:cursor-default dark:focus-visible:ring-zinc-500';
+---
+
+<div data-music-panel data-seventh={view.seventh ? '1' : '0'}>
+  <p class="text-sm text-zinc-500 dark:text-zinc-400">
+    <span class="font-medium text-zinc-700 dark:text-zinc-300" data-root-name
+      >{view.rootName}</span
+    >
+    <span class="mx-1">·</span>
+    <span data-scale-name>{view.scaleName}</span>
+  </p>
+
+  <div class="mt-3 flex flex-wrap gap-2" data-scale-notes>
+    {
+      view.notes.map((note) => (
+        <button
+          type="button"
+          data-note
+          data-note-play
+          aria-label={`Play note ${note.name}`}
+          class="cursor-pointer rounded-full border border-zinc-300 px-3 py-1 text-sm font-medium tabular-nums transition-colors outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 disabled:cursor-default dark:border-zinc-700 dark:focus-visible:ring-zinc-500 data-[playing]:border-fuchsia-400 data-[playing]:bg-fuchsia-50 dark:data-[playing]:border-fuchsia-500/60 dark:data-[playing]:bg-fuchsia-950/40"
+        >
+          {note.name}
+        </button>
+      ))
+    }
+  </div>
+
+  <ol class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-chords>
+    {
+      view.chords.map((chord) => (
+        <li data-chord data-degree={chord.degree} data-kind={chord.kind} class={cardClass}>
+          <button
+            type="button"
+            data-chord-play
+            class={playButtonClass}
+            aria-label={`Play chord ${chord.symbol || chord.roman}`}
+          >
+            <div class="flex items-baseline justify-between gap-2">
+              <span
+                data-chord-roman
+                class="text-sm font-semibold text-zinc-500 dark:text-zinc-400"
+              >
+                {chord.roman}
+              </span>
+              <span data-chord-symbol class="text-lg font-bold tracking-tight">
+                {chord.symbol}
+              </span>
+            </div>
+            <p
+              data-chord-notes
+              class="mt-2 text-sm text-zinc-600 tabular-nums dark:text-zinc-400"
+            >
+              {chord.notes.map((note) => note.name).join(' ')}
+            </p>
+            <span data-chord-quality class="sr-only">
+              {chord.quality}
+            </span>
+          </button>
+        </li>
+      ))
+    }
+  </ol>
+</div>

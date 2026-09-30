@@ -58,6 +58,22 @@ export const TOOLS: Tool[] = [
     description: 'Solve any proportion a / b = c / x for the missing value.',
     path: '/math/rule-of-three/',
   },
+  {
+    slug: 'chord-finder',
+    category: 'music',
+    title: 'Scale & Chord Finder',
+    description:
+      'Pick a root and a scale to get its notes and the seven diatonic chords.',
+    path: '/music/chord-finder/',
+  },
+  {
+    slug: 'circle-of-fifths',
+    category: 'music',
+    title: 'Circle of Fifths',
+    description:
+      'Explore all twelve major keys, their relative minors, key signatures and chords.',
+    path: '/music/circle-of-fifths/',
+  },
 ];
 
 export function toolsInCategory(category: string): Tool[] {

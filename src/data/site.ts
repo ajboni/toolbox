@@ -114,6 +114,12 @@ export const CATEGORIES: Category[] = [
     description: 'Percentages, proportions and everyday number crunching.',
     accent: 'emerald',
   },
+  {
+    slug: 'music',
+    name: 'Music',
+    description: 'Scales, chords and key relationships for musicians.',
+    accent: 'fuchsia',
+  },
 ];
 
 export function findCategory(slug: string): Category | undefined {

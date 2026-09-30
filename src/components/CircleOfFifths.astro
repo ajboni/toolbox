@@ -1,0 +1,259 @@
+---
+import ScaleChordsPanel from './ScaleChordsPanel.astro';
+import { renderScaleChords } from '../lib/music/view';
+import {
+  CIRCLE,
+  chordFamily,
+  circleChords,
+  circleForKey,
+  keySignatureLabel,
+  keySignatureSymbol,
+  type CircleRing,
+} from '../lib/music/circle';
+
+interface Props {
+  keyName?: string;
+}
+
+const initialKey = circleForKey(Astro.props.keyName ?? 'C')?.major ?? 'C';
+const initial = renderScaleChords({ root: initialKey, scale: 'major', sev: '0' });
+const initialEntry = circleForKey(initialKey)!;
+
+const CX = 200;
+const CY = 205;
+const SEGMENT = 30;
+
+const RINGS = {
+  dim: { inner: 166, outer: 188, text: 10 },
+  minor: { inner: 140, outer: 166, text: 11 },
+  major: { inner: 96, outer: 140, text: 15 },
+  sig: { inner: 74, outer: 96, text: 10 },
+} as const;
+
+function polar(radius: number, angle: number): { x: number; y: number } {
+  const radians = ((angle - 90) * Math.PI) / 180;
+  return { x: CX + radius * Math.cos(radians), y: CY + radius * Math.sin(radians) };
+}
+
+function sector(inner: number, outer: number, start: number, end: number): string {
+  const o1 = polar(outer, start);
+  const o2 = polar(outer, end);
+  const i1 = polar(inner, start);
+  const i2 = polar(inner, end);
+  return [
+    `M ${o1.x} ${o1.y}`,
+    `A ${outer} ${outer} 0 0 1 ${o2.x} ${o2.y}`,
+    `L ${i2.x} ${i2.y}`,
+    `A ${inner} ${inner} 0 0 0 ${i1.x} ${i1.y}`,
+    'Z',
+  ].join(' ');
+}
+
+const allChords = circleChords();
+const chordAt = (ring: CircleRing, index: number) =>
+  allChords.find((chord) => chord.ring === ring && chord.index === index);
+const family = chordFamily(initialKey);
+const isSelected = (ring: string, index: number) =>
+  family.some((chord) => chord.ring === ring && chord.index === index);
+
+const initialRotation = -initialEntry.index * SEGMENT;
+const labelStyle = (pos: { x: number; y: number }) =>
+  `transform-origin:${pos.x}px ${pos.y}px;transform:rotate(${-initialRotation}deg)`;
+
+const majorCell =
+  'cursor-pointer fill-zinc-100 stroke-white transition-colors group-hover:fill-zinc-200 group-data-[selected]:fill-fuchsia-500/30 dark:fill-zinc-800 dark:stroke-zinc-950 dark:group-hover:fill-zinc-700 dark:group-data-[selected]:fill-fuchsia-400/30';
+const minorCell =
+  'cursor-pointer fill-zinc-50 stroke-white transition-colors group-hover:fill-zinc-200 group-data-[selected]:fill-fuchsia-400/20 dark:fill-zinc-900 dark:stroke-zinc-950 dark:group-hover:fill-zinc-700 dark:group-data-[selected]:fill-fuchsia-400/20';
+const dimCell =
+  'cursor-pointer fill-zinc-50 stroke-white transition-colors group-hover:fill-zinc-200 group-data-[selected]:fill-fuchsia-400/20 dark:fill-zinc-900 dark:stroke-zinc-950 dark:group-hover:fill-zinc-700 dark:group-data-[selected]:fill-fuchsia-400/20';
+const sigCell =
+  'cursor-pointer fill-zinc-100 stroke-white transition-colors group-hover:fill-zinc-200 dark:fill-zinc-800 dark:stroke-zinc-950 dark:group-hover:fill-zinc-700';
+
+const majorLabel =
+  'pointer-events-none select-none fill-zinc-800 text-[15px] font-bold group-data-[selected]:fill-fuchsia-600 dark:fill-zinc-100 dark:group-data-[selected]:fill-fuchsia-400';
+const minorLabel =
+  'pointer-events-none select-none fill-zinc-500 text-[11px] font-medium group-data-[selected]:fill-fuchsia-600 dark:fill-zinc-400 dark:group-data-[selected]:fill-fuchsia-400';
+const dimLabel =
+  'pointer-events-none select-none fill-zinc-400 text-[10px] font-medium group-data-[selected]:fill-fuchsia-500 dark:fill-zinc-500 dark:group-data-[selected]:fill-fuchsia-400';
+const sigLabel = 'pointer-events-none select-none fill-zinc-400 text-[10px] dark:fill-zinc-500';
+---
+
+<div
+  data-circle-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <svg
+    viewBox="0 0 400 400"
+    role="group"
+    aria-label="Circle of fifths chord wheel"
+    class="mx-auto w-full max-w-md"
+  >
+    <g data-wheel style={`transform:rotate(${initialRotation}deg)`}>
+      {
+        CIRCLE.map((entry) => {
+          const center = entry.index * SEGMENT;
+          const start = center - SEGMENT / 2;
+          const end = center + SEGMENT / 2;
+          const majorPos = polar((RINGS.major.inner + RINGS.major.outer) / 2, center);
+          const minorPos = polar((RINGS.minor.inner + RINGS.minor.outer) / 2, center);
+          const dimPos = polar((RINGS.dim.inner + RINGS.dim.outer) / 2, center);
+          const sigPos = polar((RINGS.sig.inner + RINGS.sig.outer) / 2, center);
+          return (
+            <g
+              class="group/sector"
+              data-circle-key={entry.major}
+              role="button"
+              tabindex="0"
+              aria-label={`${entry.major} major, ${entry.minor} minor, ${chordAt('dim', entry.index)?.symbol} diminished`}
+            >
+              <g
+                class="group"
+                data-cell
+                data-ring="major"
+                data-index={entry.index}
+                data-selected={isSelected('major', entry.index) ? '' : undefined}
+              >
+                <path d={sector(RINGS.major.inner, RINGS.major.outer, start, end)} class={majorCell} />
+                <text
+                  x={majorPos.x}
+                  y={majorPos.y}
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  class={majorLabel}
+                  data-wheel-label
+                  style={labelStyle(majorPos)}
+                >
+                  {entry.major}
+                </text>
+              </g>
+
+              <g
+                class="group"
+                data-cell
+                data-ring="minor"
+                data-index={entry.index}
+                data-selected={isSelected('minor', entry.index) ? '' : undefined}
+              >
+                <path d={sector(RINGS.minor.inner, RINGS.minor.outer, start, end)} class={minorCell} />
+                <text
+                  x={minorPos.x}
+                  y={minorPos.y}
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  class={minorLabel}
+                  data-wheel-label
+                  style={labelStyle(minorPos)}
+                >
+                  {chordAt('minor', entry.index)?.symbol}
+                </text>
+              </g>
+
+              <g
+                class="group"
+                data-cell
+                data-ring="dim"
+                data-index={entry.index}
+                data-selected={isSelected('dim', entry.index) ? '' : undefined}
+              >
+                <path d={sector(RINGS.dim.inner, RINGS.dim.outer, start, end)} class={dimCell} />
+                <text
+                  x={dimPos.x}
+                  y={dimPos.y}
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  class={dimLabel}
+                  data-wheel-label
+                  style={labelStyle(dimPos)}
+                >
+                  {chordAt('dim', entry.index)?.symbol}
+                </text>
+              </g>
+
+              <g class="group" data-cell data-ring="sig" data-index={entry.index}>
+                <path d={sector(RINGS.sig.inner, RINGS.sig.outer, start, end)} class={sigCell} />
+                <text
+                  x={sigPos.x}
+                  y={sigPos.y}
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  class={sigLabel}
+                  data-wheel-label
+                  style={labelStyle(sigPos)}
+                >
+                  {keySignatureSymbol(entry.accidentals)}
+                </text>
+              </g>
+            </g>
+          );
+        })
+      }
+    </g>
+
+    <circle cx={CX} cy={CY} r={RINGS.sig.inner} class="fill-zinc-50 dark:fill-zinc-900" />
+
+    <g class="pointer-events-none">
+      <path
+        d={`M ${CX - 16} 0 L ${CX + 16} 0 L ${CX} 22 Z`}
+        class="fill-zinc-800 dark:fill-zinc-200"
+      />
+      <text
+        x={CX}
+        y={CY - 26}
+        text-anchor="middle"
+        dominant-baseline="middle"
+        class="fill-zinc-900 text-[22px] font-bold dark:fill-zinc-100"
+        data-circle-major
+      >
+        {initialEntry.major}
+      </text>
+      <text
+        x={CX}
+        y={CY}
+        text-anchor="middle"
+        dominant-baseline="middle"
+        class="fill-zinc-500 text-[11px] font-medium dark:fill-zinc-400"
+        data-circle-minor
+      >
+        {initialEntry.minor} minor
+      </text>
+      <text
+        x={CX}
+        y={CY + 18}
+        text-anchor="middle"
+        dominant-baseline="middle"
+        class="fill-zinc-400 text-[10px] dark:fill-zinc-500"
+        data-circle-signature
+      >
+        {keySignatureLabel(initialEntry.accidentals)}
+      </text>
+    </g>
+  </svg>
+
+  <div class="mt-6">
+    <ScaleChordsPanel view={initial} />
+  </div>
+</div>
+
+<style>
+  [data-wheel] {
+    transform-box: view-box;
+    transform-origin: 200px 205px;
+    transition: transform 0.55s cubic-bezier(0.33, 0, 0.2, 1);
+  }
+
+  [data-wheel-label] {
+    transform-box: view-box;
+    transition: transform 0.55s cubic-bezier(0.33, 0, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-wheel],
+    [data-wheel-label] {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import '../scripts/circleOfFifths';
+</script>
