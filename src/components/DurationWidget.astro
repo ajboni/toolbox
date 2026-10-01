@@ -1,0 +1,72 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { addDays, formatYmd, toISODate } from '../lib/dates';
+import { durationBetween } from '../lib/duration';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'violet' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const today = new Date();
+const defaultFrom = toISODate(today);
+const defaultTo = toISODate(addDays(today, 30));
+
+const initial = durationBetween(new Date(defaultFrom), new Date(defaultTo));
+const value = formatYmd(initial);
+const detail = `${initial.totalDays.toLocaleString('en-US')} days, ${initial.totalWeeks.toLocaleString('en-US')} weeks or ${initial.totalHours.toLocaleString('en-US')} hours in total.`;
+
+const inputClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+---
+
+<div
+  data-duration-widget
+  data-default-from={defaultFrom}
+  data-default-to={defaultTo}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="mx-auto grid max-w-lg gap-4 sm:grid-cols-2">
+    <label class={labelClass}>
+      <span class={labelText}>From</span>
+      <input type="date" data-from-input value={defaultFrom} class={inputClass} />
+    </label>
+    <label class={labelClass}>
+      <span class={labelText}>To</span>
+      <input type="date" data-to-input value={defaultTo} class={inputClass} />
+    </label>
+  </div>
+
+  <div class="mt-8 text-center">
+    <p
+      data-result-value
+      class:list={['text-3xl font-bold tracking-tight sm:text-4xl', accentColor]}
+    >
+      {value}
+    </p>
+    <p
+      data-result-detail
+      class="mx-auto mt-4 max-w-md text-sm text-zinc-600 dark:text-zinc-400"
+    >
+      {detail}
+    </p>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/duration';
+</script>

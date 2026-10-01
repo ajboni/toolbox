@@ -92,11 +92,11 @@ export interface Category {
 }
 
 export const SITE = {
-  name: 'Aboni Toolbox',
+  name: 'bajtools',
   url: 'https://toolbox.aboni.dev',
-  tagline: 'Small, fast tools for everyday tasks.',
+  tagline: 'A pile of small, useful web tools.',
   description:
-    'A growing collection of tiny, no-nonsense web tools. No sign-up, no bloat — just open a page and get the answer.',
+    'A growing pile of tiny, no-nonsense web tools. No sign-up, no bloat. Just open a page and get the answer.',
   author: '@ajboni',
   locale: 'en',
 } as const;
@@ -119,6 +119,12 @@ export const CATEGORIES: Category[] = [
     name: 'Music',
     description: 'Scales, chords and key relationships for musicians.',
     accent: 'fuchsia',
+  },
+  {
+    slug: 'text',
+    name: 'Text & Code',
+    description: 'Format, transform and inspect text, strings and code snippets.',
+    accent: 'sky',
   },
 ];
 

@@ -1,0 +1,63 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { textStats } from '../lib/textStats';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'sky' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaultValue = 'The quick brown fox jumps over the lazy dog.';
+const initial = textStats(defaultValue);
+
+const stats: { key: keyof typeof initial; label: string }[] = [
+  { key: 'characters', label: 'Characters' },
+  { key: 'charactersNoSpaces', label: 'No spaces' },
+  { key: 'words', label: 'Words' },
+  { key: 'sentences', label: 'Sentences' },
+  { key: 'lines', label: 'Lines' },
+  { key: 'paragraphs', label: 'Paragraphs' },
+  { key: 'readingMinutes', label: 'Reading (min)' },
+];
+
+const textareaClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+---
+
+<div
+  data-counter-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <label class="flex flex-col gap-1">
+    <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Your text</span>
+    <textarea data-text-input rows="6" class={textareaClass}>{defaultValue}</textarea>
+  </label>
+
+  <dl class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    {
+      stats.map((stat) => (
+        <div class="rounded-xl border border-zinc-200 bg-white p-3 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
+          <dd
+            data-stat={stat.key}
+            class:list={['text-2xl font-bold tabular-nums', accentColor]}
+          >
+            {initial[stat.key]}
+          </dd>
+          <dt class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{stat.label}</dt>
+        </div>
+      ))
+    }
+  </dl>
+
+  <div class="mt-6 flex justify-center">
+    <button type="button" data-share class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500">
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/counter';
+</script>

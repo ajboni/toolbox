@@ -28,9 +28,9 @@ const startLong = start.toLocaleDateString('en-US', {
 const { weeks, remainderDays, days: absDays } = humanizeDays(days);
 const detail =
   days > 0
-    ? `${days} days from ${startLong} — about ${weeks} weeks and ${remainderDays} days.`
+    ? `${days} days from ${startLong}, about ${weeks} weeks and ${remainderDays} days.`
     : days < 0
-      ? `${absDays} days before ${startLong} — about ${weeks} weeks and ${remainderDays} days.`
+      ? `${absDays} days before ${startLong}, about ${weeks} weeks and ${remainderDays} days.`
       : `Same day as ${startLong}.`;
 ---
 

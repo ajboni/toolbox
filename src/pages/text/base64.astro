@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Base64Widget from '../../components/Base64Widget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/text/base64/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Base64 Encoder / Decoder',
+    description: 'Encode text to Base64 or decode Base64 back to text, with a URL-safe option.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Text & Code', path: '/text/' },
+    { name: 'Base64', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Base64 Encoder and Decoder"
+  description="Encode any text to Base64 or decode Base64 back to plain text. Includes a URL-safe variant for links and tokens. Free and shareable."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/text/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Text &amp; Code</a>
+    <span class="mx-2">/</span>
+    <span>Base64</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Base64 encoder and decoder
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Convert text to Base64 or decode it back. Unicode is handled correctly, and
+    the URL-safe option swaps the characters that would break a query string.
+    Your input lives in the URL so you can share the exact value.
+  </p>
+
+  <div class="mt-8">
+    <Base64Widget accent="sky" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      Base64 turns bytes into 64 printable characters so binary-safe data can
+      travel through text channels. The URL-safe variant replaces <code>+</code>
+      with <code>-</code> and <code>/</code> with <code>_</code>, and drops the
+      trailing padding.
+    </p>
+  </section>
+
+  <RelatedTools category="text" current={canonicalPath} />
+</BaseLayout>

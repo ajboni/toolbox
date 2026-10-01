@@ -46,9 +46,9 @@ function initRoot(root: HTMLElement): void {
 
     const { weeks, remainderDays, days: absDays } = humanizeDays(days);
     if (days > 0) {
-      detailEl.textContent = `${days} days from ${formatLongDate(from)} — about ${weeks} weeks and ${remainderDays} days.`;
+      detailEl.textContent = `${days} days from ${formatLongDate(from)}, about ${weeks} weeks and ${remainderDays} days.`;
     } else if (days < 0) {
-      detailEl.textContent = `${absDays} days before ${formatLongDate(from)} — about ${weeks} weeks and ${remainderDays} days.`;
+      detailEl.textContent = `${absDays} days before ${formatLongDate(from)}, about ${weeks} weeks and ${remainderDays} days.`;
     } else {
       detailEl.textContent = `Same day as ${formatLongDate(from)}.`;
     }

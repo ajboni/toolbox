@@ -1,0 +1,81 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { ageBetween, daysUntilBirthday, formatAge } from '../lib/age';
+import { toISODate } from '../lib/dates';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'violet' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaultBirth = '2000-01-01';
+const today = new Date();
+const birth = new Date(2000, 0, 1);
+const initial = ageBetween(birth, today);
+const initialDays = daysUntilBirthday(birth, today);
+
+const value = initial ? String(initial.years) : '–';
+const unit = initial && initial.years === 1 ? 'year old' : 'years old';
+const detail = initial
+  ? `That's ${formatAge(initial)}, or ${initial.totalDays.toLocaleString('en-US')} days (${initial.totalWeeks.toLocaleString('en-US')} weeks). Next birthday in ${initialDays} days.`
+  : 'Pick a birth date in the past.';
+
+const inputClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+---
+
+<div
+  data-age-widget
+  data-default-birth={defaultBirth}
+  data-default-on={toISODate(today)}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="mx-auto grid max-w-lg gap-4 sm:grid-cols-2">
+    <label class={labelClass}>
+      <span class={labelText}>Date of birth</span>
+      <input type="date" data-birth-input value={defaultBirth} class={inputClass} />
+    </label>
+    <label class={labelClass}>
+      <span class={labelText}>Age at date</span>
+      <input type="date" data-on-input value={toISODate(today)} class={inputClass} />
+    </label>
+  </div>
+
+  <div class="mt-8 text-center">
+    <p class="flex flex-wrap items-baseline justify-center gap-2">
+      <span
+        data-result-value
+        class:list={['text-5xl font-bold tabular-nums tracking-tight sm:text-6xl', accentColor]}
+      >
+        {value}
+      </span>
+      <span data-result-unit class="text-xl font-medium text-zinc-600 dark:text-zinc-400">
+        {unit}
+      </span>
+    </p>
+    <p
+      data-result-detail
+      class="mx-auto mt-4 max-w-md text-sm text-zinc-600 dark:text-zinc-400"
+    >
+      {detail}
+    </p>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/age';
+</script>

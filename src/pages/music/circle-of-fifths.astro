@@ -10,7 +10,7 @@ const jsonLd = [
   webApplication({
     name: 'Circle of Fifths',
     description:
-      'Interactive circle of fifths chord wheel: browse all twelve major keys across four rings — diminished, minor, major and key signature — and highlight each key’s diatonic chords.',
+      'Interactive circle of fifths chord wheel: browse all twelve major keys across four rings (diminished, minor, major and key signature) and highlight each key’s diatonic chords.',
     path: canonicalPath,
   }),
   breadcrumbs([
@@ -22,7 +22,7 @@ const jsonLd = [
 ---
 
 <BaseLayout
-  title="Circle of Fifths — Interactive Chord Wheel"
+  title="Circle of Fifths · Interactive Chord Wheel"
   description="An interactive circle of fifths chord wheel. Rotate to any key to highlight its I–IV–V, ii–iii–vi and vii° chords, and see the key signature and diatonic chords. Free, fast and shareable."
   canonicalPath={canonicalPath}
   jsonLd={jsonLd}
@@ -39,8 +39,8 @@ const jsonLd = [
     Circle of Fifths
   </h1>
   <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
-    Each step clockwise moves up a perfect fifth. The wheel has four rings —
-    diminished (vii°), minor (ii/iii/vi), major (I/IV/V) and key signature —
+    Each step clockwise moves up a perfect fifth. The wheel has four rings:
+    diminished (vii°), minor (ii/iii/vi), major (I/IV/V) and key signature,
     and the pointer marks the selected key. Click any cell to hear its chord;
     the family of the selected key lights up around the wheel, and the
     selection is saved in the URL so you can share it.
@@ -56,8 +56,8 @@ const jsonLd = [
       Moving a fifth up adds one sharp (or removes one flat); moving a fifth down
       does the opposite. That is why neighbouring keys always differ by a single
       accidental, which makes them the easiest keys to modulate between. It is
-      also why the three chords of a key that are not its tonic — IV and V in the
-      major ring, and ii, iii and vi in the minor ring — always sit in the two
+      also why the three chords of a key that are not its tonic (IV and V in the
+      major ring, and ii, iii and vi in the minor ring) always sit in the two
       sectors next to it.
     </p>
   </section>

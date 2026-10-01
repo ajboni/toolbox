@@ -56,6 +56,49 @@ export function nextNewYear(now: Date = new Date()): Date {
   return nextAnnualOccurrence(1, 1, now);
 }
 
+export interface YmdDiff {
+  years: number;
+  months: number;
+  days: number;
+}
+
+function plural(count: number, word: string): string {
+  return `${count} ${word}${count === 1 ? '' : 's'}`;
+}
+
+export function formatYmd(diff: YmdDiff): string {
+  const parts: string[] = [];
+  if (diff.years) parts.push(plural(diff.years, 'year'));
+  if (diff.months) parts.push(plural(diff.months, 'month'));
+  if (diff.days || parts.length === 0) parts.push(plural(diff.days, 'day'));
+  if (parts.length === 1) return parts[0];
+  return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`;
+}
+
+export function diffYmd(from: Date, to: Date): YmdDiff {
+  const start = startOfDay(from);
+  const end = startOfDay(to);
+  const negative = end.getTime() < start.getTime();
+  const a = negative ? end : start;
+  const b = negative ? start : end;
+
+  let years = b.getFullYear() - a.getFullYear();
+  let months = b.getMonth() - a.getMonth();
+  let days = b.getDate() - a.getDate();
+
+  if (days < 0) {
+    months -= 1;
+    days += new Date(b.getFullYear(), b.getMonth(), 0).getDate();
+  }
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  const sign = negative ? -1 : 1;
+  return { years: sign * years, months: sign * months, days: sign * days };
+}
+
 export interface HumanizedDuration {
   days: number;
   weeks: number;

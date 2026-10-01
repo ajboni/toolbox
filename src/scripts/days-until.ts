@@ -61,7 +61,7 @@ function initRoot(root: HTMLElement): void {
     } else if (days === 0) {
       numberEl.textContent = '0';
       if (labelEl) labelEl.textContent = 'days';
-      if (detailEl) detailEl.textContent = `It's today — ${formatLongDate(target)}.`;
+      if (detailEl) detailEl.textContent = `It's today: ${formatLongDate(target)}.`;
     } else {
       const { days: abs } = humanizeDays(days);
       numberEl.textContent = String(abs);

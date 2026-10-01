@@ -1,0 +1,61 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { HASH_ALGORITHMS, hashText } from '../lib/hash';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'sky' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaultValue = 'hello world';
+const initial = await hashText(defaultValue, 'SHA-256');
+
+const textareaClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const selectClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+---
+
+<div
+  data-hash-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <label class="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+    <span>Algorithm</span>
+    <select data-alg-select class={selectClass}>
+      {HASH_ALGORITHMS.map((algorithm) => <option value={algorithm}>{algorithm}</option>)}
+    </select>
+  </label>
+
+  <div class="mt-4 grid gap-4">
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Text</span>
+      <textarea data-text-input rows="3" class={textareaClass}>{defaultValue}</textarea>
+    </label>
+    <div class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Digest (hex)</span>
+      <code
+        data-output
+        class:list={[
+          'block break-all rounded-lg border border-zinc-200 bg-white px-3 py-2 font-mono text-sm dark:border-zinc-800 dark:bg-zinc-900/60',
+          accentColor,
+        ]}
+      >{initial}</code>
+    </div>
+  </div>
+
+  <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <button type="button" data-copy="[data-output]" class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500">
+      Copy digest
+    </button>
+    <button type="button" data-share class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500">
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/hash';
+</script>

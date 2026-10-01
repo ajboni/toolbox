@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseConverterWidget from '../../components/BaseConverterWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/math/base-converter/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Number Base Converter',
+    description: 'Convert numbers between binary, octal, decimal, hexadecimal and any base up to 36.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Math & Numbers', path: '/math/' },
+    { name: 'Base Converter', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Number Base Converter · Binary, Octal, Decimal, Hex"
+  description="Convert numbers between binary, octal, decimal and hexadecimal, or any base from 2 to 36. Handles very large values and is shareable via URL."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/math/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Math &amp; Numbers</a>
+    <span class="mx-2">/</span>
+    <span>Base Converter</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Number base converter
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Pick the base of your number and type it in. You get the binary, octal,
+    decimal and hexadecimal equivalents at once. Large values are handled exactly,
+    without floating-point rounding, and the input is stored in the URL.
+  </p>
+
+  <div class="mt-8">
+    <BaseConverterWidget accent="emerald" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      A number in base b is a sum of digits times powers of b. The converter reads
+      the value as a big integer, so it stays exact even beyond JavaScript's safe
+      integer range, then rewrites it in each target base. Letters a–z stand for
+      the digit values 10–35.
+    </p>
+  </section>
+
+  <RelatedTools category="math" current={canonicalPath} />
+</BaseLayout>

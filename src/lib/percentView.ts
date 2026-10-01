@@ -51,7 +51,7 @@ export interface PercentResult {
 const TERMS: ProportionTerm[] = ['a', 'b', 'c', 'x'];
 
 const INVALID: PercentResult = {
-  value: '—',
+  value: '–',
   unit: '',
   detail: 'Enter all values to see the result.',
 };
@@ -82,7 +82,7 @@ export function renderPercent(
       if (part == null || whole == null) return INVALID;
       const result = whatPercent(part, whole);
       if (result == null) {
-        return { value: '—', unit: '', detail: 'The whole cannot be zero.' };
+        return { value: '–', unit: '', detail: 'The whole cannot be zero.' };
       }
       return {
         value: formatNumber(result),
@@ -96,7 +96,7 @@ export function renderPercent(
       if (from == null || to == null) return INVALID;
       const result = percentChange(from, to);
       if (result == null) {
-        return { value: '—', unit: '', detail: 'The starting value cannot be zero.' };
+        return { value: '–', unit: '', detail: 'The starting value cannot be zero.' };
       }
       if (result === 0) {
         return {
@@ -138,13 +138,13 @@ export function renderPercent(
       }
       const result = solveProportion(known, unknown);
       if (result == null) {
-        return { value: '—', unit: '', detail: 'Cannot divide by zero.' };
+        return { value: '–', unit: '', detail: 'Cannot divide by zero.' };
       }
       const resolved = { ...known, [unknown]: result } as Record<ProportionTerm, number>;
       return {
         value: formatNumber(result),
         unit: '',
-        detail: `${formatNumber(resolved.a)} / ${formatNumber(resolved.b)} = ${formatNumber(resolved.c)} / ${formatNumber(resolved.x)} — solved for ${unknown.toUpperCase()}.`,
+        detail: `${formatNumber(resolved.a)} / ${formatNumber(resolved.b)} = ${formatNumber(resolved.c)} / ${formatNumber(resolved.x)}, solved for ${unknown.toUpperCase()}.`,
       };
     }
   }

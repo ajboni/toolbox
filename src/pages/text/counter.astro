@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CounterWidget from '../../components/CounterWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/text/counter/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Word and Character Counter',
+    description: 'Count characters, words, sentences, lines and paragraphs as you type.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Text & Code', path: '/text/' },
+    { name: 'Word Counter', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Word and Character Counter"
+  description="Count characters (with and without spaces), words, sentences, lines and paragraphs, plus an estimated reading time. Free and private. Nothing leaves your browser."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/text/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Text &amp; Code</a>
+    <span class="mx-2">/</span>
+    <span>Word Counter</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Word and character counter
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Paste or type any text to see its length and structure: characters, words,
+    sentences, lines and paragraphs, with a rough reading time. Everything runs
+    in your browser, and the text is saved in the URL.
+  </p>
+
+  <div class="mt-8">
+    <CounterWidget accent="sky" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      Words are counted by splitting on whitespace, sentences by runs of text
+      ending in a full stop, question or exclamation mark, and paragraphs by
+      blank lines. Reading time assumes about 200 words per minute.
+    </p>
+  </section>
+
+  <RelatedTools category="text" current={canonicalPath} />
+</BaseLayout>

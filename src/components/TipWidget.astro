@@ -1,0 +1,76 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { formatMoney, splitTip } from '../lib/tip';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'emerald' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaults = { bill: 100, tip: 15, people: 2 };
+const initial = splitTip(defaults.bill, defaults.tip, defaults.people)!;
+
+const inputClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+---
+
+<div
+  data-tip-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="mx-auto grid max-w-lg gap-4 sm:grid-cols-3">
+    <label class={labelClass}>
+      <span class={labelText}>Bill</span>
+      <input type="number" step="any" data-bill-input value={defaults.bill} class={inputClass} />
+    </label>
+    <label class={labelClass}>
+      <span class={labelText}>Tip (%)</span>
+      <input type="number" step="any" data-tip-input value={defaults.tip} class={inputClass} />
+    </label>
+    <label class={labelClass}>
+      <span class={labelText}>People</span>
+      <input type="number" step="1" min="1" data-people-input value={defaults.people} class={inputClass} />
+    </label>
+  </div>
+
+  <div class="mt-8 text-center">
+    <p class="flex flex-wrap items-baseline justify-center gap-2">
+      <span
+        data-result-value
+        class:list={['text-5xl font-bold tabular-nums tracking-tight sm:text-6xl', accentColor]}
+      >
+        {formatMoney(initial.perPerson)}
+      </span>
+      <span data-result-unit class="text-xl font-medium text-zinc-600 dark:text-zinc-400">
+        each
+      </span>
+    </p>
+    <p
+      data-result-detail
+      class="mx-auto mt-4 max-w-md text-sm text-zinc-600 dark:text-zinc-400"
+    >
+      {`Tip ${formatMoney(initial.tipAmount)} • Total ${formatMoney(initial.total)}`}
+    </p>
+    <p data-result-extra class="mx-auto mt-2 max-w-md text-xs text-zinc-500 dark:text-zinc-500">
+      {`Tip per person ${formatMoney(initial.tipPerPerson)}`}
+    </p>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/tip';
+</script>

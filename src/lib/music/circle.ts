@@ -46,7 +46,7 @@ export function relativeMinor(major: string): string | undefined {
 }
 
 export function keySignatureSymbol(accidentals: number): string {
-  if (accidentals === 0) return '—';
+  if (accidentals === 0) return '–';
   const symbol = accidentals > 0 ? '♯' : '♭';
   return `${Math.abs(accidentals)}${symbol}`;
 }

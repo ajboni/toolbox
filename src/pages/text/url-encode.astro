@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import UrlEncodeWidget from '../../components/UrlEncodeWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/text/url-encode/';
+
+const jsonLd = [
+  webApplication({
+    name: 'URL Encoder / Decoder',
+    description: 'Percent-encode text for URLs or decode percent-encoded strings back to text.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Text & Code', path: '/text/' },
+    { name: 'URL Encode', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="URL Encoder and Decoder · Percent-Encoding"
+  description="Percent-encode text so it is safe inside a URL, or decode an encoded string back to readable text. Free, instant and shareable."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/text/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Text &amp; Code</a>
+    <span class="mx-2">/</span>
+    <span>URL Encode</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    URL encoder and decoder
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Encode text so it survives inside a URL, or decode a percent-encoded string
+    back to something readable. Handy for query values, tracking parameters and
+    debugging. The input is stored in the URL for sharing.
+  </p>
+
+  <div class="mt-8">
+    <UrlEncodeWidget accent="sky" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      Percent-encoding replaces each reserved or non-ASCII character with a
+      percent sign followed by its hexadecimal byte value, so a space becomes
+      <code>%20</code> and <code>&amp;</code> becomes <code>%26</code>. Decoding
+      reverses the process, and also treats <code>+</code> as a space.
+    </p>
+  </section>
+
+  <RelatedTools category="text" current={canonicalPath} />
+</BaseLayout>

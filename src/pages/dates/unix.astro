@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import UnixWidget from '../../components/UnixWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/dates/unix/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Unix Timestamp Converter',
+    description: 'Convert a Unix timestamp to a human date and back, in local and UTC time.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Dates & Time', path: '/dates/' },
+    { name: 'Unix Timestamp', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Unix Timestamp Converter · Epoch to Date and Back"
+  description="Convert Unix epoch timestamps (seconds or milliseconds) to readable dates in local and UTC time, and turn any date back into a timestamp."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/dates/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Dates &amp; Time</a>
+    <span class="mx-2">/</span>
+    <span>Unix Timestamp</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Unix timestamp converter
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Paste a Unix timestamp to see the matching date and time, or edit the date to
+    get its timestamp back. Ten-digit values are read as seconds and thirteen-digit
+    values as milliseconds. Everything stays in the URL for easy sharing.
+  </p>
+
+  <div class="mt-8">
+    <UnixWidget accent="violet" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      Unix time counts the seconds since 1 January 1970 UTC, ignoring leap
+      seconds. A value of 0 is that epoch, 1,000,000,000 is 9 September 2001 and
+      so on. JavaScript itself counts milliseconds, hence the ×1000 difference
+      the converter applies to shorter values automatically.
+    </p>
+  </section>
+
+  <RelatedTools category="dates" current={canonicalPath} />
+</BaseLayout>

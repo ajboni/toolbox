@@ -17,7 +17,7 @@ export const OCCASIONS: Occasion[] = [
     shortName: 'New Year',
     month: 1,
     day: 1,
-    seoTitle: "How Many Days Until New Year's Day? — Live Countdown",
+    seoTitle: "How Many Days Until New Year's Day? · Live Countdown",
     seoDescription:
       "Find out exactly how many days, weeks and months are left until New Year's Day. Free, instant and no sign-up required.",
     intro:
@@ -31,7 +31,7 @@ export const OCCASIONS: Occasion[] = [
     shortName: 'Christmas',
     month: 12,
     day: 25,
-    seoTitle: 'How Many Days Until Christmas? — Live Christmas Countdown',
+    seoTitle: 'How Many Days Until Christmas? · Live Christmas Countdown',
     seoDescription:
       "Count down the days, weeks and months until Christmas Day. A quick, free and always up-to-date Christmas countdown.",
     intro:
@@ -45,7 +45,7 @@ export const OCCASIONS: Occasion[] = [
     shortName: "Valentine's Day",
     month: 2,
     day: 14,
-    seoTitle: "How Many Days Until Valentine's Day? — Day Countdown",
+    seoTitle: "How Many Days Until Valentine's Day? · Day Countdown",
     seoDescription:
       "See how many days, weeks and months remain until Valentine's Day on 14 February. Free, fast and no sign-up needed.",
     intro:
@@ -59,7 +59,7 @@ export const OCCASIONS: Occasion[] = [
     shortName: 'Halloween',
     month: 10,
     day: 31,
-    seoTitle: 'How Many Days Until Halloween? — Spooky Countdown',
+    seoTitle: 'How Many Days Until Halloween? · Spooky Countdown',
     seoDescription:
       'Find out how many days, weeks and months are left until Halloween on 31 October. Free and instant.',
     intro:
@@ -73,7 +73,7 @@ export const OCCASIONS: Occasion[] = [
     shortName: "New Year's Eve",
     month: 12,
     day: 31,
-    seoTitle: "How Many Days Until New Year's Eve? — Countdown",
+    seoTitle: "How Many Days Until New Year's Eve? · Countdown",
     seoDescription:
       "Count the days, weeks and months until New Year's Eve on 31 December. Free, live and no sign-up required.",
     intro:
@@ -87,7 +87,7 @@ export const OCCASIONS: Occasion[] = [
     shortName: 'Earth Day',
     month: 4,
     day: 22,
-    seoTitle: 'How Many Days Until Earth Day? — Countdown',
+    seoTitle: 'How Many Days Until Earth Day? · Countdown',
     seoDescription:
       'See how many days, weeks and months remain until Earth Day on 22 April. Free, instant and no sign-up.',
     intro:

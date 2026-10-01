@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../data/site';
+import { ANALYTICS } from '../data/analytics';
 import '../styles/global.css';
 
 interface Props {
@@ -30,6 +31,16 @@ const { title, description, canonicalPath, jsonLd, noindex } = Astro.props;
       jsonLd={jsonLd}
       noindex={noindex}
     />
+    {
+      ANALYTICS.cfToken && (
+        <script
+          is:inline
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: ANALYTICS.cfToken })}
+        />
+      )
+    }
   </head>
   <body class="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
     <a

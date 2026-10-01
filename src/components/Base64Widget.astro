@@ -1,0 +1,64 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { encodeBase64 } from '../lib/base64';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'sky' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaultValue = 'hello world';
+const initial = encodeBase64(defaultValue);
+
+const textareaClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const selectClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+---
+
+<div
+  data-base64-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="flex flex-wrap items-center gap-4">
+    <label class="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+      <span>Direction</span>
+      <select data-dir-select class={selectClass}>
+        <option value="encode">Encode</option>
+        <option value="decode">Decode</option>
+      </select>
+    </label>
+    <label class="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+      <input type="checkbox" data-urlsafe-checkbox class="h-4 w-4" />
+      <span>URL-safe</span>
+    </label>
+  </div>
+
+  <div class="mt-4 grid gap-4">
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Input</span>
+      <textarea data-text-input rows="3" class={textareaClass}>{defaultValue}</textarea>
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Output</span>
+      <textarea readonly data-output rows="3" class:list={[textareaClass, accentColor]}>{initial}</textarea>
+    </label>
+  </div>
+
+  <p data-status class="mt-2 text-xs text-zinc-500 dark:text-zinc-500"></p>
+
+  <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <button type="button" data-copy="[data-output]" class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500">
+      Copy output
+    </button>
+    <button type="button" data-share class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500">
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/base64';
+</script>

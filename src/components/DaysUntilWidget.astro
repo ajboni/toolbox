@@ -37,7 +37,7 @@ let detail =
   days > 0
     ? `That's about ${weeks} weeks and ${remainderDays} days, or roughly ${months} months. Target: ${targetLong}.`
     : days === 0
-      ? `It's today — ${targetLong}.`
+      ? `It's today: ${targetLong}.`
       : `That date was ${targetLong}.`;
 if (days < 0) label = 'days ago';
 

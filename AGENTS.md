@@ -4,7 +4,7 @@ Guidance for agents and contributors working in this repository.
 
 ## What this is
 
-**Aboni Toolbox** is a static website that hosts a growing collection of small,
+**bajtools** is a static website that hosts a growing collection of small,
 single-purpose web tools. Each tool lives on its own URL, grouped by category.
 It is **not** a SPA: every page is pre-rendered HTML for speed and SEO.
 
@@ -28,7 +28,7 @@ It is **not** a SPA: every page is pre-rendered HTML for speed and SEO.
 | `pnpm dev` | Start the dev server |
 | `pnpm build` | Build the static site into `dist/` |
 | `pnpm preview` | Preview the production build locally |
-| `pnpm check` | `astro check` — type/diagnostic check |
+| `pnpm check` | `astro check`: type/diagnostic check |
 | `pnpm test` | Run Vitest once |
 
 Run `pnpm check` and `pnpm build` (and `pnpm test` when logic changed) before
@@ -53,6 +53,7 @@ tasks/                  # todo / done / ideas notes
 ## Conventions
 
 - Content and UI copy are in **English**.
+- Avoid em dashes (U+2014) in content and UI copy: use commas, colons, periods or parentheses. Use a middot (·) as a separator in titles and labels; use an en dash (–) for empty-value placeholders.
 - Base color palette is **zinc** (neutral, no blue tint); dark mode is the
   automatic `prefers-color-scheme` variant with a `zinc-950` background.
 - Each category has an `accent` (Tailwind color name) in `src/data/site.ts`.
@@ -87,8 +88,8 @@ Tool state is serialized into the query string so any state is one copy-paste
 away.
 
 - Use the helpers in `src/lib/urlState.ts`:
-  - `readUrlState(schema)` — parse + validate params on load.
-  - `writeUrlState(schema, values, { defaults })` — update the URL.
+  - `readUrlState(schema)`: parse + validate params on load.
+  - `writeUrlState(schema, values, { defaults })`: update the URL.
 - On change, call `writeUrlState` with `replace: true` (default) so the history
   is not polluted. Handle `popstate` to restore state on back/forward.
 - Omit values equal to the default (pass `defaults`) to keep URLs clean.
@@ -110,9 +111,9 @@ away.
 
 Work notes live in `tasks/`:
 
-- `tasks/todo/` — planned work.
-- `tasks/done/` — completed work.
-- `tasks/ideas/` — backlog and future tools/categories.
+- `tasks/todo/`: planned work.
+- `tasks/done/`: completed work.
+- `tasks/ideas/`: backlog and future tools/categories.
 
 One file per task, named `NNNN-short-slug.md`. When a task is finished, move it
 from `todo/` to `done/`.

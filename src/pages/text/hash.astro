@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HashWidget from '../../components/HashWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/text/hash/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Hash Generator',
+    description: 'Compute SHA-1, SHA-256, SHA-384 or SHA-512 hashes of any text.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Text & Code', path: '/text/' },
+    { name: 'Hash Generator', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Hash Generator · SHA-256, SHA-512 and More"
+  description="Compute SHA-1, SHA-256, SHA-384 or SHA-512 digests of any text, entirely in your browser. Free, private and shareable via URL."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/text/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Text &amp; Code</a>
+    <span class="mx-2">/</span>
+    <span>Hash Generator</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Hash generator</h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Compute a cryptographic hash of any text using SHA-1, SHA-256, SHA-384 or
+    SHA-512. The digest updates as you type and is computed with the Web Crypto
+    API, so your input never leaves the browser.
+  </p>
+
+  <div class="mt-8">
+    <HashWidget accent="sky" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      A hash function maps any input to a fixed-length hexadecimal string. The
+      same input always produces the same digest, but any change, even one
+      character, produces a completely different one. SHA-256 and SHA-512 are
+      the safe choices; SHA-1 is included only for legacy checksums.
+    </p>
+  </section>
+
+  <RelatedTools category="text" current={canonicalPath} />
+</BaseLayout>
