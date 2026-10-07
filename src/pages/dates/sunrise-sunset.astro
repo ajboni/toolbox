@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SunWidget from '../../components/SunWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/dates/sunrise-sunset/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Sunrise & Sunset Calculator',
+    description:
+      'Find sunrise, sunset, solar noon, day length and twilight times for any city or coordinate pair.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Dates & Time', path: '/dates/' },
+    { name: 'Sunrise & Sunset', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Sunrise & Sunset Calculator · Times for Any Location"
+  description="Find sunrise, sunset, solar noon, day length and civil, nautical and astronomical twilight for any city or coordinates. Free, instant and shareable."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/dates/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Dates &amp; Time</a>
+    <span class="mx-2">/</span>
+    <span>Sunrise &amp; Sunset</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Sunrise &amp; sunset times
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Pick a city or type any latitude and longitude to see when the sun rises,
+    sets and reaches its highest point, plus the length of the day and the three
+    twilight phases. Every value is stored in the URL, so the exact view is one
+    copy-paste away.
+  </p>
+
+  <div class="mt-8">
+    <SunWidget />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      The times come from the NOAA solar position equations, computed entirely in
+      your browser. For a given date and coordinate pair the tool derives the
+      solar declination and the equation of time, then finds the hour angle at
+      which the sun crosses the horizon. Sunrise and sunset use the official
+      90.833° zenith (which accounts for atmospheric refraction and the sun's
+      disc), while twilight uses 96°, 102° and 108° for the civil, nautical and
+      astronomical phases.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Results are calculated in UTC and then formatted in the time zone you
+      choose. When you pick a preset city its zone is filled in automatically;
+      otherwise type any IANA name such as <code>Europe/Madrid</code> or
+      <code>Australia/Sydney</code>. At high latitudes the sun may never rise or
+      never set, and the page says so instead of showing a time.
+    </p>
+  </section>
+
+  <section class="mt-12 text-sm">
+    <a
+      href="/dates/days-until/"
+      class="text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+    >
+      Planning around a date? Count the days until it →
+    </a>
+  </section>
+
+  <RelatedTools category="dates" current={canonicalPath} />
+</BaseLayout>

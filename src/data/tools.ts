@@ -46,6 +46,14 @@ export const TOOLS: Tool[] = [
     path: '/dates/unix/',
   },
   {
+    slug: 'sunrise-sunset',
+    category: 'dates',
+    title: 'Sunrise & Sunset',
+    description:
+      'Sunrise, sunset, solar noon, day length and twilight for any place and date.',
+    path: '/dates/sunrise-sunset/',
+  },
+  {
     slug: 'percent-of',
     category: 'math',
     title: 'Percent Of',

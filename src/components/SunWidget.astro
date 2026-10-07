@@ -1,0 +1,189 @@
+---
+import { CITIES, DEFAULT_CITY } from '../data/cities';
+import { accentClasses } from '../data/site';
+import { toISODate } from '../lib/dates';
+import {
+  formatDuration,
+  formatTime,
+  solarTimes,
+  twilightTimes,
+  type SunTimes,
+} from '../lib/sun';
+
+const accentColor = accentClasses('violet').text;
+
+const now = new Date();
+const dateISO = toISODate(now);
+const tz = DEFAULT_CITY.tz;
+
+const sun = solarTimes(now, DEFAULT_CITY.lat, DEFAULT_CITY.lon);
+const twilight = twilightTimes(now, DEFAULT_CITY.lat, DEFAULT_CITY.lon);
+
+const DASH = '–';
+const inputClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const cardClass =
+  'rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900';
+
+function time(value: Date | null): string {
+  return value ? formatTime(value, tz) : DASH;
+}
+
+function dayLength(times: SunTimes): string {
+  if (times.dayLengthMinutes != null) return formatDuration(times.dayLengthMinutes);
+  if (times.state === 'polar-day') return '24 h 00 min';
+  if (times.state === 'polar-night') return '0 h 00 min';
+  return DASH;
+}
+
+function range(times: SunTimes): string {
+  return `${time(times.sunrise)} – ${time(times.sunset)}`;
+}
+
+const stateNote =
+  sun.state === 'polar-day'
+    ? 'The sun stays above the horizon all day.'
+    : sun.state === 'polar-night'
+      ? 'The sun stays below the horizon all day.'
+      : '';
+---
+
+<div
+  data-sun-widget
+  data-default-lat={DEFAULT_CITY.lat}
+  data-default-lon={DEFAULT_CITY.lon}
+  data-default-tz={DEFAULT_CITY.tz}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label class={labelClass}>
+      <span class={labelText}>City</span>
+      <select data-city-select class={inputClass}>
+        <option value="" disabled>Custom location</option>
+        {
+          CITIES.map((city) => (
+            <option value={city.slug} selected={city.slug === DEFAULT_CITY.slug}>
+              {city.name}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+
+    <label class={labelClass}>
+      <span class={labelText}>Date</span>
+      <input type="date" data-date-input value={dateISO} class={inputClass} />
+    </label>
+
+    <label class={labelClass}>
+      <span class={labelText}>Latitude</span>
+      <input
+        type="number"
+        step="any"
+        inputmode="decimal"
+        data-lat-input
+        value={DEFAULT_CITY.lat}
+        class={inputClass}
+      />
+    </label>
+
+    <label class={labelClass}>
+      <span class={labelText}>Longitude</span>
+      <input
+        type="number"
+        step="any"
+        inputmode="decimal"
+        data-lon-input
+        value={DEFAULT_CITY.lon}
+        class={inputClass}
+      />
+    </label>
+
+    <label class={labelClass}>
+      <span class={labelText}>Time zone (IANA)</span>
+      <input
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        data-tz-input
+        value={tz}
+        class={inputClass}
+      />
+    </label>
+
+    <div class="flex items-end">
+      <button
+        type="button"
+        data-geo
+        class="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+      >
+        Use my location
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class={cardClass}>
+      <p class={labelText}>Sunrise</p>
+      <p data-out="sunrise" class:list={['mt-1 text-2xl font-bold tabular-nums', accentColor]}>
+        {time(sun.sunrise)}
+      </p>
+    </div>
+    <div class={cardClass}>
+      <p class={labelText}>Sunset</p>
+      <p data-out="sunset" class:list={['mt-1 text-2xl font-bold tabular-nums', accentColor]}>
+        {time(sun.sunset)}
+      </p>
+    </div>
+    <div class={cardClass}>
+      <p class={labelText}>Solar noon</p>
+      <p data-out="noon" class="mt-1 text-2xl font-bold tabular-nums">
+        {time(sun.solarNoon)}
+      </p>
+    </div>
+    <div class={cardClass}>
+      <p class={labelText}>Day length</p>
+      <p data-out="daylength" class="mt-1 text-2xl font-bold tabular-nums">
+        {dayLength(sun)}
+      </p>
+    </div>
+  </div>
+
+  <p data-out="state" class="mt-4 text-sm font-medium text-amber-600 dark:text-amber-400">
+    {stateNote}
+  </p>
+
+  <div class="mt-8">
+    <h3 class="text-sm font-semibold text-zinc-600 dark:text-zinc-400">Twilight</h3>
+    <dl class="mt-3 divide-y divide-zinc-200 text-sm dark:divide-zinc-800">
+      <div class="flex items-center justify-between py-2">
+        <dt class="text-zinc-600 dark:text-zinc-400">Civil (sun at -6°)</dt>
+        <dd data-out="civil" class="tabular-nums">{range(twilight.civil)}</dd>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <dt class="text-zinc-600 dark:text-zinc-400">Nautical (sun at -12°)</dt>
+        <dd data-out="nautical" class="tabular-nums">{range(twilight.nautical)}</dd>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <dt class="text-zinc-600 dark:text-zinc-400">Astronomical (sun at -18°)</dt>
+        <dd data-out="astronomical" class="tabular-nums">{range(twilight.astronomical)}</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/sun';
+</script>
