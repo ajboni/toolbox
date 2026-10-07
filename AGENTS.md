@@ -53,7 +53,7 @@ tasks/                  # todo / done / ideas notes
 ## Conventions
 
 - Content and UI copy are in **English**.
-- Avoid em dashes (U+2014) in content and UI copy: use commas, colons, periods or parentheses. Use a middot (·) as a separator in titles and labels; use an en dash (–) for empty-value placeholders.
+- Never use em dashes (U+2014) anywhere: content, UI copy or documentation. Use commas, colons, periods or parentheses instead. Use a middot (·) as a separator in titles and labels; use an en dash (–) for empty-value placeholders.
 - Base color palette is **zinc** (neutral, no blue tint); dark mode is the
   automatic `prefers-color-scheme` variant with a `zinc-950` background.
 - Each category has an `accent` (Tailwind color name) in `src/data/site.ts`.

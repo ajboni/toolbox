@@ -1,0 +1,96 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import {
+  birthdayTableHtml,
+  buildBirthdayView,
+  weekdayCountsHtml,
+} from '../lib/birthdayView';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'violet' } = Astro.props;
+const acc = accentClasses(accent);
+
+const defaultBirth = '2000-01-01';
+const view = buildBirthdayView(new Date(2000, 0, 1));
+
+const inputClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const countsHighlight = `${acc.bgSoft} ${acc.text}`;
+---
+
+<div
+  data-birthday-widget
+  data-default-birth={defaultBirth}
+  data-counts-highlight={countsHighlight}
+  data-row-highlight={acc.bgSoft}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <label class="mx-auto flex max-w-xs flex-col gap-1">
+    <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+      Date of birth
+    </span>
+    <input
+      type="date"
+      data-birth-input
+      value={defaultBirth}
+      class={inputClass}
+    />
+  </label>
+
+  <p
+    data-summary
+    class="mx-auto mt-6 max-w-xl text-center text-sm text-zinc-600 dark:text-zinc-400"
+  >
+    {view.summary}
+  </p>
+
+  <ul
+    data-counts
+    class="mx-auto mt-4 grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4"
+    set:html={weekdayCountsHtml(view, countsHighlight)}
+  >
+  </ul>
+
+  <div
+    class="mx-auto mt-6 max-h-96 max-w-2xl overflow-y-auto rounded-xl border border-zinc-200 dark:border-zinc-800"
+  >
+    <table class="w-full text-left text-sm">
+      <thead
+        class="sticky top-0 bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+      >
+        <tr>
+          <th class="px-3 py-2 font-medium">Year</th>
+          <th class="px-3 py-2 font-medium">Age</th>
+          <th class="px-3 py-2 font-medium">Date</th>
+          <th class="px-3 py-2 font-medium">Day of week</th>
+        </tr>
+      </thead>
+      <tbody
+        data-table-body
+        class="bg-white dark:bg-zinc-900"
+        set:html={birthdayTableHtml(view, {
+          currentClass: 'bg-zinc-100 dark:bg-zinc-800/60',
+          nextClass: acc.bgSoft,
+        })}
+      >
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-6 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/birthday-weekday';
+</script>

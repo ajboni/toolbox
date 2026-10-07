@@ -54,6 +54,14 @@ export const TOOLS: Tool[] = [
     path: '/dates/sunrise-sunset/',
   },
   {
+    slug: 'birthday-weekday',
+    category: 'dates',
+    title: 'Birthday Weekday',
+    description:
+      'See which day of the week every one of your birthdays falls on, past and future.',
+    path: '/dates/birthday-weekday/',
+  },
+  {
     slug: 'percent-of',
     category: 'math',
     title: 'Percent Of',
