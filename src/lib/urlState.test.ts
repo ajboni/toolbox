@@ -32,4 +32,15 @@ describe('buildSearch', () => {
   it('drops null and empty values', () => {
     expect(buildSearch(schema, { date: null, count: 0 })).toBe('count=0');
   });
+
+  it('keeps commas and slashes when pretty is set', () => {
+    expect(
+      buildSearch(
+        { clock: 'string' },
+        { clock: 'Europe/Prague,America/New_York' },
+        {},
+        { pretty: true },
+      ),
+    ).toBe('clock=Europe/Prague,America/New_York');
+  });
 });

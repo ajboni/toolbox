@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorldClockWidget from '../../components/WorldClockWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/dates/world-clock/';
+
+const jsonLd = [
+  webApplication({
+    name: 'World Clock Dashboard',
+    description:
+      'See the current time in several time zones at once. Add clocks, pick a watchface and share the whole board with a link.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Dates & Time', path: '/dates/' },
+    { name: 'World Clock', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="World Clock Dashboard · Multiple Time Zones at Once"
+  description="See the current time in several time zones at once. Add cities, watch the offsets and share your board with a link. Free, instant and no sign-up required."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/dates/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Dates &amp; Time</a>
+    <span class="mx-2">/</span>
+    <span>World Clock</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    World clock dashboard
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Add the places you care about and watch their clocks tick side by side. Each
+    card shows the local time, the weekday and the current UTC offset, so you
+    can see at a glance who is already at work and who is asleep.
+  </p>
+
+  <div class="mt-8">
+    <WorldClockWidget />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Shareable boards</h2>
+    <p class="text-sm leading-relaxed">
+      Your board is stored in the URL, so it is one copy-paste away. Add a
+      time zone by typing a city, a country code such as
+      <code class="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">cz</code>,
+      <code class="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">ar</code> or
+      <code class="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">usa</code>,
+      or the full IANA name like
+      <code class="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">Europe/Prague</code>.
+      Then hit <em>Copy link</em> to share the exact board.
+    </p>
+    <p class="text-sm leading-relaxed">
+      The watchface and the seconds readout are optional and travel in the link
+      too: pick <em>Analog</em> for clock hands, or uncheck <em>Seconds</em> for a
+      calmer board without a tick.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Time zones are the same IANA database your operating system uses, so
+      daylight saving changes are handled automatically. Everything runs in
+      your browser; nothing is sent to a server.
+    </p>
+  </section>
+
+  <RelatedTools category="dates" current={canonicalPath} />
+</BaseLayout>

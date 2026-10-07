@@ -1,0 +1,90 @@
+---
+import WorldClockCard from './WorldClockCard.astro';
+import { DEFAULT_CLOCKS, TIMEZONES } from '../data/timezones';
+
+const inputClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const buttonClass =
+  'rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500';
+---
+
+<div
+  data-world-clock
+  data-defaults={DEFAULT_CLOCKS.join(',')}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="flex flex-wrap items-end gap-3">
+    <form data-add-form class="flex min-w-0 flex-1 flex-wrap items-end gap-2">
+      <label class:list={[labelClass, 'min-w-[12rem] flex-1']}>
+        <span class={labelText}>Add a time zone</span>
+        <input
+          type="text"
+          data-zone-input
+          list="world-clock-zones"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="City, country code (cz, ar) or IANA zone"
+          class={inputClass}
+        />
+      </label>
+      <button type="submit" class={buttonClass}>Add</button>
+    </form>
+
+    <label class={labelClass}>
+      <span class={labelText}>Watchface</span>
+      <select data-face class={inputClass}>
+        <option value="digital">Digital</option>
+        <option value="analog">Analog</option>
+        <option value="minimal">Minimal</option>
+      </select>
+    </label>
+
+    <label class="flex items-center gap-2 pb-2">
+      <input
+        type="checkbox"
+        data-seconds
+        checked
+        class="h-4 w-4 rounded border-zinc-300 text-violet-600 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-900"
+      />
+      <span class={labelText}>Seconds</span>
+    </label>
+  </div>
+
+  <datalist id="world-clock-zones">
+    {
+      TIMEZONES.map((entry) => (
+        <option value={entry.zone}>{entry.label}</option>
+      ))
+    }
+  </datalist>
+
+  <p
+    data-message
+    role="status"
+    aria-live="polite"
+    class="mt-2 hidden text-sm text-rose-600 dark:text-rose-400"
+  >
+  </p>
+
+  <div data-clock-grid class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      DEFAULT_CLOCKS.map((zone) => (
+        <WorldClockCard zone={zone} />
+      ))
+    }
+  </div>
+
+  <template data-clock-card-template>
+    <WorldClockCard />
+  </template>
+
+  <div class="mt-8 flex justify-center">
+    <button type="button" data-share class={buttonClass}>Copy link</button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/world-clock';
+</script>

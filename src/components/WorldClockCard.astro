@@ -1,0 +1,129 @@
+---
+import { zoneLabel } from '../lib/timezoneClocks';
+
+interface Props {
+  zone?: string;
+}
+
+const { zone = '' } = Astro.props;
+const label = zone ? zoneLabel(zone) : '';
+const ticks = Array.from({ length: 12 }, (_, index) => index * 30);
+---
+
+<article
+  data-clock-card
+  data-zone={zone}
+  data-face="digital"
+  data-phase="day"
+  data-seconds="on"
+  class="group relative rounded-2xl border border-zinc-200 bg-zinc-50 p-5 transition dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="flex items-start justify-between gap-2">
+    <div class="min-w-0">
+      <h3
+        data-clock-label
+        class="truncate text-sm font-semibold text-zinc-900 dark:text-zinc-100"
+      >
+        {label}
+      </h3>
+      <p
+        data-clock-zone
+        class="truncate text-xs text-zinc-500 dark:text-zinc-400"
+      >
+        {zone}
+      </p>
+    </div>
+    <button
+      type="button"
+      data-remove
+      aria-label="Remove clock"
+      class="-mr-1 -mt-1 rounded-lg px-2 py-0.5 text-lg leading-none text-zinc-400 transition hover:bg-zinc-200 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+    >
+      ×
+    </button>
+  </div>
+
+  <div class="mt-4 flex items-center gap-4">
+    <svg
+      data-face-analog
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+      class="hidden h-20 w-20 shrink-0 group-data-[face=analog]:block"
+    >
+      <circle
+        cx="50"
+        cy="50"
+        r="46"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        class="text-zinc-300 dark:text-zinc-700"
+      />
+      {
+        ticks.map((angle) => (
+          <line
+            x1="50"
+            y1="10"
+            x2="50"
+            y2="16"
+            stroke="currentColor"
+            stroke-width="2"
+            class="text-zinc-400 dark:text-zinc-600"
+            transform={`rotate(${angle} 50 50)`}
+          />
+        ))
+      }
+      <line
+        data-hand="hour"
+        x1="50"
+        y1="50"
+        x2="50"
+        y2="28"
+        stroke="currentColor"
+        stroke-width="4"
+        stroke-linecap="round"
+        class="text-zinc-800 dark:text-zinc-100"
+      />
+      <line
+        data-hand="minute"
+        x1="50"
+        y1="50"
+        x2="50"
+        y2="18"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        class="text-zinc-800 dark:text-zinc-100"
+      />
+      <line
+        data-hand="second"
+        x1="50"
+        y1="50"
+        x2="50"
+        y2="14"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        class="text-violet-500 group-data-[seconds=off]:hidden"
+      />
+      <circle cx="50" cy="50" r="3" class="fill-zinc-800 dark:fill-zinc-100" />
+    </svg>
+
+    <div class="min-w-0">
+      <p
+        data-clock-time
+        class="text-3xl font-bold tabular-nums tracking-tight text-violet-600 transition-colors group-data-[phase=night]:text-zinc-500 dark:text-violet-400 dark:group-data-[phase=night]:text-zinc-400 sm:text-4xl"
+      >
+        --:--:--
+      </p>
+      <p
+        data-clock-meta
+        class="mt-1 text-xs text-zinc-500 dark:text-zinc-400 group-data-[face=minimal]:hidden"
+      >
+        <span data-clock-date>{zone ? '' : '–'}</span>
+        <span class="mx-1">·</span>
+        <span data-clock-offset>{zone ? '' : '–'}</span>
+      </p>
+    </div>
+  </div>
+</article>

@@ -54,6 +54,14 @@ export const TOOLS: Tool[] = [
     path: '/dates/sunrise-sunset/',
   },
   {
+    slug: 'world-clock',
+    category: 'dates',
+    title: 'World Clock',
+    description:
+      'Watch the current time in several time zones at once, with offsets and a shareable board.',
+    path: '/dates/world-clock/',
+  },
+  {
     slug: 'birthday-weekday',
     category: 'dates',
     title: 'Birthday Weekday',

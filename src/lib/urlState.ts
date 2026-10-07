@@ -10,6 +10,11 @@ export type StateValues = Record<string, string | number | null | undefined>;
 export interface WriteOptions {
   replace?: boolean;
   defaults?: StateValues;
+  pretty?: boolean;
+}
+
+export interface BuildOptions {
+  pretty?: boolean;
 }
 
 function coerce(type: ParamType, raw: string): string | number | null {
@@ -39,6 +44,7 @@ export function buildSearch(
   schema: ParamSchema,
   values: StateValues,
   defaults: StateValues = {},
+  options: BuildOptions = {},
 ): string {
   const params = new URLSearchParams();
   for (const key of Object.keys(schema)) {
@@ -47,7 +53,8 @@ export function buildSearch(
     if (defaults[key] != null && String(value) === String(defaults[key])) continue;
     params.set(key, String(value));
   }
-  return params.toString();
+  const query = params.toString();
+  return options.pretty ? query.replace(/%2C/g, ',').replace(/%2F/g, '/') : query;
 }
 
 export function writeUrlState(
@@ -56,8 +63,8 @@ export function writeUrlState(
   options: WriteOptions = {},
 ): void {
   if (typeof location === 'undefined' || typeof history === 'undefined') return;
-  const { replace = true, defaults = {} } = options;
-  const query = buildSearch(schema, values, defaults);
+  const { replace = true, defaults = {}, pretty = false } = options;
+  const query = buildSearch(schema, values, defaults, { pretty });
   const url = location.pathname + (query ? `?${query}` : '') + location.hash;
   const method = replace ? 'replaceState' : 'pushState';
   history[method]({}, '', url);
