@@ -183,6 +183,14 @@ export const TOOLS: Tool[] = [
     description: 'Generate placeholder paragraphs, sentences or words.',
     path: '/text/lorem-ipsum/',
   },
+  {
+    slug: 'password',
+    category: 'security',
+    title: 'Password & Passphrase Generator',
+    description:
+      'Create strong random passwords or word-based passphrases, with an entropy estimate.',
+    path: '/security/password/',
+  },
 ];
 
 export function toolsInCategory(category: string): Tool[] {

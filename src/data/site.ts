@@ -126,6 +126,12 @@ export const CATEGORIES: Category[] = [
     description: 'Format, transform and inspect text, strings and code snippets.',
     accent: 'sky',
   },
+  {
+    slug: 'security',
+    name: 'Security',
+    description: 'Generate passwords and passphrases without anything leaving your browser.',
+    accent: 'rose',
+  },
 ];
 
 export function findCategory(slug: string): Category | undefined {

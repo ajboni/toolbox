@@ -7,12 +7,26 @@ import {
   zoneLabel,
   zoneOffsetLabel,
 } from '../lib/timezoneClocks';
+import {
+  BOARD_STORAGE_KEY,
+  clearStoredState,
+  readStoredState,
+  resolveBoardState,
+  writeStoredState,
+  type BoardState,
+} from '../lib/persistedState';
 import { readUrlState, writeUrlState } from '../lib/urlState';
 import { wireShare } from './ui';
 
 const schema = { clock: 'string', face: 'string', seconds: 'number' } as const;
 const FACES = ['digital', 'analog', 'minimal'] as const;
 type Face = (typeof FACES)[number];
+
+const DEFAULT_PARAMS: BoardState = {
+  clock: DEFAULT_CLOCKS.join(','),
+  face: 'digital',
+  seconds: 1,
+};
 
 interface ClockState {
   zones: string[];
@@ -29,10 +43,13 @@ function localZone(): string {
 }
 
 function currentState(): ClockState {
-  const state = readUrlState(schema);
-  const raw = typeof state.clock === 'string' ? state.clock : '';
+  const state = resolveBoardState(
+    readUrlState(schema),
+    readStoredState(BOARD_STORAGE_KEY),
+    DEFAULT_PARAMS,
+  );
   const local = localZone();
-  const expanded = raw
+  const expanded = state.clock
     .split(',')
     .map((token) => (token.trim().toLowerCase() === 'local' ? local : token))
     .join(',');
@@ -57,10 +74,10 @@ function initRoot(root: HTMLElement): void {
   const datalist = root.querySelector<HTMLDataListElement>('datalist');
   const faceSelect = root.querySelector<HTMLSelectElement>('[data-face]');
   const secondsInput = root.querySelector<HTMLInputElement>('[data-seconds]');
+  const resetButton = root.querySelector<HTMLButtonElement>('[data-reset]');
   const message = root.querySelector<HTMLElement>('[data-message]');
   if (!grid || !template) return;
 
-  const defaults = DEFAULT_CLOCKS.join(',');
   const state = currentState();
   if (faceSelect) faceSelect.value = state.face;
   if (secondsInput) secondsInput.checked = state.seconds;
@@ -75,18 +92,27 @@ function initRoot(root: HTMLElement): void {
   };
 
   const persist = (): void => {
-    writeUrlState(
-      schema,
-      {
-        clock: serializeClocks(state.zones),
-        face: state.face,
-        seconds: state.seconds ? 1 : 0,
-      },
-      {
-        defaults: { clock: defaults, face: 'digital', seconds: 1 },
-        pretty: true,
-      },
-    );
+    const values = {
+      clock: serializeClocks(state.zones),
+      face: state.face,
+      seconds: state.seconds ? 1 : 0,
+    };
+    writeUrlState(schema, values, {
+      defaults: { ...DEFAULT_PARAMS },
+      pretty: true,
+    });
+    writeStoredState(BOARD_STORAGE_KEY, values);
+  };
+
+  const resetBoard = (): void => {
+    clearStoredState(BOARD_STORAGE_KEY);
+    state.zones = [...DEFAULT_CLOCKS];
+    state.face = 'digital';
+    state.seconds = true;
+    if (faceSelect) faceSelect.value = state.face;
+    if (secondsInput) secondsInput.checked = state.seconds;
+    writeUrlState(schema, {});
+    render();
   };
 
   const update = (): void => {
@@ -216,6 +242,8 @@ function initRoot(root: HTMLElement): void {
     persist();
     update();
   });
+
+  resetButton?.addEventListener('click', resetBoard);
 
   window.addEventListener('popstate', () => {
     const next = currentState();
