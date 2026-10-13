@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DiffWidget from '../../components/DiffWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/text/diff/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Diff Checker',
+    description: 'Compare two blocks of text line by line and highlight additions and removals.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Text & Code', path: '/text/' },
+    { name: 'Diff', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Diff Checker"
+  description="Compare two blocks of text line by line and highlight what was added or removed. Additions, removals and a summary, all in your browser."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/text/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Text &amp; Code</a>
+    <span class="mx-2">/</span>
+    <span>Diff</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Diff checker</h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Paste the original text on the left and the changed text on the right to see
+    a line-by-line comparison. Added lines are green, removed lines are red, and
+    a summary tells you how much changed. Everything runs locally, and both
+    blocks travel in the URL so you can share the comparison.
+  </p>
+
+  <div class="mt-8">
+    <DiffWidget accent="sky" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      The tool splits both blocks into lines and finds the longest common
+      subsequence between them. Lines outside that subsequence are reported as
+      additions or removals, so you can see exactly what changed without any
+      content leaving your browser.
+    </p>
+  </section>
+
+  <RelatedTools category="text" current={canonicalPath} />
+</BaseLayout>

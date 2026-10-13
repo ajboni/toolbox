@@ -1,6 +1,6 @@
 # 0010 — Diff checker
 
-Status: todo
+Status: done
 Created: 2026-10-07
 
 ## Goal

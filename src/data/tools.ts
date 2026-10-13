@@ -156,6 +156,20 @@ export const TOOLS: Tool[] = [
     path: '/text/url-encode/',
   },
   {
+    slug: 'json',
+    category: 'text',
+    title: 'JSON Formatter',
+    description: 'Pretty-print or minify JSON with clear, line-aware error messages.',
+    path: '/text/json/',
+  },
+  {
+    slug: 'diff',
+    category: 'text',
+    title: 'Diff Checker',
+    description: 'Compare two blocks of text line by line and highlight additions and removals.',
+    path: '/text/diff/',
+  },
+  {
     slug: 'counter',
     category: 'text',
     title: 'Word Counter',

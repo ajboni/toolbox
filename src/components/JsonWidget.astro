@@ -1,0 +1,89 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { formatJson } from '../lib/json';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'sky' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaultValue = `{
+  "name": "bajtools",
+  "category": "text",
+  "tools": ["json", "diff"],
+  "open": true
+}`;
+const initial = formatJson(defaultValue).output;
+
+const textareaClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const selectClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+---
+
+<div
+  data-json-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="flex flex-wrap items-center gap-4">
+    <label class="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+      <span>Mode</span>
+      <select data-mode-select class={selectClass}>
+        <option value="pretty">Pretty</option>
+        <option value="min">Minify</option>
+      </select>
+    </label>
+    <label
+      data-indent-field
+      class="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400"
+    >
+      <span>Indent</span>
+      <select data-indent-select class={selectClass}>
+        <option value="2">2 spaces</option>
+        <option value="4">4 spaces</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="mt-4 grid gap-4">
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Input</span>
+      <textarea data-json-input rows="8" spellcheck="false" class={textareaClass}>{defaultValue}</textarea>
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Output</span>
+      <textarea
+        readonly
+        data-json-output
+        rows="8"
+        spellcheck="false"
+        class:list={[textareaClass, accentColor]}>{initial}</textarea
+      >
+    </label>
+  </div>
+
+  <p data-status class="mt-2 text-xs text-zinc-500 dark:text-zinc-500" aria-live="polite"></p>
+
+  <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <button
+      type="button"
+      data-copy="[data-json-output]"
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy output
+    </button>
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/json';
+</script>

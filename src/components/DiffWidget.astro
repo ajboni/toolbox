@@ -1,0 +1,95 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { diffLines, diffSummary, numberDiffLines } from '../lib/diff';
+import {
+  DIFF_GUTTER,
+  DIFF_ROW_BASE,
+  DIFF_ROW_TINT,
+  DIFF_SIGN,
+  DIFF_SIGN_CELL,
+  DIFF_SIGN_COLOR,
+  DIFF_TEXT,
+  describeDiff,
+} from '../lib/diffView';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'sky' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaultA = `# Meeting notes
+- ship the diff tool
+- fix the JSON parser
+- write tests`;
+
+const defaultB = `# Meeting notes
+- ship the diff tool
+- fix the JSON bug
+- write more tests
+- celebrate`;
+
+const initialDiff = diffLines(defaultA, defaultB);
+const initialRows = numberDiffLines(initialDiff);
+const initialSummary = describeDiff(diffSummary(initialDiff));
+
+const textareaClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const buttonClass =
+  'rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500';
+---
+
+<div
+  data-diff-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label class="flex flex-col gap-1">
+      <span class={labelText}>Original</span>
+      <textarea data-diff-a rows="8" spellcheck="false" class={textareaClass}>{defaultA}</textarea>
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class={labelText}>Changed</span>
+      <textarea data-diff-b rows="8" spellcheck="false" class={textareaClass}>{defaultB}</textarea>
+    </label>
+  </div>
+
+  <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
+    <p
+      data-diff-summary
+      class:list={['text-sm font-medium', accentColor]}
+      aria-live="polite"
+    >
+      {initialSummary}
+    </p>
+    <button type="button" data-swap class={buttonClass}>Swap sides</button>
+  </div>
+
+  <div
+    data-diff-output
+    class="mt-2 overflow-auto rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+  >
+    {
+      initialRows.map((row) => (
+        <div class:list={[DIFF_ROW_BASE, DIFF_ROW_TINT[row.type]]}>
+          <span class={DIFF_GUTTER}>{row.oldLine ?? ''}</span>
+          <span class={DIFF_GUTTER}>{row.newLine ?? ''}</span>
+          <span class:list={[DIFF_SIGN_CELL, DIFF_SIGN_COLOR[row.type]]}>
+            {DIFF_SIGN[row.type]}
+          </span>
+          <span class={DIFF_TEXT}>{row.text}</span>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <button type="button" data-share class={buttonClass}>Copy link</button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/diff';
+</script>

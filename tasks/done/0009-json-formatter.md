@@ -1,6 +1,6 @@
 # 0009 — JSON formatter / minifier
 
-Status: todo
+Status: done
 Created: 2026-10-07
 
 ## Goal
