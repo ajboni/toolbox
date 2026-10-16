@@ -1,0 +1,169 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import {
+  DIMENSION_DEFAULTS,
+  type DimensionId,
+  convertAll,
+  formatUnitValue,
+  unitsFor,
+} from '../lib/units';
+
+interface Props {
+  dimension: DimensionId;
+  accent?: AccentName;
+}
+
+const { dimension, accent = 'cyan' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const units = unitsFor(dimension);
+const dimDefaults = DIMENSION_DEFAULTS[dimension];
+const defaultValue = 1;
+
+const unitOptions = units.map((unit) => ({
+  id: unit.id,
+  name: unit.name,
+  symbol: unit.symbol,
+}));
+
+const conversions = convertAll(dimension, defaultValue, dimDefaults.from) ?? [];
+const target = conversions.find((item) => item.unit.id === dimDefaults.to);
+const initialValue = target ? formatUnitValue(target.value) : '–';
+const initialSymbol = target?.unit.symbol ?? '';
+const fromSymbol = units.find((unit) => unit.id === dimDefaults.from)?.symbol ?? dimDefaults.from;
+const initialDetail = `${formatUnitValue(defaultValue)} ${fromSymbol} equals ${initialValue} ${initialSymbol}.`;
+
+const inputClass =
+  'h-11 w-full min-w-0 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex min-w-0 flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+---
+
+<div
+  data-units-widget
+  data-dimension={dimension}
+  data-units={JSON.stringify(unitOptions)}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <label class="mx-auto flex max-w-lg flex-col gap-1">
+    <span class={labelText}>Amount</span>
+    <input
+      type="number"
+      step="any"
+      inputmode="decimal"
+      data-value
+      value={defaultValue}
+      class={inputClass}
+    />
+  </label>
+
+  <div class="mx-auto mt-4 grid max-w-lg grid-cols-[1fr_auto_1fr] items-end gap-x-4">
+    <label class={labelClass}>
+      <span class={labelText}>From</span>
+      <select data-from class={inputClass}>
+        {
+          units.map((unit) => (
+            <option value={unit.id} selected={unit.id === dimDefaults.from}>
+              {unit.name}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+    <button
+      type="button"
+      data-swap
+      aria-label="Swap units"
+      title="Swap units"
+      class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-zinc-300 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-500 dark:hover:text-zinc-100"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="h-5 w-5"
+        aria-hidden="true"
+      >
+        <path d="M4 8h13" />
+        <path d="m14 5 3 3-3 3" />
+        <path d="M20 16H7" />
+        <path d="m10 13-3 3 3 3" />
+      </svg>
+    </button>
+    <label class={labelClass}>
+      <span class={labelText}>To</span>
+      <select data-to class={inputClass}>
+        {
+          units.map((unit) => (
+            <option value={unit.id} selected={unit.id === dimDefaults.to}>
+              {unit.name}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="mt-8 text-center">
+    <p class="flex flex-wrap items-baseline justify-center gap-2">
+      <span
+        data-result-value
+        class:list={[
+          'break-all text-4xl font-bold tabular-nums tracking-tight sm:text-5xl',
+          accentColor,
+        ]}
+      >
+        {initialValue}
+      </span>
+      <span
+        data-result-unit
+        class="text-xl font-medium text-zinc-600 dark:text-zinc-400"
+      >
+        {initialSymbol}
+      </span>
+    </p>
+    <p
+      data-result-detail
+      class="mx-auto mt-4 max-w-md text-sm text-zinc-600 dark:text-zinc-400"
+    >
+      {initialDetail}
+    </p>
+  </div>
+
+  <div class="mx-auto mt-10 max-w-lg overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+    <table class="w-full text-sm">
+      <caption class="sr-only">All units in this dimension</caption>
+      <tbody data-table class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        {
+          conversions.map((item) => (
+            <tr class="flex items-baseline justify-between gap-4 px-4 py-2 odd:bg-white dark:odd:bg-zinc-900/60">
+              <th scope="row" class="text-left font-normal text-zinc-500 dark:text-zinc-400">
+                {item.unit.name} ({item.unit.symbol})
+              </th>
+              <td class="tabular-nums text-zinc-900 dark:text-zinc-100">
+                {formatUnitValue(item.value)}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/units';
+</script>

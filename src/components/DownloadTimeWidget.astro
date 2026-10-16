@@ -1,0 +1,163 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { SPEED_PRESETS, formatDuration, transferSeconds } from '../lib/downloadTime';
+import { unitsFor } from '../lib/units';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'teal' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const sizeUnits = unitsFor('data');
+const rateUnits = unitsFor('bandwidth');
+
+const defaultSize = 1000;
+const defaultSizeUnit = 'mb';
+const defaultRate = 10;
+const defaultRateUnit = 'MBps';
+
+const sizeOptions = sizeUnits.map((unit) => ({
+  id: unit.id,
+  name: unit.name,
+  symbol: unit.symbol,
+}));
+const rateOptions = rateUnits.map((unit) => ({
+  id: unit.id,
+  name: unit.name,
+  symbol: unit.symbol,
+}));
+
+const initialSeconds = transferSeconds(defaultSize, defaultSizeUnit, defaultRate, defaultRateUnit);
+const initialDuration = initialSeconds == null ? '–' : formatDuration(initialSeconds);
+const sizeSymbol = sizeUnits.find((unit) => unit.id === defaultSizeUnit)?.symbol ?? '';
+const rateSymbol = rateUnits.find((unit) => unit.id === defaultRateUnit)?.symbol ?? '';
+const initialDetail = `${defaultSize} ${sizeSymbol} at ${defaultRate} ${rateSymbol}`;
+
+const presetRows = SPEED_PRESETS.map((preset) => ({
+  label: preset.label,
+  seconds: transferSeconds(defaultSize, defaultSizeUnit, preset.value, preset.unit),
+}));
+
+const inputClass =
+  'h-11 w-full min-w-0 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelClass = 'flex min-w-0 flex-col gap-1';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const rowClass =
+  'flex items-center justify-between gap-4 px-4 py-2 odd:bg-white dark:odd:bg-zinc-900/60';
+---
+
+<div
+  data-download-widget
+  data-size-units={JSON.stringify(sizeOptions)}
+  data-rate-units={JSON.stringify(rateOptions)}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="mx-auto grid max-w-lg gap-4 sm:grid-cols-2">
+    <label class={labelClass}>
+      <span class={labelText}>File size</span>
+      <input
+        type="number"
+        step="any"
+        inputmode="decimal"
+        data-size
+        value={defaultSize}
+        class={inputClass}
+      />
+    </label>
+    <label class={labelClass}>
+      <span class={labelText}>Size unit</span>
+      <select data-size-unit class={inputClass}>
+        {
+          sizeOptions.map((unit) => (
+            <option value={unit.id} selected={unit.id === defaultSizeUnit}>
+              {unit.name}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+    <label class={labelClass}>
+      <span class={labelText}>Download speed</span>
+      <input
+        type="number"
+        step="any"
+        inputmode="decimal"
+        data-rate
+        value={defaultRate}
+        class={inputClass}
+      />
+    </label>
+    <label class={labelClass}>
+      <span class={labelText}>Speed unit</span>
+      <select data-rate-unit class={inputClass}>
+        {
+          rateOptions.map((unit) => (
+            <option value={unit.id} selected={unit.id === defaultRateUnit}>
+              {unit.name}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="mt-8 text-center">
+    <p
+      data-result-value
+      class:list={[
+        'text-4xl font-bold tabular-nums tracking-tight sm:text-5xl',
+        accentColor,
+      ]}
+    >
+      {initialDuration}
+    </p>
+    <p
+      data-result-detail
+      class="mx-auto mt-4 max-w-md text-sm text-zinc-600 dark:text-zinc-400"
+    >
+      {initialDetail}
+    </p>
+  </div>
+
+  <div class="mx-auto mt-10 max-w-lg overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+    <table class="w-full text-sm">
+      <caption class="sr-only">Download time at common speeds</caption>
+      <thead>
+        <tr class="flex items-center justify-between gap-4 bg-zinc-50 px-4 py-2 text-xs font-medium uppercase tracking-wide text-zinc-500 dark:bg-zinc-900/60 dark:text-zinc-400">
+          <th scope="col" class="text-left">Speed</th>
+          <th scope="col" class="text-right">Time</th>
+        </tr>
+      </thead>
+      <tbody data-table class="divide-y divide-zinc-200 dark:divide-zinc-800">
+        {
+          presetRows.map((row) => (
+            <tr class={rowClass}>
+              <th scope="row" class="text-left font-normal text-zinc-500 dark:text-zinc-400">
+                {row.label}
+              </th>
+              <td class="tabular-nums text-zinc-900 dark:text-zinc-100">
+                {row.seconds == null ? '–' : formatDuration(row.seconds)}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-8 flex justify-center">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/download-time';
+</script>

@@ -1,0 +1,110 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import UnitsWidget from '../../components/UnitsWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { CONVERTER_PAGES, type ConverterPage } from '../../data/converters';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return CONVERTER_PAGES.map((page) => ({
+    params: { dimension: page.slug },
+    props: { page },
+  }));
+};
+
+interface Props {
+  page: ConverterPage;
+}
+
+const { page } = Astro.props;
+const canonicalPath = `/converters/${page.slug}/`;
+
+const jsonLd = [
+  webApplication({
+    name: page.title,
+    description: page.seoDescription,
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Converters', path: '/converters/' },
+    { name: page.title, path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title={page.seoTitle}
+  description={page.seoDescription}
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Converters</a>
+    <span class="mx-2">/</span>
+    <span>{page.title}</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    {page.title}
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    {page.intro}
+  </p>
+
+  <div class="mt-8">
+    <UnitsWidget dimension={page.dimension} accent="cyan" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">{page.about}</p>
+  </section>
+
+  {
+    page.reference && (
+      <section class="mt-12">
+        <h2 class="text-xl font-semibold tracking-tight">{page.reference.title}</h2>
+        <div class="mt-4 overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-zinc-50 text-left text-xs font-medium uppercase tracking-wide text-zinc-500 dark:bg-zinc-900/60 dark:text-zinc-400">
+                {page.reference.headers.map((header) => (
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap">
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+              {page.reference.rows.map((row) => (
+                <tr class="odd:bg-white dark:odd:bg-zinc-900/60">
+                  {row.map((cell, index) => (
+                    <td
+                      class:list={[
+                        'px-4 py-2 whitespace-nowrap',
+                        index % 2 === 0
+                          ? 'text-zinc-700 dark:text-zinc-300'
+                          : 'tabular-nums text-zinc-500 dark:text-zinc-400',
+                      ]}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {page.reference.note && (
+          <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{page.reference.note}</p>
+        )}
+      </section>
+    )
+  }
+
+  <RelatedTools category="converters" current={canonicalPath} />
+</BaseLayout>

@@ -1,3 +1,5 @@
+import { CONVERTER_PAGES } from './converters';
+
 export interface Tool {
   slug: string;
   category: string;
@@ -6,7 +8,7 @@ export interface Tool {
   path: string;
 }
 
-export const TOOLS: Tool[] = [
+const CORE_TOOLS: Tool[] = [
   {
     slug: 'days-until',
     category: 'dates',
@@ -198,6 +200,22 @@ export const TOOLS: Tool[] = [
     path: '/text/lorem-ipsum/',
   },
   {
+    slug: 'subnet',
+    category: 'networking',
+    title: 'Subnet Calculator',
+    description:
+      'Turn a CIDR block into its network, broadcast, host range and netmask.',
+    path: '/networking/subnet/',
+  },
+  {
+    slug: 'download-time',
+    category: 'networking',
+    title: 'Download Time Calculator',
+    description:
+      'Work out how long a file takes to download from its size and your connection speed.',
+    path: '/networking/download-time/',
+  },
+  {
     slug: 'password',
     category: 'security',
     title: 'Password & Passphrase Generator',
@@ -206,6 +224,16 @@ export const TOOLS: Tool[] = [
     path: '/security/password/',
   },
 ];
+
+const CONVERTER_TOOLS: Tool[] = CONVERTER_PAGES.map((page) => ({
+  slug: page.slug,
+  category: 'converters',
+  title: page.title,
+  description: page.description,
+  path: `/converters/${page.slug}/`,
+}));
+
+export const TOOLS: Tool[] = [...CORE_TOOLS, ...CONVERTER_TOOLS];
 
 export function toolsInCategory(category: string): Tool[] {
   return TOOLS.filter((tool) => tool.category === category);

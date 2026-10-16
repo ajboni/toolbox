@@ -115,6 +115,12 @@ export const CATEGORIES: Category[] = [
     accent: 'emerald',
   },
   {
+    slug: 'converters',
+    name: 'Converters',
+    description: 'Convert between units of length, mass, temperature and more.',
+    accent: 'cyan',
+  },
+  {
     slug: 'music',
     name: 'Music',
     description: 'Scales, chords and key relationships for musicians.',
@@ -125,6 +131,12 @@ export const CATEGORIES: Category[] = [
     name: 'Text & Code',
     description: 'Format, transform and inspect text, strings and code snippets.',
     accent: 'sky',
+  },
+  {
+    slug: 'networking',
+    name: 'Networking',
+    description: 'Subnet math and quick client-side network utilities.',
+    accent: 'teal',
   },
   {
     slug: 'security',

@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SubnetWidget from '../../components/SubnetWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/networking/subnet/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Subnet Calculator',
+    description:
+      'Turn an IPv4 CIDR block into its network, broadcast, host range, netmask and wildcard.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Networking', path: '/networking/' },
+    { name: 'Subnet Calculator', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Subnet Calculator · CIDR, Netmask & Host Range"
+  description="Work out the network address, broadcast, usable host range, netmask and wildcard for any IPv4 CIDR block. Shareable, instant and computed in your browser."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/networking/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Networking</a>
+    <span class="mx-2">/</span>
+    <span>Subnet Calculator</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Subnet calculator
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Type an IPv4 address with a prefix (or a dotted netmask) and get the network,
+    broadcast, usable host range, netmask and wildcard. Everything runs locally and
+    the block is stored in the URL, so you can share it.
+  </p>
+
+  <div class="mt-8">
+    <SubnetWidget accent="teal" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      An IPv4 address is a 32-bit number. The prefix length marks the leading bits
+      that identify the network; the remaining bits address hosts inside it. The
+      network address has every host bit set to zero and the broadcast has them all
+      set to one. For prefixes up to /30 the first and last addresses are reserved,
+      so usable hosts are the block size minus two. A /31 pair (RFC 3021) is treated
+      as a point-to-point link where both addresses are usable, and a /32 is a single
+      host.
+    </p>
+  </section>
+
+  <RelatedTools category="networking" current={canonicalPath} />
+</BaseLayout>
