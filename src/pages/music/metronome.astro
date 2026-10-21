@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MetronomeWidget from '../../components/MetronomeWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/music/metronome/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Online Metronome',
+    description:
+      'A browser metronome with tap tempo, time signatures, accents and subdivisions.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Music', path: '/music/' },
+    { name: 'Metronome', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Online Metronome · Tap Tempo, Time Signatures and Subdivisions"
+  description="A free browser metronome with tap tempo, adjustable time signatures, accents, subdivisions and volume. No sign-up and no audio uploads."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/music/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Music</a>
+    <span class="mx-2">/</span>
+    <span>Metronome</span>
+  </nav>
+
+  <h1 class="mt-3 text-3xl font-bold tracking-tight sm:mt-4 sm:text-4xl">Online Metronome</h1>
+  <p class="mt-2 max-w-xl text-zinc-600 sm:mt-3 dark:text-zinc-400">
+    Set a tempo, choose a time signature and press start. Tap the tempo if you
+    do not know the BPM. Everything runs in your browser, and the setup is saved
+    in the URL so you can share it.
+  </p>
+
+  <div class="mt-6 sm:mt-8">
+    <MetronomeWidget />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      The metronome schedules clicks a fraction of a second ahead using the Web
+      Audio API. A timer wakes up every 25 milliseconds and queues any clicks
+      that fall inside the next 100 milliseconds, so the pulse stays steady even
+      when the page is busy. Plain JavaScript timers are not used for the
+      clicks themselves because they drift over time.
+    </p>
+    <p class="text-sm leading-relaxed">
+      BPM applies to the beat unit in the lower part of the time signature. In
+      4/4 that is a quarter note, so 100 BPM means 100 quarter notes per minute.
+      In 6/8 it is an eighth note, so 100 BPM means 100 eighth notes per minute
+      and the bar has six of them.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Subdivisions add extra clicks between beats: eighths double the clicks,
+      triplets fit three evenly spaced clicks into each beat and sixteenths fit
+      four. The first beat of the bar is accented unless you turn that option
+      off.
+    </p>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Tap tempo</h2>
+    <p class="text-sm leading-relaxed">
+      Press the tap button four times in the rhythm you want and the metronome
+      averages the gaps for you. A pause longer than four seconds starts a new
+      measurement, so a missed tap does not throw off the tempo. Tapping works
+      while the metronome is running, which makes it easy to match a recording
+      or a band.
+    </p>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Tips</h2>
+    <ul class="list-disc space-y-2 pl-5 text-sm leading-relaxed">
+      <li>Press the space bar to start or stop without reaching for the mouse.</li>
+      <li>Use eighth-note or sixteenth-note subdivisions to practise fast passages at a slow tempo.</li>
+      <li>The metronome cannot start on its own because browsers require a click before playing audio.</li>
+      <li>Background tabs may be throttled by the browser; keep the tab visible while practising.</li>
+    </ul>
+  </section>
+
+  <RelatedTools category="music" current={canonicalPath} />
+</BaseLayout>

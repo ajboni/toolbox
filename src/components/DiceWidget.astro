@@ -1,0 +1,156 @@
+---
+import { DICE_SIDES } from '../lib/dice';
+import { accentClasses, type AccentName } from '../data/site';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'emerald' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+const rollBg = accentClasses(accent).bg;
+
+const inputClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base tabular-nums text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const pillClass =
+  'rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-900 aria-pressed:border-zinc-900 aria-pressed:bg-zinc-900 aria-pressed:text-white sm:px-4 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100 dark:aria-pressed:border-zinc-100 dark:aria-pressed:bg-zinc-100 dark:aria-pressed:text-zinc-900';
+---
+
+<div
+  data-dice-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50 sm:p-6"
+>
+  <div class="text-center">
+    <p class="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+      Total
+    </p>
+    <p
+      data-total
+      aria-live="polite"
+      class:list={[
+        'mt-1 text-5xl font-bold tabular-nums tracking-tight sm:text-7xl',
+        accentColor,
+      ]}
+    >
+      –
+    </p>
+    <p
+      data-formula
+      class="mx-auto mt-2 max-w-md break-words font-mono text-sm text-zinc-600 dark:text-zinc-400 sm:mt-3"
+    >
+      Pick a die and roll.
+    </p>
+  </div>
+
+  <div
+    class="mt-4 flex flex-wrap justify-center gap-1.5 sm:mt-6 sm:gap-2"
+    role="group"
+    aria-label="Die type"
+  >
+    {
+      DICE_SIDES.map((sides) => (
+        <button
+          type="button"
+          data-sides={sides}
+          aria-pressed={sides === 6 ? 'true' : 'false'}
+          class={pillClass}
+        >
+          d{sides}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="mt-3 flex justify-center sm:mt-6">
+    <button
+      type="button"
+      data-roll
+      class:list={[
+        'w-full rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 sm:w-auto',
+        rollBg,
+      ]}
+    >
+      Roll dice
+    </button>
+  </div>
+
+  <div class="mx-auto mt-6 grid max-w-2xl gap-4 sm:grid-cols-3">
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+        Number of dice
+      </span>
+      <input
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="20"
+        step="1"
+        value="1"
+        data-count
+        class={inputClass}
+      />
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+        Modifier
+      </span>
+      <input
+        type="number"
+        inputmode="numeric"
+        min="-99"
+        max="99"
+        step="1"
+        value="0"
+        data-modifier
+        class={inputClass}
+      />
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+        Notation
+      </span>
+      <input
+        type="text"
+        inputmode="text"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
+        value="d6"
+        data-notation
+        placeholder="2d6+3"
+        class={inputClass}
+      />
+    </label>
+  </div>
+
+  <p
+    data-error
+    class="mx-auto mt-2 hidden max-w-2xl text-sm text-rose-600 dark:text-rose-400"
+  >
+  </p>
+
+  <section data-history class="mx-auto mt-6 hidden max-w-2xl sm:mt-8">
+    <h2 class="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+      Recent rolls
+    </h2>
+    <ol
+      data-history-list
+      class="mt-2 rounded-xl border border-zinc-200 bg-white px-4 dark:border-zinc-800 dark:bg-zinc-900/60"
+    >
+    </ol>
+  </section>
+
+  <div class="mt-6 flex justify-center sm:mt-8">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/dice';
+</script>

@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DiceWidget from '../../components/DiceWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/math/dice/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Dice Roller',
+    description:
+      'Roll d4, d6, d8, d10, d12, d20 and d100 dice with a modifier, dice notation and a roll history.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Math & Numbers', path: '/math/' },
+    { name: 'Dice Roller', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Dice Roller · Roll d4, d6, d8, d10, d12, d20 and d100"
+  description="Roll standard dice online: d4, d6, d8, d10, d12, d20 and d100. Add a modifier, use notation like 2d6+3 and share the setup. Free and browser-based."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/math/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Math &amp; Numbers</a>
+    <span class="mx-2">/</span>
+    <span>Dice Roller</span>
+  </nav>
+
+  <h1 class="mt-3 text-3xl font-bold tracking-tight sm:mt-4 sm:text-4xl">Dice Roller</h1>
+  <p class="mt-2 max-w-xl text-zinc-600 sm:mt-3 dark:text-zinc-400">
+    Pick a die, choose how many to roll and add a modifier. The total, every
+    individual roll and the recent history update below. Your setup is saved in
+    the URL, so you can share the same dice with a friend.
+  </p>
+
+  <div class="mt-6 sm:mt-8">
+    <DiceWidget />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      Each die is rolled independently and the results are added together. The
+      modifier is applied once to the final total, so <code>2d6+3</code> means
+      roll two six-sided dice, add both results and then add three. Negative
+      modifiers such as <code>1d20-2</code> work too.
+    </p>
+    <p class="text-sm leading-relaxed">
+      The shorthand in the notation field follows the usual tabletop convention:
+      <code>NdS+M</code>, where <code>N</code> is the number of dice,
+      <code>S</code> is the number of sides and <code>M</code> is an optional
+      modifier. The count can be left out, so <code>d20</code> means one
+      twenty-sided die.
+    </p>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Which die should I use?</h2>
+    <ul class="list-disc space-y-2 pl-5 text-sm leading-relaxed">
+      <li><strong>d6</strong> is the common cube die used in board games and for damage in many role-playing games.</li>
+      <li><strong>d20</strong> is the standard die for attacks, saves and ability checks in games such as D&amp;D.</li>
+      <li><strong>d100</strong> gives a percentage from 1 to 100, handy for random tables and percentile rolls.</li>
+      <li><strong>d4, d8, d10 and d12</strong> cover the rest of the standard tabletop set, from small weapons to hit dice.</li>
+    </ul>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Is it fair?</h2>
+    <p class="text-sm leading-relaxed">
+      Rolls use the browser's cryptographic random number generator with
+      rejection sampling, so every face has the same chance and no result is
+      biased by rounding. Nothing is sent to a server and the roll history stays
+      in the current tab.
+    </p>
+  </section>
+
+  <RelatedTools category="math" current={canonicalPath} />
+</BaseLayout>

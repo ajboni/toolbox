@@ -1,0 +1,192 @@
+---
+import {
+  DEFAULT_BPM,
+  DEFAULT_SIGNATURE,
+  DENOMINATORS,
+  MAX_BPM,
+  MAX_NUMERATOR,
+  MIN_BPM,
+  MIN_NUMERATOR,
+  SUBDIVISIONS,
+} from '../lib/metronome';
+
+const numerators = Array.from(
+  { length: MAX_NUMERATOR - MIN_NUMERATOR + 1 },
+  (_, index) => MIN_NUMERATOR + index,
+);
+
+const selectClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const transportButton =
+  'inline-flex h-9 flex-1 items-center justify-center rounded-full px-4 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-400 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none';
+const startButtonClass = `${transportButton} bg-fuchsia-600 text-white shadow-sm hover:opacity-90 dark:bg-fuchsia-500`;
+const tapButtonClass = `${transportButton} border border-zinc-300 bg-white text-zinc-700 hover:border-zinc-500 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-500 dark:hover:bg-zinc-800`;
+const smallButtonClass =
+  'flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 text-lg font-medium text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100';
+---
+
+<div
+  data-metronome
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50 sm:p-6"
+>
+  <div class="text-center">
+    <div class="flex items-center justify-center gap-3">
+      <button
+        type="button"
+        data-bpm-step="-1"
+        aria-label="Decrease tempo by one beat per minute"
+        class={smallButtonClass}
+      >
+        -
+      </button>
+      <label class="flex flex-col items-center">
+        <span class="sr-only">Tempo in beats per minute</span>
+        <input
+          type="number"
+          inputmode="numeric"
+          min={MIN_BPM}
+          max={MAX_BPM}
+          step="1"
+          value={DEFAULT_BPM}
+          data-bpm-input
+          class="w-32 border-0 bg-transparent text-center text-5xl font-bold tabular-nums tracking-tight text-zinc-900 focus:outline-none dark:text-zinc-100"
+        />
+      </label>
+      <button
+        type="button"
+        data-bpm-step="1"
+        aria-label="Increase tempo by one beat per minute"
+        class={smallButtonClass}
+      >
+        +
+      </button>
+    </div>
+    <p class="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+      Beats per minute
+    </p>
+    <input
+      type="range"
+      min={MIN_BPM}
+      max={MAX_BPM}
+      step="1"
+      value={DEFAULT_BPM}
+      data-bpm-range
+      aria-label="Tempo"
+      class="mt-4 w-full max-w-md accent-fuchsia-600 dark:accent-fuchsia-400"
+    />
+  </div>
+
+  <div class="mt-5 sm:mt-6">
+    <div class="flex items-stretch justify-center gap-3">
+      <button
+        type="button"
+        data-toggle
+        aria-pressed="false"
+        class={startButtonClass}
+      >
+        Start
+      </button>
+      <button type="button" data-tap class={tapButtonClass}>
+        Tap tempo
+      </button>
+    </div>
+    <p data-tap-hint class="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
+      Tap four times to set the tempo.
+    </p>
+    <p class="mt-1 text-center text-xs text-zinc-500 dark:text-zinc-400">
+      Press the space bar to start or stop.
+    </p>
+  </div>
+
+  <div class="mt-6 flex flex-col items-center sm:mt-8">
+    <div
+      data-pulse
+      aria-hidden="true"
+      class="h-16 w-16 rounded-full border-4 border-fuchsia-500/40 bg-fuchsia-50 dark:border-fuchsia-400/40 dark:bg-fuchsia-950/30 sm:h-20 sm:w-20"
+    >
+    </div>
+    <div data-beats aria-hidden="true" class="mt-3 flex flex-wrap justify-center gap-1.5 sm:mt-4 sm:gap-2">
+    </div>
+    <p data-beat-label class="mt-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+      Ready
+    </p>
+  </div>
+
+  <div class="mx-auto mt-6 grid max-w-2xl gap-4 sm:mt-8 sm:grid-cols-2">
+    <fieldset class="flex flex-col gap-1">
+      <legend class={labelText}>Time signature</legend>
+      <div class="flex items-center gap-2">
+        <select data-numerator class={selectClass} aria-label="Beats per bar">
+          {
+            numerators.map((value) => (
+              <option value={value} selected={value === DEFAULT_SIGNATURE.numerator}>
+                {value}
+              </option>
+            ))
+          }
+        </select>
+        <span class="text-zinc-500 dark:text-zinc-400">/</span>
+        <select data-denominator class={selectClass} aria-label="Beat unit">
+          {
+            DENOMINATORS.map((value) => (
+              <option value={value} selected={value === DEFAULT_SIGNATURE.denominator}>
+                {value}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+    </fieldset>
+
+    <label class="flex flex-col gap-1">
+      <span class={labelText}>Subdivision</span>
+      <select data-subdivision class={selectClass}>
+        {
+          SUBDIVISIONS.map((option) => (
+            <option value={option.value} selected={option.value === 0}>
+              {option.label}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+      <input
+        type="checkbox"
+        data-accent
+        checked
+        class="h-4 w-4 rounded border-zinc-300 text-fuchsia-600 focus:ring-fuchsia-500 dark:border-zinc-700 dark:bg-zinc-900"
+      />
+      Accent the first beat
+    </label>
+
+    <label class="flex flex-col gap-1">
+      <span class={labelText}>Volume <span data-volume-label>70%</span></span>
+      <input
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        value="70"
+        data-volume
+        class="accent-fuchsia-600 dark:accent-fuchsia-400"
+      />
+    </label>
+  </div>
+
+  <div class="mt-6 flex justify-center sm:mt-8">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/metronome';
+</script>

@@ -121,6 +121,14 @@ const CORE_TOOLS: Tool[] = [
     path: '/math/base-converter/',
   },
   {
+    slug: 'dice',
+    category: 'math',
+    title: 'Dice Roller',
+    description:
+      'Roll d4, d6, d8, d10, d12, d20 or d100 dice with modifiers and a roll history.',
+    path: '/math/dice/',
+  },
+  {
     slug: 'chord-finder',
     category: 'music',
     title: 'Scale & Chord Finder',
@@ -135,6 +143,14 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Explore all twelve major keys, their relative minors, key signatures and chords.',
     path: '/music/circle-of-fifths/',
+  },
+  {
+    slug: 'metronome',
+    category: 'music',
+    title: 'Online Metronome',
+    description:
+      'Keep time with tap tempo, time signatures, accents, subdivisions and a shareable setup.',
+    path: '/music/metronome/',
   },
   {
     slug: 'case-converter',
