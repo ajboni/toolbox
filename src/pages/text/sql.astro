@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SqlWidget from '../../components/SqlWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/text/sql/';
+
+const jsonLd = [
+  webApplication({
+    name: 'SQL Formatter',
+    description:
+      'Format or minify SQL with your dialect, keyword case and indentation, without your query leaving the browser.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Text & Code', path: '/text/' },
+    { name: 'SQL', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="SQL Formatter and Minifier"
+  description="Format or minify SQL in your browser. Pick a dialect, keyword case and indentation. Strings stay intact and your query never leaves the tab."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/text/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Text &amp; Code</a>
+    <span class="mx-2">/</span>
+    <span>SQL</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">SQL formatter</h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Paste a query to reflow it with the dialect, keyword case and indentation you
+    pick. Format mode leaves strings, quoted identifiers and comments alone.
+    Minify mode puts the query on one line and drops comments. Everything runs in
+    your browser, and the query stays in this tab.
+  </p>
+
+  <div class="mt-8">
+    <SqlWidget accent="sky" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      Formatting uses a SQL parser for the selected dialect, so pick the one that
+      matches your database. It changes whitespace and keyword case only: it does
+      not validate the query against a schema or a server. If the parser cannot
+      read the query, the output stays empty and the status line points to the
+      line and column. Minify removes ordinary comments but keeps optimizer hints
+      such as <code>/*+ ... */</code>. The query is kept in this tab so a reload
+      does not lose it, and it is never added to the URL.
+    </p>
+  </section>
+
+  <RelatedTools category="text" current={canonicalPath} />
+</BaseLayout>

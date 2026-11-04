@@ -37,3 +37,5 @@ Notes:
   copy/share buttons.
 - Formats that need a full parser (YAML, TOML, SQL, JS/TS) stay out: a heuristic
   formatter produces false diffs, which is worse than comparing the raw text.
+  SQL now has its own formatter at `/text/sql/`; the diff checker still compares
+  SQL raw.

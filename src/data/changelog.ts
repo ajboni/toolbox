@@ -5,6 +5,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: '2026-11-04',
     notes: [
       'Add a full screen mode to every tool, so the tool fills the window with the navigation and the page intro out of the way.',
+      'Tab from the original text to the changed text in the diff checker, without stopping at the format toggles first.',
     ],
   },
   {
@@ -20,10 +21,11 @@ export const CHANGELOG: ChangelogEntry[] = [
   },
   {
     date: '2026-11-04',
-    tools: ['/dates/shadow/', '/music/tuner/', '/text/list-compare/'],
+    tools: ['/dates/shadow/', '/music/tuner/', '/text/list-compare/', '/text/sql/'],
     notes: [
       'Decode Base64 into real files and download them, or encode a local file to Base64.',
       'Add a command palette with recent tools, plus a search page with category filters.',
+      'Add a SQL formatter with dialect, keyword case and indentation options, plus a minify mode that drops comments.',
     ],
   },
   {

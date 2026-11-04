@@ -1,0 +1,103 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { SQL_DIALECTS, formatSql } from '../lib/sqlFormat';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'sky' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaultValue = `-- Recent orders per active user
+select u.id,u.name,count(o.id) as orders from users u left join orders o on o.user_id=u.id where u.active=1 and o.created_at >= '2026-01-01' and o.status <> 'cancelled' group by u.id,u.name having count(o.id) > 2 order by orders desc limit 10;`;
+const initial = formatSql(defaultValue).output;
+
+const textareaClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const selectClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const fieldClass =
+  'flex flex-col gap-1 text-sm font-medium text-zinc-600 dark:text-zinc-400';
+---
+
+<div
+  data-sql-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="flex flex-wrap items-end gap-4">
+    <label class={fieldClass}>
+      <span>Mode</span>
+      <select data-mode-select class={selectClass}>
+        <option value="format">Format</option>
+        <option value="min">Minify</option>
+      </select>
+    </label>
+    <label class={fieldClass}>
+      <span>Dialect</span>
+      <select data-dialect-select class={selectClass}>
+        {
+          Object.entries(SQL_DIALECTS).map(([value, dialect]) => (
+            <option value={value}>{dialect.label}</option>
+          ))
+        }
+      </select>
+    </label>
+    <label class={fieldClass}>
+      <span>Keywords</span>
+      <select data-case-select class={selectClass}>
+        <option value="upper">UPPER</option>
+        <option value="lower">lower</option>
+        <option value="preserve">Preserve</option>
+      </select>
+    </label>
+    <label data-indent-field class={fieldClass}>
+      <span>Indent</span>
+      <select data-indent-select class={selectClass}>
+        <option value="2">2 spaces</option>
+        <option value="4">4 spaces</option>
+        <option value="tab">Tab</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="mt-4 grid gap-4">
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Input</span>
+      <textarea
+        data-sql-input
+        rows="10"
+        spellcheck="false"
+        autocapitalize="off"
+        autocomplete="off"
+        class={textareaClass}>{defaultValue}</textarea
+      >
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Output</span>
+      <textarea
+        readonly
+        data-sql-output
+        rows="12"
+        spellcheck="false"
+        class:list={[textareaClass, accentColor]}>{initial}</textarea
+      >
+    </label>
+  </div>
+
+  <p data-status class="mt-2 text-xs text-zinc-500 dark:text-zinc-500" aria-live="polite"></p>
+
+  <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <button
+      type="button"
+      data-copy="[data-sql-output]"
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy output
+    </button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/sql';
+</script>

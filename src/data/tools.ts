@@ -223,6 +223,15 @@ const CORE_TOOLS: Tool[] = [
     added: '2026-10-07',
   },
   {
+    slug: 'sql',
+    category: 'text',
+    title: 'SQL Formatter',
+    description:
+      'Format or minify SQL with your dialect, keyword case and indentation, without your query leaving the browser.',
+    path: '/text/sql/',
+    added: '2026-11-04',
+  },
+  {
     slug: 'diff',
     category: 'text',
     title: 'Diff Checker',
