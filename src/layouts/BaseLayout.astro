@@ -15,9 +15,10 @@ interface Props {
   canonicalPath: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
+  wide?: boolean;
 }
 
-const { title, description, canonicalPath, jsonLd, noindex } = Astro.props;
+const { title, description, canonicalPath, jsonLd, noindex, wide = false } = Astro.props;
 const toolPath = TOOLS.some((tool) => tool.path === canonicalPath) ? canonicalPath : undefined;
 ---
 
@@ -66,10 +67,16 @@ const toolPath = TOOLS.some((tool) => tool.path === canonicalPath) ? canonicalPa
       </div>
       <Sidebar />
       <div class="flex min-w-0 flex-1 flex-col">
-        <main id="main" class="mx-auto w-full max-w-4xl flex-1 px-4 pb-10 pt-6 sm:py-10">
+        <main
+          id="main"
+          class:list={[
+            'mx-auto w-full flex-1 px-4 pb-10 pt-6 sm:px-8 sm:py-10',
+            wide ? 'max-w-6xl' : 'max-w-4xl',
+          ]}
+        >
           <slot />
         </main>
-        <Footer />
+        <Footer wide={wide} />
       </div>
     </div>
 

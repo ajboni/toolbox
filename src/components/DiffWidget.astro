@@ -1,14 +1,19 @@
 ---
 import { accentClasses, type AccentName } from '../data/site';
-import { diffLines, diffSummary, numberDiffLines } from '../lib/diff';
+import { beautifyForDiff } from '../lib/codeFormat';
+import { diffLines, diffSummary, splitDiffLines } from '../lib/diff';
 import {
-  DIFF_GUTTER,
-  DIFF_ROW_BASE,
   DIFF_ROW_TINT,
-  DIFF_SIGN,
-  DIFF_SIGN_CELL,
-  DIFF_SIGN_COLOR,
-  DIFF_TEXT,
+  DIFF_SPLIT_CELL,
+  DIFF_SPLIT_EMPTY,
+  DIFF_SPLIT_GUTTER,
+  DIFF_SPLIT_LEFT,
+  DIFF_SPLIT_ROW,
+  DIFF_SPLIT_TEXT,
+  VIEW_BUTTON_ACTIVE,
+  VIEW_BUTTON_BASE,
+  VIEW_BUTTON_INACTIVE,
+  describeDetectedFormat,
   describeDiff,
 } from '../lib/diffView';
 
@@ -19,70 +24,156 @@ interface Props {
 const { accent = 'sky' } = Astro.props;
 const accentColor = accentClasses(accent).text;
 
-const defaultA = `# Meeting notes
-- ship the diff tool
-- fix the JSON parser
-- write tests`;
+const defaultA = '{"name":"bajtools","category":"text","tools":["json","diff"],"open":true}';
+const defaultB = '{"name":"bajtools","category":"text","tools":["json","diff"],"open":false}';
 
-const defaultB = `# Meeting notes
-- ship the diff tool
-- fix the JSON bug
-- write more tests
-- celebrate`;
-
-const initialDiff = diffLines(defaultA, defaultB);
-const initialRows = numberDiffLines(initialDiff);
-const initialSummary = describeDiff(diffSummary(initialDiff));
+const formattedA = beautifyForDiff(defaultA);
+const formattedB = beautifyForDiff(defaultB);
+const initialLines = diffLines(formattedA.text, formattedB.text, {
+  ignoreTrailingWhitespace: true,
+});
+const initialSummary = describeDiff(diffSummary(initialLines));
+const initialSplit = splitDiffLines(initialLines);
+const initialHintA = describeDetectedFormat(formattedA.format, true);
+const initialHintB = describeDetectedFormat(formattedB.format, true);
 
 const textareaClass =
-  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-xs text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
 const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const hintClass = 'text-xs text-zinc-500 dark:text-zinc-500';
+const checkboxClass =
+  'h-3.5 w-3.5 rounded border-zinc-300 accent-sky-600 dark:border-zinc-600';
+const optionText = 'flex items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-400';
 const buttonClass =
   'rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500';
+const splitButtonClass = `${VIEW_BUTTON_BASE} ${VIEW_BUTTON_ACTIVE}`;
+const unifiedButtonClass = `${VIEW_BUTTON_BASE} ${VIEW_BUTTON_INACTIVE}`;
 ---
 
 <div
   data-diff-widget
-  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50 sm:p-6"
 >
   <div class="grid gap-4 sm:grid-cols-2">
-    <label class="flex flex-col gap-1">
-      <span class={labelText}>Original</span>
-      <textarea data-diff-a rows="8" spellcheck="false" class={textareaClass}>{defaultA}</textarea>
-    </label>
-    <label class="flex flex-col gap-1">
-      <span class={labelText}>Changed</span>
-      <textarea data-diff-b rows="8" spellcheck="false" class={textareaClass}>{defaultB}</textarea>
-    </label>
+    <div class="flex flex-col gap-1">
+      <div class="flex items-center justify-between gap-2">
+        <label for="diff-a" class={labelText}>Original</label>
+        <label for="diff-format-a" class={optionText}>
+          <input
+            id="diff-format-a"
+            type="checkbox"
+            data-format-a
+            checked
+            class={checkboxClass}
+          />
+          <span>Format</span>
+        </label>
+      </div>
+      <textarea
+        id="diff-a"
+        data-diff-a
+        rows="8"
+        spellcheck="false"
+        class={textareaClass}>{defaultA}</textarea
+      >
+      <p data-hint-a class={hintClass} aria-live="polite">{initialHintA}</p>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <div class="flex items-center justify-between gap-2">
+        <label for="diff-b" class={labelText}>Changed</label>
+        <label for="diff-format-b" class={optionText}>
+          <input
+            id="diff-format-b"
+            type="checkbox"
+            data-format-b
+            checked
+            class={checkboxClass}
+          />
+          <span>Format</span>
+        </label>
+      </div>
+      <textarea
+        id="diff-b"
+        data-diff-b
+        rows="8"
+        spellcheck="false"
+        class={textareaClass}>{defaultB}</textarea
+      >
+      <p data-hint-b class={hintClass} aria-live="polite">{initialHintB}</p>
+    </div>
   </div>
 
-  <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
-    <p
-      data-diff-summary
-      class:list={['text-sm font-medium', accentColor]}
-      aria-live="polite"
-    >
+  <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+    <p data-diff-summary class:list={['text-sm font-medium', accentColor]} aria-live="polite">
       {initialSummary}
     </p>
-    <button type="button" data-swap class={buttonClass}>Swap sides</button>
+    <div class="flex flex-wrap items-center gap-2">
+      <label for="diff-whitespace" class={optionText}>
+        <input
+          id="diff-whitespace"
+          type="checkbox"
+          data-ignore-whitespace
+          checked
+          class={checkboxClass}
+        />
+        <span>Ignore trailing spaces</span>
+      </label>
+      <div
+        role="group"
+        aria-label="Diff view"
+        class="inline-flex items-center rounded-full border border-zinc-300 p-0.5 dark:border-zinc-700"
+      >
+        <button
+          type="button"
+          data-view-split
+          aria-pressed="true"
+          class={splitButtonClass}>Side by side</button
+        >
+        <button
+          type="button"
+          data-view-unified
+          aria-pressed="false"
+          class={unifiedButtonClass}>Unified</button
+        >
+      </div>
+      <button type="button" data-swap class={buttonClass}>Swap sides</button>
+    </div>
   </div>
 
   <div
-    data-diff-output
+    data-diff-split
     class="mt-2 overflow-auto rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
   >
     {
-      initialRows.map((row) => (
-        <div class:list={[DIFF_ROW_BASE, DIFF_ROW_TINT[row.type]]}>
-          <span class={DIFF_GUTTER}>{row.oldLine ?? ''}</span>
-          <span class={DIFF_GUTTER}>{row.newLine ?? ''}</span>
-          <span class:list={[DIFF_SIGN_CELL, DIFF_SIGN_COLOR[row.type]]}>
-            {DIFF_SIGN[row.type]}
-          </span>
-          <span class={DIFF_TEXT}>{row.text}</span>
+      initialSplit.map((row) => (
+        <div class={DIFF_SPLIT_ROW}>
+          {row.left ? (
+            <div class:list={[DIFF_SPLIT_CELL, DIFF_SPLIT_LEFT, DIFF_ROW_TINT[row.left.type]]}>
+              <span class={DIFF_SPLIT_GUTTER}>{row.left.line}</span>
+              <span class={DIFF_SPLIT_TEXT}>{row.left.text}</span>
+            </div>
+          ) : (
+            <div class:list={[DIFF_SPLIT_CELL, DIFF_SPLIT_LEFT, DIFF_SPLIT_EMPTY]} />
+          )}
+          {row.right ? (
+            <div class:list={[DIFF_SPLIT_CELL, DIFF_ROW_TINT[row.right.type]]}>
+              <span class={DIFF_SPLIT_GUTTER}>{row.right.line}</span>
+              <span class={DIFF_SPLIT_TEXT}>{row.right.text}</span>
+            </div>
+          ) : (
+            <div class:list={[DIFF_SPLIT_CELL, DIFF_SPLIT_EMPTY]} />
+          )}
         </div>
       ))
     }
+  </div>
+
+  <div
+    data-diff-unified
+    hidden
+    class="mt-2 overflow-auto rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+  >
   </div>
 
   <div class="mt-6 flex flex-wrap justify-center gap-3">

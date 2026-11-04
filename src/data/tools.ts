@@ -226,7 +226,8 @@ const CORE_TOOLS: Tool[] = [
     slug: 'diff',
     category: 'text',
     title: 'Diff Checker',
-    description: 'Compare two blocks of text line by line and highlight additions and removals.',
+    description:
+      'Compare two blocks of text side by side, with automatic JSON and XML formatting.',
     path: '/text/diff/',
     added: '2026-10-07',
   },
