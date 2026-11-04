@@ -5,6 +5,7 @@ import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
 import SearchPalette from '../components/SearchPalette.astro';
 import { SITE } from '../data/site';
+import { TOOLS } from '../data/tools';
 import { ANALYTICS } from '../data/analytics';
 import '../styles/global.css';
 
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const { title, description, canonicalPath, jsonLd, noindex } = Astro.props;
+const toolPath = TOOLS.some((tool) => tool.path === canonicalPath) ? canonicalPath : undefined;
 ---
 
 <!doctype html>
@@ -43,7 +45,10 @@ const { title, description, canonicalPath, jsonLd, noindex } = Astro.props;
       )
     }
   </head>
-  <body class="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+  <body
+    class="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100"
+    data-tool-path={toolPath}
+  >
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-zinc-900 focus:px-4 focus:py-2 focus:text-sm focus:text-white dark:focus:bg-zinc-100 dark:focus:text-zinc-900"
@@ -73,6 +78,7 @@ const { title, description, canonicalPath, jsonLd, noindex } = Astro.props;
     <script>
       import '../scripts/sidebar';
       import '../scripts/searchPalette';
+      import '../scripts/toolVisit';
     </script>
   </body>
 </html>

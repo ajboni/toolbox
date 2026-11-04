@@ -2,13 +2,15 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ToolCard from '../../components/ToolCard.astro';
 import { CATEGORIES } from '../../data/site';
-import { toolsInCategory } from '../../data/tools';
+import { TOOLS, toolsInCategory } from '../../data/tools';
+import { newToolPaths } from '../../lib/toolFreshness';
 import { OCCASIONS } from '../../data/occasions';
 import { OFFSETS } from '../../data/offsets';
 import { breadcrumbs, webApplication } from '../../lib/jsonld';
 
 const category = CATEGORIES.find((item) => item.slug === 'dates')!;
 const tools = toolsInCategory('dates');
+const newPaths = newToolPaths(TOOLS);
 const canonicalPath = '/dates/';
 
 const jsonLd = [
@@ -51,6 +53,7 @@ const jsonLd = [
           description={tool.description}
           href={tool.path}
           accent={category.accent}
+          isNew={newPaths.has(tool.path)}
         />
       ))
     }

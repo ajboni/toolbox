@@ -1,0 +1,50 @@
+---
+import { CATEGORIES, accentClasses } from '../data/site';
+import { toolsInCategory } from '../data/tools';
+---
+
+<section class="mt-12">
+  <div class="flex items-baseline justify-between gap-4">
+    <h2 class="text-lg font-semibold tracking-tight">All tools</h2>
+    <a
+      href="/search/"
+      class="text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+    >
+      Search and filter
+    </a>
+  </div>
+  <div class="mt-4 space-y-4">
+    {
+      CATEGORIES.map((category) => {
+        const tools = toolsInCategory(category.slug);
+        const accent = accentClasses(category.accent);
+        return (
+          <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
+            <a
+              href={`/${category.slug}/`}
+              class="flex shrink-0 items-center gap-2 text-sm font-medium sm:w-44 sm:pt-1"
+            >
+              <span class:list={['h-2 w-2 rounded-full', accent.bg]} aria-hidden="true" />
+              {category.name}
+              <span class="text-xs font-normal text-zinc-400 dark:text-zinc-500">
+                {tools.length}
+              </span>
+            </a>
+            <ul class="flex flex-wrap gap-2">
+              {tools.map((tool) => (
+                <li>
+                  <a
+                    href={tool.path}
+                    class="inline-block rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-600 transition hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
+                  >
+                    {tool.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>

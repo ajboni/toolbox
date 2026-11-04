@@ -6,6 +6,7 @@ export interface Tool {
   title: string;
   description: string;
   path: string;
+  added: string;
 }
 
 const CORE_TOOLS: Tool[] = [
@@ -16,6 +17,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Count the days, weeks and months between today and any date you pick.',
     path: '/dates/days-until/',
+    added: '2026-09-28',
   },
   {
     slug: 'days-from',
@@ -24,6 +26,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Find the exact date that falls a given number of days from today or from any start date.',
     path: '/dates/days-from/',
+    added: '2026-09-28',
   },
   {
     slug: 'age',
@@ -32,6 +35,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Get an exact age in years, months and days from any date of birth.',
     path: '/dates/age/',
+    added: '2026-10-01',
   },
   {
     slug: 'duration',
@@ -39,6 +43,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Date Duration',
     description: 'Measure the time between two dates in days, weeks and months.',
     path: '/dates/duration/',
+    added: '2026-10-01',
   },
   {
     slug: 'unix',
@@ -46,6 +51,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Unix Timestamp',
     description: 'Convert Unix epoch timestamps to dates and back, local and UTC.',
     path: '/dates/unix/',
+    added: '2026-10-01',
   },
   {
     slug: 'sunrise-sunset',
@@ -54,6 +60,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Sunrise, sunset, solar noon, day length and twilight for any place and date.',
     path: '/dates/sunrise-sunset/',
+    added: '2026-10-07',
   },
   {
     slug: 'world-clock',
@@ -62,6 +69,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Watch the current time in several time zones at once, with offsets and a shareable board.',
     path: '/dates/world-clock/',
+    added: '2026-10-07',
   },
   {
     slug: 'shadow',
@@ -70,6 +78,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Drag the sun across a compass dial to see how long a shadow is and which way it points.',
     path: '/dates/shadow/',
+    added: '2026-11-04',
   },
   {
     slug: 'birthday-weekday',
@@ -78,6 +87,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'See which day of the week every one of your birthdays falls on, past and future.',
     path: '/dates/birthday-weekday/',
+    added: '2026-10-07',
   },
   {
     slug: 'percent-of',
@@ -85,6 +95,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Percent Of',
     description: 'Work out what X percent of any number is.',
     path: '/math/percent-of/',
+    added: '2026-09-29',
   },
   {
     slug: 'what-percent',
@@ -92,6 +103,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'X Is What Percent of Y?',
     description: 'Find out what percentage one number is of another.',
     path: '/math/what-percent/',
+    added: '2026-09-29',
   },
   {
     slug: 'percent-change',
@@ -99,6 +111,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Percentage Change',
     description: 'Measure the percentage increase or decrease between two values.',
     path: '/math/percent-change/',
+    added: '2026-09-29',
   },
   {
     slug: 'add-percent',
@@ -106,6 +119,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Add or Subtract a Percentage',
     description: 'Increase or decrease a value by a percentage in one step.',
     path: '/math/add-percent/',
+    added: '2026-09-29',
   },
   {
     slug: 'rule-of-three',
@@ -113,6 +127,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Rule of Three',
     description: 'Solve any proportion a / b = c / x for the missing value.',
     path: '/math/rule-of-three/',
+    added: '2026-09-29',
   },
   {
     slug: 'tip-splitter',
@@ -120,6 +135,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Tip & Bill Splitter',
     description: 'Add a tip and split the bill between any number of people.',
     path: '/math/tip-splitter/',
+    added: '2026-10-01',
   },
   {
     slug: 'base-converter',
@@ -127,6 +143,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Number Base Converter',
     description: 'Convert numbers between binary, octal, decimal and hexadecimal.',
     path: '/math/base-converter/',
+    added: '2026-10-01',
   },
   {
     slug: 'dice',
@@ -135,6 +152,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Roll d4, d6, d8, d10, d12, d20 or d100 dice with modifiers and a roll history.',
     path: '/math/dice/',
+    added: '2026-10-21',
   },
   {
     slug: 'chord-finder',
@@ -143,6 +161,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Pick a root and a scale to get its notes and the seven diatonic chords.',
     path: '/music/chord-finder/',
+    added: '2026-09-30',
   },
   {
     slug: 'circle-of-fifths',
@@ -151,6 +170,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Explore all twelve major keys, their relative minors, key signatures and chords.',
     path: '/music/circle-of-fifths/',
+    added: '2026-09-30',
   },
   {
     slug: 'metronome',
@@ -159,6 +179,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Keep time with tap tempo, time signatures, accents, subdivisions and a shareable setup.',
     path: '/music/metronome/',
+    added: '2026-10-21',
   },
   {
     slug: 'tuner',
@@ -167,6 +188,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Tune a guitar, bass, ukulele, violin or cello with a chromatic needle and string targets.',
     path: '/music/tuner/',
+    added: '2026-11-04',
   },
   {
     slug: 'case-converter',
@@ -174,6 +196,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Case Converter',
     description: 'Switch text between camelCase, snake_case, kebab-case and more.',
     path: '/text/case-converter/',
+    added: '2026-10-01',
   },
   {
     slug: 'base64',
@@ -181,6 +204,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Base64 Encoder',
     description: 'Encode text to Base64 or decode it back, with a URL-safe option.',
     path: '/text/base64/',
+    added: '2026-10-01',
   },
   {
     slug: 'url-encode',
@@ -188,6 +212,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'URL Encoder',
     description: 'Percent-encode text for URLs or decode encoded strings.',
     path: '/text/url-encode/',
+    added: '2026-10-01',
   },
   {
     slug: 'json',
@@ -195,6 +220,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'JSON Formatter',
     description: 'Pretty-print or minify JSON with clear, line-aware error messages.',
     path: '/text/json/',
+    added: '2026-10-07',
   },
   {
     slug: 'diff',
@@ -202,6 +228,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Diff Checker',
     description: 'Compare two blocks of text line by line and highlight additions and removals.',
     path: '/text/diff/',
+    added: '2026-10-07',
   },
   {
     slug: 'list-compare',
@@ -210,6 +237,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Compare two lists with a Venn diagram to see what only one side has and what both share.',
     path: '/text/list-compare/',
+    added: '2026-11-04',
   },
   {
     slug: 'counter',
@@ -217,6 +245,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Word Counter',
     description: 'Count characters, words, sentences, lines and paragraphs.',
     path: '/text/counter/',
+    added: '2026-10-01',
   },
   {
     slug: 'uuid',
@@ -224,6 +253,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'UUID Generator',
     description: 'Generate random version 4 UUIDs, one or many at a time.',
     path: '/text/uuid/',
+    added: '2026-10-01',
   },
   {
     slug: 'hash',
@@ -231,6 +261,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Hash Generator',
     description: 'Compute SHA-1, SHA-256, SHA-384 and SHA-512 digests of text.',
     path: '/text/hash/',
+    added: '2026-10-01',
   },
   {
     slug: 'lorem-ipsum',
@@ -238,6 +269,7 @@ const CORE_TOOLS: Tool[] = [
     title: 'Lorem Ipsum',
     description: 'Generate placeholder paragraphs, sentences or words.',
     path: '/text/lorem-ipsum/',
+    added: '2026-10-01',
   },
   {
     slug: 'subnet',
@@ -246,6 +278,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Turn a CIDR block into its network, broadcast, host range and netmask.',
     path: '/networking/subnet/',
+    added: '2026-10-07',
   },
   {
     slug: 'download-time',
@@ -254,6 +287,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Work out how long a file takes to download from its size and your connection speed.',
     path: '/networking/download-time/',
+    added: '2026-10-15',
   },
   {
     slug: 'password',
@@ -262,6 +296,7 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Create strong random passwords or word-based passphrases, with an entropy estimate.',
     path: '/security/password/',
+    added: '2026-10-09',
   },
 ];
 
@@ -271,6 +306,7 @@ const CONVERTER_TOOLS: Tool[] = CONVERTER_PAGES.map((page) => ({
   title: page.title,
   description: page.description,
   path: `/converters/${page.slug}/`,
+  added: page.added,
 }));
 
 export const TOOLS: Tool[] = [...CORE_TOOLS, ...CONVERTER_TOOLS];

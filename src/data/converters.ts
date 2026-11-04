@@ -16,6 +16,7 @@ export interface ConverterPage {
   seoDescription: string;
   intro: string;
   about: string;
+  added: string;
   reference?: ReferenceTable;
 }
 
@@ -35,6 +36,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'length',
     slug: 'length',
+    added: '2026-10-07',
     title: 'Length Converter',
     description:
       'Convert between millimeters, meters, kilometers, inches, feet, miles and more.',
@@ -49,6 +51,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'mass',
     slug: 'mass',
+    added: '2026-10-07',
     title: 'Weight Converter',
     description: 'Convert between milligrams, grams, kilograms, ounces, pounds and stones.',
     seoTitle: 'Weight Converter · kg, lb, oz, g, Stones',
@@ -61,6 +64,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'temperature',
     slug: 'temperature',
+    added: '2026-10-07',
     title: 'Temperature Converter',
     description: 'Convert between Celsius, Fahrenheit and Kelvin.',
     seoTitle: 'Temperature Converter · Celsius, Fahrenheit, Kelvin',
@@ -73,6 +77,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'area',
     slug: 'area',
+    added: '2026-10-07',
     title: 'Area Converter',
     description: 'Convert between square meters, square feet, acres, hectares and more.',
     seoTitle: 'Area Converter · m², ft², Acres, Hectares',
@@ -85,6 +90,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'volume',
     slug: 'volume',
+    added: '2026-10-07',
     title: 'Volume Converter',
     description: 'Convert between liters, milliliters, gallons, cups and more.',
     seoTitle: 'Volume Converter · Liters, Gallons, Cups, mL',
@@ -97,6 +103,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'speed',
     slug: 'speed',
+    added: '2026-10-07',
     title: 'Speed Converter',
     description: 'Convert between km/h, mph, m/s, ft/s and knots.',
     seoTitle: 'Speed Converter · km/h, mph, m/s, Knots',
@@ -109,6 +116,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'time',
     slug: 'time',
+    added: '2026-10-07',
     title: 'Time Converter',
     description: 'Convert between milliseconds, seconds, minutes, hours, days and weeks.',
     seoTitle: 'Time Converter · Seconds, Minutes, Hours, Days',
@@ -121,6 +129,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'data',
     slug: 'data',
+    added: '2026-10-07',
     title: 'Data Size Converter',
     description:
       'Convert between bytes, kilobytes, megabytes, gigabytes and their binary counterparts.',
@@ -135,6 +144,7 @@ export const CONVERTER_PAGES: ConverterPage[] = [
   {
     dimension: 'bandwidth',
     slug: 'bandwidth',
+    added: '2026-10-15',
     title: 'Bandwidth Converter',
     description: 'Convert between Mbps, MB/s, Gbps and other data transfer rates.',
     seoTitle: 'Bandwidth Converter · Mbps, MB/s, Gbps',

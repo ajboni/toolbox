@@ -39,6 +39,25 @@ export interface Crumb {
   path: string;
 }
 
+export function collectionPage({
+  name,
+  description,
+  path,
+}: WebApplicationInput): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name,
+    description,
+    url: new URL(path, SITE.url).href,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: SITE.name,
+      url: SITE.url,
+    },
+  };
+}
+
 export function breadcrumbs(items: Crumb[]): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',

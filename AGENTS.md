@@ -81,6 +81,8 @@ tasks/                  # todo / done / ideas notes
    plus `JSON-LD` via `src/lib/jsonld.ts` (`webApplication` + `breadcrumbs`).
 5. If the tool has inputs, make them **shareable via the URL** (see below).
 6. Link the tool from its category page and cross-link related tools.
+7. Set `added` to the release date in `src/data/tools.ts` (`converters.ts` for
+   converter pages) and add the changelog entry in `src/data/changelog.ts`.
 
 ## Shareable URLs (query strings)
 
@@ -98,6 +100,36 @@ away.
 - **SEO rule:** `canonical` and the sitemap must never include query strings.
   Query params are for sharing only; they are not meant to be indexed.
 - Example: `/dates/days-until/?date=2026-12-25`.
+
+## Changelog
+
+`src/data/changelog.ts` is the source of truth for `/changelog/`. Add one entry
+per release, newest first:
+
+```ts
+{
+  date: '2026-11-04',
+  tools: ['/text/list-compare/'],
+  notes: ['Compare two lists side by side with a Venn diagram.'],
+}
+```
+
+- One entry per release, not per commit. Group everything that shipped together
+  under the same `date`.
+- `date` is ISO `YYYY-MM-DD` and must match the day the release goes live.
+- Put new tools in `tools` by path. The page resolves their titles and links
+  from `TOOLS`; never retype them in `notes`.
+- Use `notes` for changes that are not a new tool: fixes, speed-ups, new
+  options. One short, user-facing sentence each, in the imperative ("Add
+  binary prefixes to the converter table").
+- Write for someone who used the site before: what changed and why it matters.
+  No file names, package names or refactors.
+- Keep it short. Link to the tool instead of explaining how to use it.
+- Never edit or delete a past entry. Corrections get their own entry.
+- Skip internal changes with no user-visible effect.
+- `added` in `src/data/tools.ts` (and `src/data/converters.ts` for converter
+  pages) must match the changelog date. The five most recent tools by `added`
+  carry the New badge, so there is no separate flag to maintain.
 
 ## Deploy
 

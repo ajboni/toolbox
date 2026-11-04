@@ -1,0 +1,36 @@
+---
+import { CATEGORIES, accentClasses } from '../data/site';
+import { toolsInCategory } from '../data/tools';
+---
+
+<section class="mt-10">
+  <h2 class="sr-only">Categories</h2>
+  <div class="grid gap-4 sm:grid-cols-2">
+    {
+      CATEGORIES.map((category) => {
+        const accent = accentClasses(category.accent);
+        const count = toolsInCategory(category.slug).length;
+        return (
+          <a
+            href={`/${category.slug}/`}
+            class:list={[
+              'group rounded-xl border border-zinc-200 p-5 transition hover:shadow-sm dark:border-zinc-800',
+              accent.borderHover,
+            ]}
+          >
+            <div class="flex items-baseline justify-between gap-3">
+              <h3 class="flex items-center gap-2 text-base font-semibold">
+                <span class:list={['h-2 w-2 rounded-full', accent.bg]} aria-hidden="true" />
+                {category.name}
+              </h3>
+              <span class="shrink-0 text-xs text-zinc-400 dark:text-zinc-500">
+                {count} {count === 1 ? 'tool' : 'tools'}
+              </span>
+            </div>
+            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{category.description}</p>
+          </a>
+        );
+      })
+    }
+  </div>
+</section>

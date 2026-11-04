@@ -6,9 +6,10 @@ interface Props {
   description: string;
   href: string;
   accent?: AccentName;
+  isNew?: boolean;
 }
 
-const { title, description, href, accent = DEFAULT_ACCENT } = Astro.props;
+const { title, description, href, accent = DEFAULT_ACCENT, isNew = false } = Astro.props;
 const colors = accentClasses(accent);
 ---
 
@@ -23,6 +24,13 @@ const colors = accentClasses(accent);
     <span class:list={['h-2 w-2 rounded-full', colors.bg]} aria-hidden="true"
     ></span>
     {title}
+    {
+      isNew && (
+        <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+          New
+        </span>
+      )
+    }
   </h3>
   <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
 </a>

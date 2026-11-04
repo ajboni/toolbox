@@ -2,11 +2,13 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ToolCard from '../../components/ToolCard.astro';
 import { CATEGORIES } from '../../data/site';
-import { toolsInCategory } from '../../data/tools';
+import { TOOLS, toolsInCategory } from '../../data/tools';
+import { newToolPaths } from '../../lib/toolFreshness';
 import { breadcrumbs, webApplication } from '../../lib/jsonld';
 
 const category = CATEGORIES.find((item) => item.slug === 'networking')!;
 const tools = toolsInCategory('networking');
+const newPaths = newToolPaths(TOOLS);
 const canonicalPath = '/networking/';
 
 const jsonLd = [
@@ -49,6 +51,7 @@ const jsonLd = [
           description={tool.description}
           href={tool.path}
           accent={category.accent}
+          isNew={newPaths.has(tool.path)}
         />
       ))
     }

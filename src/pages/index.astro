@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ToolCard from '../components/ToolCard.astro';
-import { CATEGORIES, SITE } from '../data/site';
-import { toolsInCategory } from '../data/tools';
+import RecentTools from '../components/RecentTools.astro';
+import LatestTools from '../components/LatestTools.astro';
+import CategoryGrid from '../components/CategoryGrid.astro';
+import ToolDirectory from '../components/ToolDirectory.astro';
+import { SITE } from '../data/site';
 import { breadcrumbs, webApplication } from '../lib/jsonld';
 
 const jsonLd = [
@@ -25,7 +27,7 @@ const jsonLd = [
     <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{SITE.name}</h1>
     <p class="mt-4 max-w-xl text-zinc-600 dark:text-zinc-400">
       {SITE.tagline} Every tool lives on its own page: open it, get your answer,
-      close it. 
+      close it.
     </p>
     <a
       href="/search/"
@@ -48,49 +50,15 @@ const jsonLd = [
         Ctrl K
       </kbd>
     </a>
+
+    <RecentTools />
   </section>
 
-  <section class="mt-12 space-y-10">
-    {
-      CATEGORIES.map((category) => {
-        const tools = toolsInCategory(category.slug);
-        return (
-          <div>
-            <div class="flex items-baseline justify-between gap-4">
-              <h2 class="text-xl font-semibold tracking-tight">
-                <a href={`/${category.slug}/`} class="hover:opacity-80">
-                  {category.name}
-                </a>
-              </h2>
-              <a
-                href={`/${category.slug}/`}
-                class="text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-              >
-                View all
-              </a>
-            </div>
-            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {category.description}
-            </p>
-            {tools.length > 0 ? (
-              <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                {tools.map((tool) => (
-                  <ToolCard
-                    title={tool.title}
-                    description={tool.description}
-                    href={tool.path}
-                    accent={category.accent}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-500">
-                More tools coming soon.
-              </p>
-            )}
-          </div>
-        );
-      })
-    }
-  </section>
+  <LatestTools />
+  <CategoryGrid />
+  <ToolDirectory />
 </BaseLayout>
+
+<script>
+  import '../scripts/homeRecents';
+</script>
