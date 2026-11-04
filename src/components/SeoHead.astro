@@ -20,6 +20,7 @@ const jsonLdBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
+<link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 {noindex && <meta name="robots" content="noindex, follow" />}
 
 <meta property="og:type" content="website" />

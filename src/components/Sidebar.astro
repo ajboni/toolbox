@@ -4,6 +4,7 @@ import { toolsInCategory } from '../data/tools';
 
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/';
+const isSearch = pathname === '/search/';
 const isActive = (path: string) =>
   pathname === path || (path !== '/' && pathname.startsWith(path));
 ---
@@ -32,6 +33,36 @@ const isActive = (path: string) =>
       ]}
     >
       Home
+    </a>
+
+    <a
+      href="/search/"
+      data-search-open
+      aria-keyshortcuts="Control+K Meta+K"
+      aria-current={isSearch ? 'page' : undefined}
+      class:list={[
+        'flex items-center justify-between gap-2 rounded-lg px-3 py-2 font-medium',
+        isSearch
+          ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100'
+          : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100',
+      ]}
+    >
+      <span class="flex items-center gap-2">
+        <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path
+            fill-rule="evenodd"
+            d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.13 3.13a.75.75 0 1 0 1.06-1.06l-3.13-3.13A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        Search
+      </span>
+      <kbd
+        data-search-kbd
+        class="rounded border border-zinc-200 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400 dark:border-zinc-700 dark:text-zinc-500"
+      >
+        Ctrl K
+      </kbd>
     </a>
 
     {

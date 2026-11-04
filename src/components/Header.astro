@@ -8,20 +8,37 @@ import { SITE } from '../data/site';
   <a href="/" class="text-base font-semibold tracking-tight hover:opacity-80">
     {SITE.name}
   </a>
-  <button
-    type="button"
-    data-sidebar-toggle
-    aria-expanded="false"
-    aria-controls="sidebar"
-    class="rounded-lg border border-zinc-200 p-2 text-zinc-600 transition hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
-  >
-    <span class="sr-only">Toggle navigation</span>
-    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <path
-        fill-rule="evenodd"
-        d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 5A.75.75 0 0 1 2.75 9h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 9.75Zm0 5a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
-        clip-rule="evenodd"
-      />
-    </svg>
-  </button>
+  <div class="flex items-center gap-2">
+    <a
+      href="/search/"
+      data-search-open
+      aria-label="Search tools"
+      aria-keyshortcuts="Control+K Meta+K"
+      class="rounded-lg border border-zinc-200 p-2 text-zinc-600 transition hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+    >
+      <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.13 3.13a.75.75 0 1 0 1.06-1.06l-3.13-3.13A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+    <button
+      type="button"
+      data-sidebar-toggle
+      aria-expanded="false"
+      aria-controls="sidebar"
+      class="rounded-lg border border-zinc-200 p-2 text-zinc-600 transition hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+    >
+      <span class="sr-only">Toggle navigation</span>
+      <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 5A.75.75 0 0 1 2.75 9h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 9.75Zm0 5a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </button>
+  </div>
 </header>

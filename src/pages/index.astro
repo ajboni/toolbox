@@ -27,6 +27,27 @@ const jsonLd = [
       {SITE.tagline} Every tool lives on its own page: open it, get your answer,
       close it. No accounts, no clutter.
     </p>
+    <a
+      href="/search/"
+      data-search-open
+      aria-keyshortcuts="Control+K Meta+K"
+      class="mt-6 flex w-full max-w-xl items-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left text-sm text-zinc-500 transition hover:border-zinc-300 hover:text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:text-zinc-200"
+    >
+      <svg class="h-4 w-4 shrink-0 text-zinc-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.13 3.13a.75.75 0 1 0 1.06-1.06l-3.13-3.13A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <span class="flex-1">Search tools, categories or keywords…</span>
+      <kbd
+        data-search-kbd
+        class="hidden rounded border border-zinc-200 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400 sm:block dark:border-zinc-700 dark:text-zinc-500"
+      >
+        Ctrl K
+      </kbd>
+    </a>
   </section>
 
   <section class="mt-12 space-y-10">

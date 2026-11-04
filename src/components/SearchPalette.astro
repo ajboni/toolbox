@@ -1,0 +1,75 @@
+---
+---
+
+<dialog
+  data-search-dialog
+  aria-label="Search tools"
+  class="mx-auto mt-[8vh] mb-auto w-[calc(100%-2rem)] max-w-xl rounded-2xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-2xl backdrop:bg-zinc-950/50 backdrop:backdrop-blur-sm sm:mt-[10vh] dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100"
+>
+  <div class="flex flex-col">
+    <div class="flex items-center gap-3 border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+      <svg
+        class="h-4 w-4 shrink-0 text-zinc-400"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.13 3.13a.75.75 0 1 0 1.06-1.06l-3.13-3.13A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <input
+        data-search-input
+        type="search"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="search-results"
+        aria-autocomplete="list"
+        aria-keyshortcuts="Control+K Meta+K"
+        aria-label="Search tools"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Search tools, categories or keywords…"
+        class="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
+      />
+      <kbd
+        class="shrink-0 rounded border border-zinc-200 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400 dark:border-zinc-700 dark:text-zinc-500"
+      >
+        esc
+      </kbd>
+    </div>
+
+    <div
+      id="search-results"
+      data-search-results
+      role="listbox"
+      aria-label="Search results"
+      class="max-h-[min(60vh,28rem)] overflow-y-auto px-2 pb-2"
+    >
+      <div class="px-4 py-10 text-center">
+        <p class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Search the toolbox</p>
+        <p class="mx-auto mt-1 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">
+          Type a tool name, category or keyword. Press Enter to browse everything.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="flex flex-wrap items-center justify-between gap-2 border-t border-zinc-200 px-4 py-2.5 text-[11px] text-zinc-500 dark:border-zinc-800 dark:text-zinc-400"
+    >
+      <span data-search-status aria-live="polite"></span>
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline">↑↓ navigate · ↵ open · esc close</span>
+        <a
+          data-search-all
+          href="/search/"
+          class="font-medium text-zinc-700 hover:underline dark:text-zinc-300"
+        >
+          All results
+        </a>
+      </div>
+    </div>
+  </div>
+</dialog>

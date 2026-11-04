@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 
+Disallow: /search.json
+
 Sitemap: https://toolbox.aboni.dev/sitemap-index.xml

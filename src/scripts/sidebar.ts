@@ -18,10 +18,10 @@ if (sidebar && toggle && overlay) {
   overlay.addEventListener('click', () => setOpen(false));
 
   sidebar.addEventListener('click', (event) => {
-    if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    if ((event.target as HTMLElement).closest('a, [data-search-open]')) setOpen(false);
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') setOpen(false);
+    if (event.key === 'Escape' && sidebar.classList.contains('is-open')) setOpen(false);
   });
 }

@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CATEGORIES, accentClasses } from '../data/site';
+import { TOOLS, toolsInCategory } from '../data/tools';
+import { breadcrumbs, webApplication } from '../lib/jsonld';
+import { searchPillClasses } from '../lib/searchPills';
+
+const canonicalPath = '/search/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Search',
+    description: 'Search every tool in the toolbox by name, category or keyword.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Search', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Search tools"
+  description="Search every tool in the toolbox by name, category or keyword. Filter by category and jump straight to what you need."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <span>Search</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Search</h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Find a tool by name, category or keyword. Filters are shareable, and the full
+    directory is always one click away.
+  </p>
+
+  <form action="/search/" method="get" data-search-form class="mt-6">
+    <label for="search-page-input" class="sr-only">Search tools</label>
+    <div
+      class="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 transition focus-within:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:focus-within:border-zinc-600"
+    >
+      <svg
+        class="h-4 w-4 shrink-0 text-zinc-400"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M9 3.5a5.5 5.5 0 1 0 3.4 9.84l3.13 3.13a.75.75 0 1 0 1.06-1.06l-3.13-3.13A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <input
+        id="search-page-input"
+        data-search-input
+        type="search"
+        name="q"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Search tools, categories or keywords…"
+        class="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
+      />
+      <kbd
+        class="hidden shrink-0 rounded border border-zinc-200 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400 sm:block dark:border-zinc-700 dark:text-zinc-500"
+      >
+        /
+      </kbd>
+    </div>
+  </form>
+
+  <noscript>
+    <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
+      Enable JavaScript to search live. You can still browse every tool in the directory
+      below.
+    </p>
+  </noscript>
+
+  <div
+    data-search-filters
+    role="group"
+    aria-label="Filter by category"
+    class="mt-4 flex flex-wrap gap-2"
+  >
+    <a href="/search/" data-search-filter="all" aria-current="true" class={searchPillClasses(null, true)}>
+      All
+    </a>
+    {
+      CATEGORIES.map((category) => {
+        const colors = accentClasses(category.accent);
+        return (
+          <a
+            href={`/search/?cat=${category.slug}`}
+            data-search-filter={category.slug}
+            class={searchPillClasses(category.accent, false)}
+          >
+            <span class:list={['h-1.5 w-1.5 rounded-full', colors.bg]} aria-hidden="true" />
+            {category.name}
+          </a>
+        );
+      })
+    }
+  </div>
+
+  <p
+    data-search-count
+    aria-live="polite"
+    class="mt-4 text-xs text-zinc-500 dark:text-zinc-400"
+  >
+    {TOOLS.length} tools
+  </p>
+
+  <div data-search-results class="mt-2">
+    {
+      CATEGORIES.map((category) => {
+        const tools = toolsInCategory(category.slug);
+        const colors = accentClasses(category.accent);
+        return (
+          <section class="mt-8 first:mt-0">
+            <div class="flex items-center justify-between gap-2">
+              <h2
+                class:list={[
+                  'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold',
+                  colors.bgSoft,
+                  colors.text,
+                ]}
+              >
+                <span class:list={['h-1.5 w-1.5 rounded-full', colors.bg]} aria-hidden="true" />
+                {category.name}
+              </h2>
+              <span class="text-xs text-zinc-400 dark:text-zinc-500">{tools.length}</span>
+            </div>
+            <div class="mt-3 grid gap-3 sm:grid-cols-2">
+              {tools.map((tool) => (
+                <a
+                  href={tool.path}
+                  data-path={tool.path}
+                  data-search-result
+                  class="group flex items-start gap-3 rounded-xl border border-zinc-200 px-5 py-4 transition hover:shadow-sm dark:border-zinc-800"
+                >
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-base font-semibold">{tool.title}</span>
+                    <span class="mt-1 block text-sm text-zinc-600 dark:text-zinc-400">
+                      {tool.description}
+                    </span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  import '../scripts/searchPage';
+</script>
