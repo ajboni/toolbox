@@ -1,0 +1,158 @@
+---
+import { accentClasses, type AccentName } from '../data/site';
+import { compareLists, describeComparison, formatGroup } from '../lib/listCompare';
+
+interface Props {
+  accent?: AccentName;
+}
+
+const { accent = 'sky' } = Astro.props;
+const accentColor = accentClasses(accent).text;
+
+const defaultA = `1200
+1345
+2210
+3310
+4500`;
+
+const defaultB = `1345
+2210
+5100
+6120`;
+
+const initial = compareLists(defaultA, defaultB);
+const initialSummary = describeComparison(initial);
+
+const textareaClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const selectClass =
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const optionLabel =
+  'flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const buttonClass =
+  'rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500';
+const panelClass =
+  'rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900';
+const preClass =
+  'mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-words font-mono text-sm text-zinc-800 dark:text-zinc-200';
+const copyClass =
+  'rounded-full border border-zinc-300 px-3 py-1 text-xs font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500';
+---
+
+<div
+  data-list-compare-widget
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50"
+>
+  <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+    <label class={optionLabel}>
+      <input type="checkbox" data-ignore-case class="h-4 w-4" />
+      <span>Ignore case</span>
+    </label>
+    <label class={optionLabel}>
+      <input type="checkbox" data-trim checked class="h-4 w-4" />
+      <span>Trim spaces</span>
+    </label>
+    <label class={optionLabel}>
+      <input type="checkbox" data-show-counts class="h-4 w-4" />
+      <span>Show occurrence counts</span>
+    </label>
+    <label class={optionLabel}>
+      <input type="checkbox" data-sort class="h-4 w-4" />
+      <span>Sort results</span>
+    </label>
+    <label class={optionLabel}>
+      <span>Split items on</span>
+      <select data-separators class={selectClass}>
+        <option value="lines">Lines</option>
+        <option value="commas">Lines and commas</option>
+        <option value="wide">Lines, commas, tabs and semicolons</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="mt-4 grid gap-4 sm:grid-cols-2">
+    <label class="flex flex-col gap-1">
+      <span class={labelText}>List A</span>
+      <textarea data-list-a rows="8" spellcheck="false" class={textareaClass}>{defaultA}</textarea>
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class={labelText}>List B</span>
+      <textarea data-list-b rows="8" spellcheck="false" class={textareaClass}>{defaultB}</textarea>
+    </label>
+  </div>
+
+  <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+    <p data-summary class="text-sm text-zinc-600 dark:text-zinc-400" aria-live="polite">
+      {initialSummary}
+    </p>
+    <button type="button" data-download class={buttonClass}>Download results</button>
+  </div>
+
+  <figure class="mt-6">
+    <svg
+      role="img"
+      viewBox="0 0 420 250"
+      class="mx-auto h-auto w-full max-w-md"
+      aria-labelledby="venn-title venn-desc"
+    >
+      <title id="venn-title">List overlap</title>
+      <desc id="venn-desc" data-venn-desc>
+        {initial.onlyA.length} only in A, {initial.both.length} in both, {initial.onlyB.length} only in B
+      </desc>
+      <circle cx="160" cy="125" r="100" fill="currentColor" class="text-sky-500/20 dark:text-sky-400/20"></circle>
+      <circle cx="260" cy="125" r="100" fill="currentColor" class="text-sky-500/20 dark:text-sky-400/20"></circle>
+      <circle cx="160" cy="125" r="100" fill="none" stroke="currentColor" stroke-width="2" class="text-sky-600 dark:text-sky-400"></circle>
+      <circle cx="260" cy="125" r="100" fill="none" stroke="currentColor" stroke-width="2" class="text-sky-600 dark:text-sky-400"></circle>
+      <text x="110" y="118" text-anchor="middle" class="fill-zinc-900 text-2xl font-bold dark:fill-zinc-50" data-venn-only-a>{initial.onlyA.length}</text>
+      <text x="110" y="144" text-anchor="middle" class="fill-zinc-500 text-xs dark:fill-zinc-400">Only A</text>
+      <text x="210" y="118" text-anchor="middle" class="fill-zinc-900 text-2xl font-bold dark:fill-zinc-50" data-venn-both>{initial.both.length}</text>
+      <text x="210" y="144" text-anchor="middle" class="fill-zinc-500 text-xs dark:fill-zinc-400">In both</text>
+      <text x="310" y="118" text-anchor="middle" class="fill-zinc-900 text-2xl font-bold dark:fill-zinc-50" data-venn-only-b>{initial.onlyB.length}</text>
+      <text x="310" y="144" text-anchor="middle" class="fill-zinc-500 text-xs dark:fill-zinc-400">Only B</text>
+    </svg>
+  </figure>
+
+  <div class="mt-6 grid gap-4 lg:grid-cols-3">
+    <section class={panelClass}>
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          Only in A
+          <span data-count-only-a class:list={['ml-1', accentColor]}>{initial.onlyA.length}</span>
+        </h3>
+        <button type="button" data-copy="[data-result-only-a]" class={copyClass}>Copy</button>
+      </div>
+      <pre data-result-only-a class={preClass}>{formatGroup(initial.onlyA, 'onlyA', false) || '–'}</pre>
+    </section>
+
+    <section class={panelClass}>
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          In both
+          <span data-count-both class:list={['ml-1', accentColor]}>{initial.both.length}</span>
+        </h3>
+        <button type="button" data-copy="[data-result-both]" class={copyClass}>Copy</button>
+      </div>
+      <pre data-result-both class={preClass}>{formatGroup(initial.both, 'both', false) || '–'}</pre>
+    </section>
+
+    <section class={panelClass}>
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          Only in B
+          <span data-count-only-b class:list={['ml-1', accentColor]}>{initial.onlyB.length}</span>
+        </h3>
+        <button type="button" data-copy="[data-result-only-b]" class={copyClass}>Copy</button>
+      </div>
+      <pre data-result-only-b class={preClass}>{formatGroup(initial.onlyB, 'onlyB', false) || '–'}</pre>
+    </section>
+  </div>
+
+  <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <button type="button" data-share class={buttonClass}>Copy link</button>
+  </div>
+</div>
+
+<script>
+  import '../scripts/list-compare';
+</script>

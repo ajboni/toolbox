@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ListCompareWidget from '../../components/ListCompareWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/text/list-compare/';
+
+const jsonLd = [
+  webApplication({
+    name: 'List Compare',
+    description:
+      'Compare two lists with a Venn diagram and find what only A has, what only B has and what both share.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Text & Code', path: '/text/' },
+    { name: 'List Compare', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="List Compare · Venn Diagram for Two Lists"
+  description="Compare two lists and see what only A has, what only B has and what they share. A Venn diagram shows the counts at a glance. Numbers, IDs or any text, all in your browser."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/text/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Text &amp; Code</a>
+    <span class="mx-2">/</span>
+    <span>List Compare</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Compare two lists</h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Paste two lists to find out what only A has, what only B has and what both
+    share. The Venn diagram shows the three counts at a glance, and each group
+    is listed separately with a copy button. One item per line by default, or
+    split on commas, tabs and semicolons when you paste from a spreadsheet.
+  </p>
+
+  <div class="mt-8">
+    <ListCompareWidget accent="sky" />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      Each side is treated as a set: repeated values collapse into one entry,
+      and trimming plus the optional case-insensitive mode decide when two
+      values count as the same. Values present on both sides form the overlap.
+      The rest is split into only A and only B, in the order they appear unless
+      you turn on sorting.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Turn on occurrence counts to see how many times a value appears on each
+      side, which is handy for invoices, stock lists or duplicated IDs.
+      Everything runs in your browser, and both lists travel in the URL so the
+      comparison is easy to share.
+    </p>
+  </section>
+
+  <RelatedTools category="text" current={canonicalPath} />
+</BaseLayout>

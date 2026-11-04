@@ -9,7 +9,8 @@ const canonicalPath = '/text/base64/';
 const jsonLd = [
   webApplication({
     name: 'Base64 Encoder / Decoder',
-    description: 'Encode text to Base64 or decode Base64 back to text, with a URL-safe option.',
+    description:
+      'Encode text or files to Base64 and decode Base64 back to text or a downloadable file, with a URL-safe option.',
     path: canonicalPath,
   }),
   breadcrumbs([
@@ -22,7 +23,7 @@ const jsonLd = [
 
 <BaseLayout
   title="Base64 Encoder and Decoder"
-  description="Encode any text to Base64 or decode Base64 back to plain text. Includes a URL-safe variant for links and tokens. Free and shareable."
+  description="Encode text or files to Base64 or decode Base64 back to plain text or a downloadable file. Handles PDFs, images and URL-safe tokens, all in your browser."
   canonicalPath={canonicalPath}
   jsonLd={jsonLd}
 >
@@ -38,9 +39,10 @@ const jsonLd = [
     Base64 encoder and decoder
   </h1>
   <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
-    Convert text to Base64 or decode it back. Unicode is handled correctly, and
-    the URL-safe option swaps the characters that would break a query string.
-    Your input lives in the URL so you can share the exact value.
+    Convert text or a whole file to Base64, or paste a Base64 string and get the
+    original bytes back. Decoded PDFs, images and archives can be downloaded as
+    a file, while plain text shows up in the box. Unicode, URL-safe tokens and
+    optional line wrapping are supported.
   </p>
 
   <div class="mt-8">
@@ -51,9 +53,16 @@ const jsonLd = [
     <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
     <p class="text-sm leading-relaxed">
       Base64 turns bytes into 64 printable characters so binary-safe data can
-      travel through text channels. The URL-safe variant replaces <code>+</code>
+      travel through text channels. The tool detects common file types from
+      their first bytes, so a decoded PDF or PNG keeps the right extension and
+      opens properly after download. The URL-safe variant replaces <code>+</code>
       with <code>-</code> and <code>/</code> with <code>_</code>, and drops the
-      trailing padding.
+      trailing padding. Line wrapping is handy for PEM certificates and MIME
+      attachments.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Everything runs in your browser. Only the tool settings travel in the URL,
+      never the encoded data, so large PDFs do not turn into monster links.
     </p>
   </section>
 

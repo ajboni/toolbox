@@ -15,7 +15,12 @@ const initial = encodeBase64(defaultValue);
 const textareaClass =
   'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
 const selectClass =
-  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+  'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const inputClass =
+  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+const labelText = 'text-sm font-medium text-zinc-600 dark:text-zinc-400';
+const buttonClass =
+  'rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:hover:border-zinc-500';
 ---
 
 <div
@@ -34,28 +39,66 @@ const selectClass =
       <input type="checkbox" data-urlsafe-checkbox class="h-4 w-4" />
       <span>URL-safe</span>
     </label>
+    <label
+      data-wrap-field
+      class="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400"
+    >
+      <span>Wrap lines at</span>
+      <select data-wrap-select class={selectClass}>
+        <option value="0">None</option>
+        <option value="64">64</option>
+        <option value="76">76</option>
+      </select>
+    </label>
   </div>
 
-  <div class="mt-4 grid gap-4">
-    <label class="flex flex-col gap-1">
-      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Input</span>
-      <textarea data-text-input rows="3" class={textareaClass}>{defaultValue}</textarea>
-    </label>
-    <label class="flex flex-col gap-1">
-      <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Output</span>
-      <textarea readonly data-output rows="3" class:list={[textareaClass, accentColor]}>{initial}</textarea>
-    </label>
+  <div data-file-field class="mt-4">
+    <div class="rounded-xl border border-dashed border-zinc-300 p-4 dark:border-zinc-700">
+      <label class="flex flex-wrap items-center gap-3">
+        <span class={labelText}>Encode a file</span>
+        <input
+          type="file"
+          data-file-input
+          class="text-sm text-zinc-600 file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-zinc-200 file:px-4 file:py-1.5 file:text-sm file:font-medium file:text-zinc-800 hover:file:bg-zinc-300 dark:text-zinc-400 dark:file:bg-zinc-800 dark:file:text-zinc-200 dark:hover:file:bg-zinc-700"
+        />
+      </label>
+      <p data-file-info hidden class="mt-2 text-xs text-zinc-500 dark:text-zinc-400"></p>
+      <button
+        type="button"
+        data-file-clear
+        hidden
+        class="mt-2 text-xs font-medium text-zinc-500 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+      >
+        Remove file and use text instead
+      </button>
+    </div>
   </div>
 
-  <p data-status class="mt-2 text-xs text-zinc-500 dark:text-zinc-500"></p>
+  <label data-text-field class="mt-4 flex flex-col gap-1">
+    <span data-input-label class={labelText}>Text to encode</span>
+    <textarea data-text-input rows="4" spellcheck="false" class={textareaClass}>{defaultValue}</textarea>
+  </label>
+
+  <label class="mt-4 flex flex-col gap-1">
+    <span data-output-label class={labelText}>Base64 output</span>
+    <textarea readonly data-output rows="4" class:list={[textareaClass, accentColor]}>{initial}</textarea>
+  </label>
+
+  <p data-status class="mt-2 text-xs text-zinc-500 dark:text-zinc-500" aria-live="polite"></p>
+
+  <div data-download-row hidden class="mt-4">
+    <div class="flex flex-wrap items-end gap-3">
+      <label class="flex min-w-48 flex-1 flex-col gap-1">
+        <span class={labelText}>File name</span>
+        <input type="text" data-filename value="decoded" class={inputClass} />
+      </label>
+      <button type="button" data-download class={buttonClass}>Download</button>
+    </div>
+  </div>
 
   <div class="mt-6 flex flex-wrap justify-center gap-3">
-    <button type="button" data-copy="[data-output]" class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500">
-      Copy output
-    </button>
-    <button type="button" data-share class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500">
-      Copy link
-    </button>
+    <button type="button" data-copy="[data-output]" class={buttonClass}>Copy output</button>
+    <button type="button" data-share class={buttonClass}>Copy link</button>
   </div>
 </div>
 

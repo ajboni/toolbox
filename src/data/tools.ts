@@ -204,6 +204,14 @@ const CORE_TOOLS: Tool[] = [
     path: '/text/diff/',
   },
   {
+    slug: 'list-compare',
+    category: 'text',
+    title: 'List Compare',
+    description:
+      'Compare two lists with a Venn diagram to see what only one side has and what both share.',
+    path: '/text/list-compare/',
+  },
+  {
     slug: 'counter',
     category: 'text',
     title: 'Word Counter',
