@@ -1,11 +1,19 @@
 ---
+import BrandLogo from './BrandLogo.astro';
 import { SITE } from '../data/site';
+
+const isHome = Astro.url.pathname === '/';
 ---
 
 <header
   class="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-zinc-200 bg-white/90 px-4 py-2 backdrop-blur sm:py-3 lg:hidden dark:border-zinc-800 dark:bg-zinc-950/90"
 >
-  <a href="/" class="text-base font-semibold tracking-tight hover:opacity-80">
+  <a
+    href="/"
+    aria-current={isHome ? 'page' : undefined}
+    class="flex items-center gap-2 text-base font-semibold tracking-tight hover:opacity-80"
+  >
+    <BrandLogo size="sm" />
     {SITE.name}
   </a>
   <div class="flex items-center gap-2">

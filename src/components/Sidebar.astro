@@ -1,4 +1,5 @@
 ---
+import BrandLogo from './BrandLogo.astro';
 import { CATEGORIES, SITE, accentClasses } from '../data/site';
 import { toolsInCategory } from '../data/tools';
 
@@ -16,25 +17,19 @@ const isActive = (path: string) =>
 >
   <a
     href="/"
-    class="mb-6 px-2 text-lg font-semibold tracking-tight hover:opacity-80"
+    aria-current={isHome ? 'page' : undefined}
+    class:list={[
+      'mb-5 flex items-center gap-2.5 rounded-lg px-2 py-1 text-lg font-semibold tracking-tight',
+      isHome
+        ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100'
+        : 'text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-900',
+    ]}
   >
+    <BrandLogo />
     {SITE.name}
   </a>
 
   <nav aria-label="Tools" class="flex flex-col gap-1 text-sm">
-    <a
-      href="/"
-      aria-current={isHome ? 'page' : undefined}
-      class:list={[
-        'rounded-lg px-3 py-2 font-medium',
-        isHome
-          ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100'
-          : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100',
-      ]}
-    >
-      Home
-    </a>
-
     <a
       href="/search/"
       data-search-open

@@ -1,0 +1,22 @@
+---
+interface Props {
+  size?: 'sm' | 'md';
+}
+
+const { size = 'md' } = Astro.props;
+const dimensions = size === 'sm' ? 'h-6 w-6' : 'h-7 w-7';
+---
+
+<svg
+  class:list={[
+    'shrink-0 rounded-[7px] ring-1 ring-zinc-200 dark:ring-zinc-800',
+    dimensions,
+  ]}
+  viewBox="0 0 32 32"
+  aria-hidden="true"
+>
+  <rect width="32" height="32" rx="7" fill="#09090b" />
+  <path d="M11 5.5h10" fill="none" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round" />
+  <path d="M16 6.5v9" fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round" />
+  <path d="M11.5 15.5h9v4.5c0 3.2-2.2 5.4-4.5 7-2.3-1.6-4.5-3.8-4.5-7z" fill="#a78bfa" />
+</svg>
