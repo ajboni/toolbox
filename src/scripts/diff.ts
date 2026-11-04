@@ -1,4 +1,4 @@
-import { beautifyForDiff } from '../lib/codeFormat';
+import { beautifyForDiff, type IndentMode } from '../lib/codeFormat';
 import {
   DIFF_TOO_LARGE,
   DIFF_ROW_BASE,
@@ -24,13 +24,18 @@ import {
   diffIsTooLarge,
   diffLines,
   diffSummary,
+  diffText,
   numberDiffLines,
   splitDiffLines,
+  type DiffLine,
   type NumberedDiffLine,
   type SplitCell,
 } from '../lib/diff';
+import { readStoredState, writeStoredState } from '../lib/persistedState';
 import { readUrlState, writeUrlState } from '../lib/urlState';
-import { wireShare } from './ui';
+import { flash } from './ui';
+
+const CONTENT_KEY = 'diff:content';
 
 const schema = {
   a: 'string',
@@ -39,9 +44,14 @@ const schema = {
   fa: 'number',
   fb: 'number',
   ws: 'number',
+  ind: 'string',
 } as const;
 
 type ViewMode = 'split' | 'unified';
+
+function indentFrom(value: unknown): IndentMode {
+  return value === '4' || value === 'tab' ? value : '2';
+}
 
 function rowElement(row: NumberedDiffLine): HTMLElement {
   const el = document.createElement('div');
@@ -102,9 +112,11 @@ function initRoot(root: HTMLElement): void {
   const outputUnified = root.querySelector<HTMLElement>('[data-diff-unified]');
   const summaryEl = root.querySelector<HTMLElement>('[data-diff-summary]');
   const swapButton = root.querySelector<HTMLButtonElement>('[data-swap]');
+  const copyButton = root.querySelector<HTMLButtonElement>('[data-copy-diff]');
   const formatABox = root.querySelector<HTMLInputElement>('[data-format-a]');
   const formatBBox = root.querySelector<HTMLInputElement>('[data-format-b]');
   const whitespaceBox = root.querySelector<HTMLInputElement>('[data-ignore-whitespace]');
+  const indentSelect = root.querySelector<HTMLSelectElement>('[data-indent]');
   const hintA = root.querySelector<HTMLElement>('[data-hint-a]');
   const hintB = root.querySelector<HTMLElement>('[data-hint-b]');
   const splitButton = root.querySelector<HTMLButtonElement>('[data-view-split]');
@@ -113,6 +125,7 @@ function initRoot(root: HTMLElement): void {
 
   const defaultA = inputA.value;
   const defaultB = inputB.value;
+  const defaultIndent: IndentMode = '2';
   const defaults = {
     a: defaultA,
     b: defaultB,
@@ -120,9 +133,11 @@ function initRoot(root: HTMLElement): void {
     fa: 1,
     fb: 1,
     ws: 1,
+    ind: defaultIndent,
   };
 
   let view: ViewMode = 'split';
+  let latestLines: DiffLine[] | null = null;
   let timer: number | undefined;
 
   const syncViewButtons = (): void => {
@@ -139,8 +154,9 @@ function initRoot(root: HTMLElement): void {
   };
 
   const render = (): void => {
-    const formattedA = beautifyForDiff(inputA.value);
-    const formattedB = beautifyForDiff(inputB.value);
+    const indent = indentFrom(indentSelect?.value);
+    const formattedA = beautifyForDiff(inputA.value, { indent });
+    const formattedB = beautifyForDiff(inputB.value, { indent });
     const formatA = formatABox?.checked ?? true;
     const formatB = formatBBox?.checked ?? true;
 
@@ -156,6 +172,9 @@ function initRoot(root: HTMLElement): void {
     outputSplit.hidden = !showSplit;
     outputUnified.hidden = showSplit;
 
+    latestLines = null;
+    if (copyButton) copyButton.disabled = true;
+
     if (diffIsTooLarge(textA, textB)) {
       outputSplit.replaceChildren();
       outputUnified.replaceChildren();
@@ -166,6 +185,8 @@ function initRoot(root: HTMLElement): void {
     const lines = diffLines(textA, textB, {
       ignoreTrailingWhitespace: whitespaceBox?.checked ?? true,
     });
+    latestLines = lines;
+    if (copyButton) copyButton.disabled = false;
     if (summaryEl) summaryEl.textContent = describeDiff(diffSummary(lines));
 
     if (showSplit) {
@@ -175,19 +196,23 @@ function initRoot(root: HTMLElement): void {
     }
   };
 
+  const saveContent = (): void => {
+    writeStoredState(CONTENT_KEY, { a: inputA.value, b: inputB.value }, 'session');
+  };
+
   const persist = (): void => {
     writeUrlState(
       schema,
       {
-        a: inputA.value,
-        b: inputB.value,
         view,
         fa: (formatABox?.checked ?? true) ? 1 : 0,
         fb: (formatBBox?.checked ?? true) ? 1 : 0,
         ws: (whitespaceBox?.checked ?? true) ? 1 : 0,
+        ind: indentFrom(indentSelect?.value),
       },
       { defaults },
     );
+    saveContent();
   };
 
   const schedulePersist = (): void => {
@@ -202,17 +227,25 @@ function initRoot(root: HTMLElement): void {
 
   const applyState = (): void => {
     const state = readUrlState(schema);
-    inputA.value = typeof state.a === 'string' ? state.a : defaultA;
-    inputB.value = typeof state.b === 'string' ? state.b : defaultB;
+    const stored = readStoredState(CONTENT_KEY, 'session');
+    const legacyA = typeof state.a === 'string' ? state.a : null;
+    const legacyB = typeof state.b === 'string' ? state.b : null;
+    const storedA = typeof stored?.a === 'string' ? stored.a : null;
+    const storedB = typeof stored?.b === 'string' ? stored.b : null;
+
+    inputA.value = legacyA ?? storedA ?? defaultA;
+    inputB.value = legacyB ?? storedB ?? defaultB;
     view = state.view === 'unified' ? 'unified' : 'split';
     if (formatABox) formatABox.checked = state.fa !== 0;
     if (formatBBox) formatBBox.checked = state.fb !== 0;
     if (whitespaceBox) whitespaceBox.checked = state.ws !== 0;
+    if (indentSelect) indentSelect.value = indentFrom(state.ind);
     syncViewButtons();
   };
 
   applyState();
   render();
+  persist();
 
   inputA.addEventListener('input', update);
   inputB.addEventListener('input', update);
@@ -220,6 +253,7 @@ function initRoot(root: HTMLElement): void {
   formatABox?.addEventListener('change', update);
   formatBBox?.addEventListener('change', update);
   whitespaceBox?.addEventListener('change', update);
+  indentSelect?.addEventListener('change', update);
 
   splitButton?.addEventListener('click', () => {
     view = 'split';
@@ -240,14 +274,21 @@ function initRoot(root: HTMLElement): void {
     update();
   });
 
+  copyButton?.addEventListener('click', async () => {
+    if (!latestLines) return;
+    try {
+      await navigator.clipboard.writeText(diffText(latestLines));
+      await flash(copyButton, 'Copied');
+    } catch {
+      await flash(copyButton, 'Copy failed');
+    }
+  });
+
   window.addEventListener('popstate', () => {
     window.clearTimeout(timer);
     applyState();
     render();
   });
-
-  root.querySelector('[data-share]')?.addEventListener('click', persist);
-  wireShare(root);
 }
 
 document.querySelectorAll<HTMLElement>('[data-diff-widget]').forEach(initRoot);

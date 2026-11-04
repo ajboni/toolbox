@@ -5,9 +5,12 @@ import {
   formatGroup,
   type SeparatorMode,
 } from '../lib/listCompare';
+import { readStoredState, writeStoredState } from '../lib/persistedState';
 import { readUrlState, writeUrlState } from '../lib/urlState';
 import { downloadText } from './download';
-import { wireCopy, wireShare } from './ui';
+import { wireCopy } from './ui';
+
+const CONTENT_KEY = 'list-compare:content';
 
 const schema = {
   a: 'string',
@@ -93,8 +96,6 @@ function initRoot(root: HTMLElement): void {
     writeUrlState(
       schema,
       {
-        a: inputA.value,
-        b: inputB.value,
         ci: ignoreCaseBox.checked ? 1 : 0,
         trim: trimBox.checked ? 1 : 0,
         dup: countsBox.checked ? 1 : 0,
@@ -102,6 +103,11 @@ function initRoot(root: HTMLElement): void {
         sort: sortBox.checked ? 1 : 0,
       },
       { defaults },
+    );
+    writeStoredState(
+      CONTENT_KEY,
+      { a: inputA.value, b: inputB.value },
+      'session',
     );
   };
 
@@ -117,8 +123,14 @@ function initRoot(root: HTMLElement): void {
 
   const applyState = (): void => {
     const state = readUrlState(schema);
-    inputA.value = typeof state.a === 'string' ? state.a : defaultA;
-    inputB.value = typeof state.b === 'string' ? state.b : defaultB;
+    const stored = readStoredState(CONTENT_KEY, 'session');
+    const legacyA = typeof state.a === 'string' ? state.a : null;
+    const legacyB = typeof state.b === 'string' ? state.b : null;
+    const storedA = typeof stored?.a === 'string' ? stored.a : null;
+    const storedB = typeof stored?.b === 'string' ? stored.b : null;
+
+    inputA.value = legacyA ?? storedA ?? defaultA;
+    inputB.value = legacyB ?? storedB ?? defaultB;
     ignoreCaseBox.checked = state.ci === 1;
     trimBox.checked = state.trim !== 0;
     countsBox.checked = state.dup === 1;
@@ -128,6 +140,7 @@ function initRoot(root: HTMLElement): void {
 
   applyState();
   render();
+  persist();
 
   inputA.addEventListener('input', update);
   inputB.addEventListener('input', update);
@@ -147,9 +160,6 @@ function initRoot(root: HTMLElement): void {
     render();
   });
 
-  root.querySelector<HTMLElement>('[data-share]')?.addEventListener('click', persist);
-
-  wireShare(root);
   wireCopy(root);
 }
 

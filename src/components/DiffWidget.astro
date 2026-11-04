@@ -44,8 +44,10 @@ const hintClass = 'text-xs text-zinc-500 dark:text-zinc-500';
 const checkboxClass =
   'h-3.5 w-3.5 rounded border-zinc-300 accent-sky-600 dark:border-zinc-600';
 const optionText = 'flex items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-400';
+const selectClass =
+  'rounded-lg border border-zinc-300 bg-white px-2 py-1 text-xs text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
 const buttonClass =
-  'rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500';
+  'rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:hover:border-zinc-500';
 const splitButtonClass = `${VIEW_BUTTON_BASE} ${VIEW_BUTTON_ACTIVE}`;
 const unifiedButtonClass = `${VIEW_BUTTON_BASE} ${VIEW_BUTTON_INACTIVE}`;
 ---
@@ -109,6 +111,14 @@ const unifiedButtonClass = `${VIEW_BUTTON_BASE} ${VIEW_BUTTON_INACTIVE}`;
       {initialSummary}
     </p>
     <div class="flex flex-wrap items-center gap-2">
+      <label for="diff-indent" class={optionText}>
+        <span>Indent</span>
+        <select id="diff-indent" data-indent class={selectClass}>
+          <option value="2" selected>2 spaces</option>
+          <option value="4">4 spaces</option>
+          <option value="tab">Tabs</option>
+        </select>
+      </label>
       <label for="diff-whitespace" class={optionText}>
         <input
           id="diff-whitespace"
@@ -177,7 +187,7 @@ const unifiedButtonClass = `${VIEW_BUTTON_BASE} ${VIEW_BUTTON_INACTIVE}`;
   </div>
 
   <div class="mt-6 flex flex-wrap justify-center gap-3">
-    <button type="button" data-share class={buttonClass}>Copy link</button>
+    <button type="button" data-copy-diff disabled class={buttonClass}>Copy diff</button>
   </div>
 </div>
 

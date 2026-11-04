@@ -7,6 +7,9 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Add a side-by-side view to the diff checker, with a switch back to the unified layout.',
       'Detect minified JSON and XML and pretty-print either side before comparing, with a toggle per input.',
       'Ignore trailing spaces when comparing and normalise Windows line endings.',
+      'Add two-space, four-space and tab indentation for formatted JSON and XML in the diff checker.',
+      'Copy the diff as plain - and + lines from the diff checker.',
+      'Keep pasted text out of links: the diff checker, list compare and JSON formatter store it in the tab and only settings travel in the URL.',
     ],
   },
   {

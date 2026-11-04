@@ -79,27 +79,48 @@ tasks/                  # todo / done / ideas notes
 3. Put reusable logic in `src/lib/` and add a `*.test.ts`.
 4. Pass a unique `title`, `description` and `canonicalPath` to `BaseLayout`,
    plus `JSON-LD` via `src/lib/jsonld.ts` (`webApplication` + `breadcrumbs`).
-5. If the tool has inputs, make them **shareable via the URL** (see below).
+5. Keep non-sensitive settings in the URL; keep free-text or private input in
+   `sessionStorage` (see below).
 6. Link the tool from its category page and cross-link related tools.
 7. Set `added` to the release date in `src/data/tools.ts` (`converters.ts` for
    converter pages) and add the changelog entry in `src/data/changelog.ts`.
 
 ## Shareable URLs (query strings)
 
-Tool state is serialized into the query string so any state is one copy-paste
-away.
+Short options and non-sensitive settings can travel in the query string so a
+configuration is one copy-paste away. Free-text input, and anything that might
+carry private or sensitive data, must never go in the URL: the query string is
+sent to the CDN on every request and can end up in logs, browser history and
+chat previews.
 
-- Use the helpers in `src/lib/urlState.ts`:
+- Use the helpers in `src/lib/urlState.ts` for settings:
   - `readUrlState(schema)`: parse + validate params on load.
   - `writeUrlState(schema, values, { defaults })`: update the URL.
+- Keep input text in `sessionStorage` with `readStoredState` /
+  `writeStoredState` from `src/lib/persistedState.ts`, using the `'session'`
+  area and a per-tool key (`diff:content`, `json:content`). Session storage
+  survives a reload but is cleared when the tab closes.
+- Load priority: legacy URL content (read only, never written again), then
+  stored state, then defaults.
 - On change, call `writeUrlState` with `replace: true` (default) so the history
-  is not polluted. Handle `popstate` to restore state on back/forward.
+  is not polluted. Handle `popstate` to restore settings on back/forward.
 - Omit values equal to the default (pass `defaults`) to keep URLs clean.
 - Invalid or missing params must fall back to the tool's default; never throw.
-- Add a "Copy link" button (`navigator.clipboard.writeText(location.href)`).
+- Offer a "Copy" action for the result instead of a link that contains the
+  input. `src/scripts/ui.ts` has `wireCopy`; the diff checker copies the diff
+  text directly.
 - **SEO rule:** `canonical` and the sitemap must never include query strings.
-  Query params are for sharing only; they are not meant to be indexed.
+  Query params are for sharing settings only; they are not meant to be indexed.
 - Example: `/dates/days-until/?date=2026-12-25`.
+
+### Pending migration
+
+These tools still put free text in the URL and should move to session storage:
+
+- `/text/case-converter/` (`?in=`)
+- `/text/counter/` (`?in=`)
+- `/text/url-encode/` (`?in=`)
+- `/text/hash/` (`?in=`)
 
 ## Changelog
 

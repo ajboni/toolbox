@@ -5,7 +5,7 @@ export interface JsonResult {
 }
 
 export interface FormatOptions {
-  indent?: number;
+  indent?: number | string;
 }
 
 type ParseResult = { ok: true; value: unknown } | { ok: false; error: string };

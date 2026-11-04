@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { beautifyForDiff, detectFormat, formatXml } from './codeFormat';
+import {
+  beautifyForDiff,
+  detectFormat,
+  formatXml,
+  indentUnit,
+} from './codeFormat';
 
 describe('beautifyForDiff', () => {
   it('formats minified JSON with two-space indentation', () => {
@@ -98,5 +103,29 @@ describe('detectFormat', () => {
     expect(detectFormat('{"a":1}')).toBe('json');
     expect(detectFormat('<r><a/></r>')).toBe('xml');
     expect(detectFormat('plain')).toBeNull();
+  });
+});
+
+describe('indent modes', () => {
+  it('builds the indent unit', () => {
+    expect(indentUnit('2')).toBe('  ');
+    expect(indentUnit('4')).toBe('    ');
+    expect(indentUnit('tab')).toBe('\t');
+  });
+
+  it('applies four spaces to JSON and XML', () => {
+    expect(beautifyForDiff('{"a":1}', { indent: '4' }).text).toBe(
+      '{\n    "a": 1\n}',
+    );
+    expect(formatXml('<r><a/></r>', '    ')).toBe('<r>\n    <a/>\n</r>');
+  });
+
+  it('applies tabs to JSON and XML', () => {
+    expect(beautifyForDiff('{"a":1}', { indent: 'tab' }).text).toBe(
+      '{\n\t"a": 1\n}',
+    );
+    expect(beautifyForDiff('<r><a/></r>', { indent: 'tab' }).text).toBe(
+      '<r>\n\t<a/>\n</r>',
+    );
   });
 });

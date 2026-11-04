@@ -37,9 +37,11 @@ class MemoryStorage implements Storage {
 }
 
 const original = (globalThis as { localStorage?: Storage }).localStorage;
+const originalSession = (globalThis as { sessionStorage?: Storage }).sessionStorage;
 
 beforeEach(() => {
   (globalThis as { localStorage?: Storage }).localStorage = new MemoryStorage();
+  (globalThis as { sessionStorage?: Storage }).sessionStorage = new MemoryStorage();
 });
 
 afterEach(() => {
@@ -47,6 +49,11 @@ afterEach(() => {
     delete (globalThis as { localStorage?: Storage }).localStorage;
   } else {
     (globalThis as { localStorage?: Storage }).localStorage = original;
+  }
+  if (originalSession === undefined) {
+    delete (globalThis as { sessionStorage?: Storage }).sessionStorage;
+  } else {
+    (globalThis as { sessionStorage?: Storage }).sessionStorage = originalSession;
   }
 });
 
@@ -88,6 +95,25 @@ describe('clearStoredState', () => {
     writeStoredState(BOARD_STORAGE_KEY, { clock: 'UTC' });
     clearStoredState(BOARD_STORAGE_KEY);
     expect(readStoredState(BOARD_STORAGE_KEY)).toBeNull();
+  });
+});
+
+describe('storage areas', () => {
+  it('keeps local and session state separate', () => {
+    writeStoredState('diff:content', { a: 'local' });
+    writeStoredState('diff:content', { a: 'session' }, 'session');
+
+    expect(readStoredState('diff:content')).toEqual({ a: 'local' });
+    expect(readStoredState('diff:content', 'session')).toEqual({ a: 'session' });
+  });
+
+  it('clears only the requested area', () => {
+    writeStoredState('json:content', { in: 'local' });
+    writeStoredState('json:content', { in: 'session' }, 'session');
+    clearStoredState('json:content', 'session');
+
+    expect(readStoredState('json:content', 'session')).toBeNull();
+    expect(readStoredState('json:content')).toEqual({ in: 'local' });
   });
 });
 

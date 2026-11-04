@@ -1,6 +1,9 @@
+import { readStoredState, writeStoredState } from '../lib/persistedState';
 import { formatJson, minifyJson } from '../lib/json';
 import { readUrlState, writeUrlState } from '../lib/urlState';
-import { wireCopy, wireShare } from './ui';
+import { wireCopy } from './ui';
+
+const CONTENT_KEY = 'json:content';
 
 const schema = { in: 'string', mode: 'string', indent: 'number' } as const;
 const STATUS_BASE = 'mt-2 text-xs text-zinc-500 dark:text-zinc-500';
@@ -18,7 +21,9 @@ function initRoot(root: HTMLElement): void {
   const defaultInput = input.value;
   const defaultMode = modeSelect.value;
   const defaultIndent = Number(indentSelect.value);
-  const defaults = { in: defaultInput, mode: defaultMode, indent: defaultIndent };
+  const defaults = { mode: defaultMode, indent: defaultIndent };
+
+  let timer: number | undefined;
 
   const render = (): void => {
     const mode = modeSelect.value === 'min' ? 'min' : 'pretty';
@@ -35,35 +40,50 @@ function initRoot(root: HTMLElement): void {
     }
   };
 
+  const persist = (): void => {
+    writeUrlState(
+      schema,
+      { mode: modeSelect.value, indent: Number(indentSelect.value) },
+      { defaults },
+    );
+    writeStoredState(CONTENT_KEY, { in: input.value }, 'session');
+  };
+
+  const schedulePersist = (): void => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(persist, 300);
+  };
+
   const applyState = (): void => {
     const state = readUrlState(schema);
-    input.value = typeof state.in === 'string' ? state.in : defaultInput;
+    const stored = readStoredState(CONTENT_KEY, 'session');
+    const legacy = typeof state.in === 'string' ? state.in : null;
+    const saved = typeof stored?.in === 'string' ? stored.in : null;
+
+    input.value = legacy ?? saved ?? defaultInput;
     modeSelect.value = state.mode === 'min' ? 'min' : defaultMode;
     indentSelect.value = state.indent === 4 ? '4' : String(defaultIndent);
   };
 
   const update = (): void => {
-    writeUrlState(
-      schema,
-      { in: input.value, mode: modeSelect.value, indent: Number(indentSelect.value) },
-      { defaults },
-    );
     render();
+    schedulePersist();
   };
 
   applyState();
   render();
+  persist();
 
   input.addEventListener('input', update);
   modeSelect.addEventListener('change', update);
   indentSelect.addEventListener('change', update);
 
   window.addEventListener('popstate', () => {
+    window.clearTimeout(timer);
     applyState();
     render();
   });
 
-  wireShare(root);
   wireCopy(root);
 }
 

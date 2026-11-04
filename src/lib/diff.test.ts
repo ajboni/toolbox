@@ -3,6 +3,7 @@ import {
   diffIsTooLarge,
   diffLines,
   diffSummary,
+  diffText,
   numberDiffLines,
   splitDiffLines,
 } from './diff';
@@ -162,6 +163,14 @@ describe('splitDiffLines', () => {
       [1, 1],
       [2, 2],
     ]);
+  });
+});
+
+describe('diffText', () => {
+  it('prefixes additions, removals and unchanged lines', () => {
+    expect(diffText(diffLines('one\ntwo', 'one\n2\nthree'))).toBe(
+      ' one\n-two\n+2\n+three',
+    );
   });
 });
 

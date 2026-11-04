@@ -42,8 +42,8 @@ const jsonLd = [
     a line-by-line comparison side by side. Minified JSON and XML are detected
     and pretty-printed before the diff, and each side has its own format toggle.
     Added lines are green, removed lines are red, and a summary tells you how
-    much changed. Everything runs locally, and both blocks travel in the URL so
-    you can share the comparison.
+    much changed. Everything runs locally: your text stays in this tab and is
+    never uploaded or added to the link.
   </p>
 
   <div class="mt-8">
@@ -60,17 +60,21 @@ const jsonLd = [
       single-column diff.
     </p>
     <p class="text-sm leading-relaxed">
-      JSON and XML are detected per side. JSON is re-serialised with two-space
-      indentation, which also normalises number formats and escapes. XML is
-      re-indented only when the whole document is well-formed, and whitespace
-      between elements is collapsed, so XML that relies on significant
-      whitespace may show extra changes. Line numbers refer to the formatted
-      text: turn the toggle off to compare exactly what you pasted.
+      JSON and XML are detected per side. JSON is re-serialised with the
+      indentation you pick (two spaces, four spaces or tabs), which also
+      normalises number formats and escapes. XML is re-indented only when the
+      whole document is well-formed, and whitespace between elements is
+      collapsed, so XML that relies on significant whitespace may show extra
+      changes. Line numbers refer to the formatted text: turn the toggle off to
+      compare exactly what you pasted.
     </p>
     <p class="text-sm leading-relaxed">
       Key order in JSON is not normalised, so two objects with the same keys in
       a different order still show as changes. Comparisons above a few thousand
-      lines per side stop early to keep the tab responsive.
+      lines per side stop early to keep the tab responsive. Your text is kept in
+      this tab, so a reload does not lose it, and it is cleared when you close
+      the tab. Use Copy diff to paste the result somewhere else as plain - and +
+      lines.
     </p>
   </section>
 

@@ -13,6 +13,11 @@ describe('formatJson', () => {
     expect(result.output).toBe('{\n    "a": 1\n}');
   });
 
+  it('honours a tab indent', () => {
+    const result = formatJson('{"a":1}', { indent: '\t' });
+    expect(result.output).toBe('{\n\t"a": 1\n}');
+  });
+
   it('reports a readable error with line and column', () => {
     const result = formatJson('{\n  "a": 1,\n}');
     expect(result.ok).toBe(false);

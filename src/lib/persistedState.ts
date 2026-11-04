@@ -1,5 +1,7 @@
 export type StoredState = Record<string, string | number>;
 
+export type StorageArea = 'local' | 'session';
+
 export const BOARD_STORAGE_KEY = 'world-clock:board';
 
 export interface BoardState {
@@ -8,8 +10,11 @@ export interface BoardState {
   seconds: number;
 }
 
-function storage(): Storage | null {
+function storage(area: StorageArea): Storage | null {
   try {
+    if (area === 'session') {
+      return typeof sessionStorage === 'undefined' ? null : sessionStorage;
+    }
     return typeof localStorage === 'undefined' ? null : localStorage;
   } catch {
     return null;
@@ -20,8 +25,8 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-export function readStoredState(key: string): StoredState | null {
-  const store = storage();
+export function readStoredState(key: string, area: StorageArea = 'local'): StoredState | null {
+  const store = storage(area);
   if (!store) return null;
   try {
     const raw = store.getItem(key);
@@ -38,8 +43,12 @@ export function readStoredState(key: string): StoredState | null {
   }
 }
 
-export function writeStoredState(key: string, values: StoredState): void {
-  const store = storage();
+export function writeStoredState(
+  key: string,
+  values: StoredState,
+  area: StorageArea = 'local',
+): void {
+  const store = storage(area);
   if (!store) return;
   try {
     store.setItem(key, JSON.stringify(values));
@@ -48,8 +57,8 @@ export function writeStoredState(key: string, values: StoredState): void {
   }
 }
 
-export function clearStoredState(key: string): void {
-  const store = storage();
+export function clearStoredState(key: string, area: StorageArea = 'local'): void {
+  const store = storage(area);
   if (!store) return;
   try {
     store.removeItem(key);

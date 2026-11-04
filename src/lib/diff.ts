@@ -96,6 +96,15 @@ export function diffIsTooLarge(a: string, b: string): boolean {
   return splitLines(a).length * splitLines(b).length > MAX_DIFF_CELLS;
 }
 
+export function diffText(lines: DiffLine[]): string {
+  return lines
+    .map((line) => {
+      const prefix = line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ' ';
+      return `${prefix}${line.text}`;
+    })
+    .join('\n');
+}
+
 export function diffSummary(lines: DiffLine[]): DiffSummary {
   const summary: DiffSummary = { added: 0, removed: 0, unchanged: 0 };
   for (const line of lines) {

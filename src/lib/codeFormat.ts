@@ -2,9 +2,23 @@ import { formatJson } from './json';
 
 export type CodeFormat = 'json' | 'xml';
 
+export type IndentMode = '2' | '4' | 'tab';
+
+export const INDENT_MODES: IndentMode[] = ['2', '4', 'tab'];
+
 export interface FormattedText {
   format: CodeFormat | null;
   text: string;
+}
+
+export interface BeautifyOptions {
+  indent?: IndentMode;
+}
+
+export function indentUnit(mode: IndentMode = '2'): string {
+  if (mode === 'tab') return '\t';
+  if (mode === '4') return '    ';
+  return '  ';
 }
 
 type XmlTokenKind = 'open' | 'close' | 'self' | 'text' | 'comment' | 'cdata' | 'pi' | 'doctype';
@@ -239,8 +253,8 @@ function inlineXml(node: XmlNode): string {
   return `${tag}>${node.children.map(inlineXml).join('')}</${node.name}>`;
 }
 
-function formatElement(element: XmlElement, depth: number): string {
-  const pad = '  '.repeat(depth);
+function formatElement(element: XmlElement, depth: number, indent: string): string {
+  const pad = indent.repeat(depth);
   const tag = openTag(element);
   if (element.selfClosing) return `${pad}${tag}/>`;
 
@@ -259,17 +273,17 @@ function formatElement(element: XmlElement, depth: number): string {
   const innerLines: string[] = [];
   for (const child of element.children) {
     if (child.type === 'element') {
-      innerLines.push(formatElement(child, depth + 1));
+      innerLines.push(formatElement(child, depth + 1, indent));
       continue;
     }
     const raw = child.raw.trim();
-    if (raw) innerLines.push(`${'  '.repeat(depth + 1)}${raw}`);
+    if (raw) innerLines.push(`${indent.repeat(depth + 1)}${raw}`);
   }
 
   return `${pad}${tag}>\n${innerLines.join('\n')}\n${pad}</${element.name}>`;
 }
 
-export function formatXml(input: string): string | null {
+export function formatXml(input: string, indent: string = '  '): string | null {
   const tokens = scanXml(input.trim());
   if (!tokens) return null;
 
@@ -280,7 +294,7 @@ export function formatXml(input: string): string | null {
   const lines: string[] = [];
   for (const node of tree) {
     if (node.type === 'element') {
-      lines.push(formatElement(node, 0));
+      lines.push(formatElement(node, 0, indent));
       continue;
     }
     const raw = node.raw.trim();
@@ -290,14 +304,18 @@ export function formatXml(input: string): string | null {
   return lines.join('\n') || null;
 }
 
-export function beautifyForDiff(input: string): FormattedText {
+export function beautifyForDiff(
+  input: string,
+  options: BeautifyOptions = {},
+): FormattedText {
   const text = input.trim();
+  const indent = indentUnit(options.indent);
 
   if (text.startsWith('{') || text.startsWith('[')) {
-    const result = formatJson(text, { indent: 2 });
+    const result = formatJson(text, { indent });
     if (result.ok) return { format: 'json', text: result.output };
   } else if (text.startsWith('<')) {
-    const formatted = formatXml(text);
+    const formatted = formatXml(text, indent);
     if (formatted !== null) return { format: 'xml', text: formatted };
   }
 

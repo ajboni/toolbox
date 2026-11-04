@@ -27,10 +27,11 @@ beautify step, and show diffs side by side.
 
 ## Notes
 
-- Formatting is display-only: the textareas and the shared URL keep exactly what
-  was pasted.
+- Formatting is display-only: the textareas keep exactly what was pasted.
 - The diff page opts into the wider `max-w-6xl` layout and uses 12px code text,
   so the two columns get roughly twice the characters per line.
+- Pasted text is kept in `sessionStorage`; only the view settings travel in the
+  URL. The AGENTS guide records the tools that still need the same treatment.
 - JSON key order is not normalised, so a semantic JSON comparison would still
   need its own tool.
 - XML mixed content stays inline to avoid introducing significant whitespace.

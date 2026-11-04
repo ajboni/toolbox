@@ -22,7 +22,7 @@ const jsonLd = [
 
 <BaseLayout
   title="JSON Formatter and Minifier"
-  description="Pretty-print or minify JSON in your browser. Spot syntax errors with line and column numbers, and share the exact input via the URL."
+  description="Pretty-print or minify JSON in your browser. Spot syntax errors with line and column numbers, with your input kept in the tab."
   canonicalPath={canonicalPath}
   jsonLd={jsonLd}
 >
@@ -38,8 +38,8 @@ const jsonLd = [
   <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
     Paste JSON to pretty-print it with your chosen indentation or squeeze it onto
     a single line. Invalid input reports the line and column of the problem. The
-    text never leaves your browser, and the input rides along in the URL so you
-    can share it.
+    text never leaves your browser: it stays in this tab and is never added to the
+    URL.
   </p>
 
   <div class="mt-8">
@@ -52,7 +52,9 @@ const jsonLd = [
       Parsing uses the browser's native <code>JSON.parse</code>, so the tool
       accepts exactly the same input as your code does. Pretty mode re-serialises
       it with the indentation you pick; minify mode drops every optional space.
-      Nothing is uploaded: the parsing and formatting happen locally.
+      Nothing is uploaded: the parsing and formatting happen locally. The input
+      is kept in this tab so a reload does not lose it, and it is cleared when
+      you close the tab.
     </p>
   </section>
 
