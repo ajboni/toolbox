@@ -1,8 +1,14 @@
 ---
 import BrandLogo from './BrandLogo.astro';
+import FullscreenIcon from './FullscreenIcon.astro';
 import { CATEGORIES, SITE, accentClasses } from '../data/site';
 import { toolsInCategory } from '../data/tools';
 
+interface Props {
+  focusable?: boolean;
+}
+
+const { focusable = false } = Astro.props;
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/';
 const isSearch = pathname === '/search/';
@@ -59,6 +65,19 @@ const isActive = (path: string) =>
         Ctrl K
       </kbd>
     </a>
+
+    {
+      focusable && (
+        <button
+          type="button"
+          data-focus-toggle
+          class="flex items-center gap-2 rounded-lg px-3 py-2 text-left font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100"
+        >
+          <FullscreenIcon />
+          Full screen
+        </button>
+      )
+    }
 
     {
       CATEGORIES.map((category) => {

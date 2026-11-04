@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
 import SearchPalette from '../components/SearchPalette.astro';
+import FullscreenIcon from '../components/FullscreenIcon.astro';
 import { SITE } from '../data/site';
 import { TOOLS } from '../data/tools';
 import { ANALYTICS } from '../data/analytics';
@@ -20,6 +21,9 @@ interface Props {
 
 const { title, description, canonicalPath, jsonLd, noindex, wide = false } = Astro.props;
 const toolPath = TOOLS.some((tool) => tool.path === canonicalPath) ? canonicalPath : undefined;
+const focusable = TOOLS.some(
+  (tool) => canonicalPath === tool.path || canonicalPath.startsWith(tool.path),
+);
 ---
 
 <!doctype html>
@@ -58,14 +62,14 @@ const toolPath = TOOLS.some((tool) => tool.path === canonicalPath) ? canonicalPa
     </a>
 
     <div class="lg:flex">
-      <Header />
+      <Header focusable={focusable} />
       <div
         data-sidebar-overlay
         hidden
         class="fixed inset-0 z-30 bg-zinc-950/50 lg:hidden"
       >
       </div>
-      <Sidebar />
+      <Sidebar focusable={focusable} />
       <div class="flex min-w-0 flex-1 flex-col">
         <main
           id="main"
@@ -82,10 +86,26 @@ const toolPath = TOOLS.some((tool) => tool.path === canonicalPath) ? canonicalPa
 
     <SearchPalette />
 
+    {
+      focusable && (
+        <button
+          type="button"
+          data-focus-toggle
+          data-focus-exit
+          aria-label="Exit full screen"
+          class="fixed right-4 top-4 z-50 hidden items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-3 py-2 text-sm font-medium text-zinc-700 shadow-sm backdrop-blur transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-200 dark:hover:bg-zinc-800"
+        >
+          <FullscreenIcon exit class="h-4 w-4" />
+          Exit
+        </button>
+      )
+    }
+
     <script>
       import '../scripts/sidebar';
       import '../scripts/searchPalette';
       import '../scripts/toolVisit';
+      import '../scripts/focusMode';
     </script>
   </body>
 </html>

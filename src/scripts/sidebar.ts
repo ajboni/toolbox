@@ -18,7 +18,9 @@ if (sidebar && toggle && overlay) {
   overlay.addEventListener('click', () => setOpen(false));
 
   sidebar.addEventListener('click', (event) => {
-    if ((event.target as HTMLElement).closest('a, [data-search-open]')) setOpen(false);
+    if ((event.target as HTMLElement).closest('a, [data-search-open], [data-focus-toggle]')) {
+      setOpen(false);
+    }
   });
 
   document.addEventListener('keydown', (event) => {

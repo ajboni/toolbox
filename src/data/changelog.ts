@@ -4,6 +4,12 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-11-04',
     notes: [
+      'Add a full screen mode to every tool, so the tool fills the window with the navigation and the page intro out of the way.',
+    ],
+  },
+  {
+    date: '2026-11-04',
+    notes: [
       'Add a side-by-side view to the diff checker, with a switch back to the unified layout.',
       'Detect minified JSON and XML and pretty-print either side before comparing, with a toggle per input.',
       'Ignore trailing spaces when comparing and normalise Windows line endings.',

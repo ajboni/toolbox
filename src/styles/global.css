@@ -21,6 +21,37 @@ body {
   }
 }
 
+/* Full screen mode: drop the site shell and the page's title, intro and prose,
+   leaving only the tool. [data-chrome] is an escape hatch for pages whose
+   structure does not follow the nav, h1, intro, widget, sections order. */
+:root[data-focus] [data-sidebar],
+:root[data-focus] header,
+:root[data-focus] footer,
+:root[data-focus] [data-chrome] {
+  display: none;
+}
+
+:root[data-focus] #main {
+  max-width: none;
+}
+
+:root[data-focus] #main > nav,
+:root[data-focus] #main > h1,
+:root[data-focus] #main > p,
+:root[data-focus] #main > section {
+  display: none;
+}
+
+:root[data-focus] [data-focus-exit] {
+  display: inline-flex;
+}
+
+@media (max-width: 1023px) {
+  :root[data-focus] #main {
+    padding-top: 3rem;
+  }
+}
+
 [data-search-dialog][open] {
   animation: search-dialog-in 140ms ease-out;
 }

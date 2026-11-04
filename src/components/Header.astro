@@ -1,7 +1,13 @@
 ---
 import BrandLogo from './BrandLogo.astro';
+import FullscreenIcon from './FullscreenIcon.astro';
 import { SITE } from '../data/site';
 
+interface Props {
+  focusable?: boolean;
+}
+
+const { focusable = false } = Astro.props;
 const isHome = Astro.url.pathname === '/';
 ---
 
@@ -17,6 +23,18 @@ const isHome = Astro.url.pathname === '/';
     {SITE.name}
   </a>
   <div class="flex items-center gap-2">
+    {
+      focusable && (
+        <button
+          type="button"
+          data-focus-toggle
+          aria-label="Full screen"
+          class="rounded-lg border border-zinc-200 p-2 text-zinc-600 transition hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+        >
+          <FullscreenIcon class="h-5 w-5" />
+        </button>
+      )
+    }
     <a
       href="/search/"
       data-search-open
