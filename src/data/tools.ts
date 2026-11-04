@@ -64,6 +64,14 @@ const CORE_TOOLS: Tool[] = [
     path: '/dates/world-clock/',
   },
   {
+    slug: 'shadow',
+    category: 'dates',
+    title: 'Shadow Length & Solar Compass',
+    description:
+      'Drag the sun across a compass dial to see how long a shadow is and which way it points.',
+    path: '/dates/shadow/',
+  },
+  {
     slug: 'birthday-weekday',
     category: 'dates',
     title: 'Birthday Weekday',
@@ -151,6 +159,14 @@ const CORE_TOOLS: Tool[] = [
     description:
       'Keep time with tap tempo, time signatures, accents, subdivisions and a shareable setup.',
     path: '/music/metronome/',
+  },
+  {
+    slug: 'tuner',
+    category: 'music',
+    title: 'Instrument Tuner',
+    description:
+      'Tune a guitar, bass, ukulele, violin or cello with a chromatic needle and string targets.',
+    path: '/music/tuner/',
   },
   {
     slug: 'case-converter',

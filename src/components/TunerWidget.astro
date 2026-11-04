@@ -1,0 +1,214 @@
+---
+import {
+  DEFAULT_INSTRUMENT,
+  INSTRUMENTS,
+  MAX_REFERENCE,
+  MIN_REFERENCE,
+} from '../data/instruments';
+import { DEFAULT_REFERENCE } from '../lib/music/pitch';
+
+const instrument = INSTRUMENTS.find((item) => item.slug === DEFAULT_INSTRUMENT)!;
+
+const chipClass =
+  'rounded-full border border-zinc-300 px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100';
+const activeChipClass =
+  'data-[active]:border-fuchsia-500 data-[active]:bg-fuchsia-50 data-[active]:text-fuchsia-700 dark:data-[active]:border-fuchsia-400 dark:data-[active]:bg-fuchsia-950/40 dark:data-[active]:text-fuchsia-300';
+const stepButtonClass =
+  'flex h-9 w-9 items-center justify-center rounded-full border border-zinc-300 text-lg font-medium text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100';
+const labelClass = 'text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400';
+
+const ticks = [-50, -25, 0, 25, 50];
+---
+
+<div
+  data-tuner
+  data-default-ref={DEFAULT_REFERENCE}
+  data-default-instrument={DEFAULT_INSTRUMENT}
+  data-min-ref={MIN_REFERENCE}
+  data-max-ref={MAX_REFERENCE}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50 sm:p-6"
+>
+  <div class="text-center">
+    <p class={labelClass}>Detected note</p>
+    <div class="mt-1 flex min-h-20 items-center justify-center gap-3">
+      <p
+        data-out="note"
+        data-tune="0"
+        class="text-6xl font-bold tabular-nums tracking-tight text-zinc-400 data-[tune=1]:text-emerald-600 dark:text-zinc-500 dark:data-[tune=1]:text-emerald-400"
+      >
+        ♪
+      </p>
+    </div>
+    <p
+      data-out="cents"
+      class="mt-1 text-lg font-semibold tabular-nums text-zinc-500 dark:text-zinc-400"
+    >
+      Play a note
+    </p>
+    <p data-out="detail" class="mt-1 text-xs tabular-nums text-zinc-400 dark:text-zinc-500">
+      &nbsp;
+    </p>
+  </div>
+
+  <svg
+    viewBox="0 0 320 74"
+    aria-hidden="true"
+    class="mx-auto mt-3 w-full max-w-md"
+  >
+    <line
+      x1="20"
+      y1="42"
+      x2="300"
+      y2="42"
+      class="stroke-zinc-300 dark:stroke-zinc-700"
+      stroke-width="1.5"></line>
+    <rect
+      x="146"
+      y="30"
+      width="28"
+      height="24"
+      class="fill-emerald-500/15 dark:fill-emerald-400/15"></rect>
+    {
+      ticks.map((cents) => {
+        const x = 160 + cents * 2.8;
+        const tall = cents === 0;
+        return (
+          <g>
+            <line
+              x1={x}
+              y1={tall ? 26 : 34}
+              x2={x}
+              y2={tall ? 58 : 50}
+              class="stroke-zinc-300 dark:stroke-zinc-700"
+              stroke-width={tall ? 1.2 : 0.8}
+            />
+            <text
+              x={x}
+              y="70"
+              text-anchor="middle"
+              class="fill-zinc-400 text-[8px] dark:fill-zinc-500"
+            >
+              {cents > 0 ? `+${cents}` : cents}
+            </text>
+          </g>
+        );
+      })
+    }
+    <line
+      data-part="needle"
+      x1="160"
+      y1="22"
+      x2="160"
+      y2="62"
+      class="stroke-amber-500 data-[tune=1]:stroke-emerald-500 dark:stroke-amber-400 dark:data-[tune=1]:stroke-emerald-400"
+      stroke-width="3"
+      stroke-linecap="round"></line>
+  </svg>
+
+  <div class="mt-4 flex flex-col items-center gap-2">
+    <button
+      type="button"
+      data-start
+      class="inline-flex h-10 items-center justify-center rounded-full bg-fuchsia-600 px-6 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-400 dark:bg-fuchsia-500"
+    >
+      Start listening
+    </button>
+    <p data-out="status" class="min-h-5 text-center text-xs text-zinc-500 dark:text-zinc-400">
+      The microphone is only used while the tuner is running.
+    </p>
+  </div>
+
+  <div class="mt-6 grid gap-5 sm:grid-cols-2">
+    <div>
+      <p class={labelClass}>Instrument</p>
+      <div class="mt-2 flex flex-wrap gap-1.5" data-instruments>
+        {
+          INSTRUMENTS.map((item) => (
+            <button
+              type="button"
+              data-instrument={item.slug}
+              data-active={item.slug === DEFAULT_INSTRUMENT ? '1' : undefined}
+              class:list={[chipClass, activeChipClass]}
+            >
+              {item.name}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div>
+      <p class={labelClass}>Reference pitch</p>
+      <div class="mt-2 flex items-center gap-3">
+        <button
+          type="button"
+          data-ref-step="-1"
+          aria-label="Lower the reference pitch by one hertz"
+          class={stepButtonClass}
+        >
+          −
+        </button>
+        <span data-out="ref" class="text-lg font-semibold tabular-nums text-zinc-900 dark:text-zinc-100">
+          {DEFAULT_REFERENCE} Hz
+        </span>
+        <button
+          type="button"
+          data-ref-step="1"
+          aria-label="Raise the reference pitch by one hertz"
+          class={stepButtonClass}
+        >
+          +
+        </button>
+      </div>
+      <input
+        type="range"
+        min={MIN_REFERENCE}
+        max={MAX_REFERENCE}
+        step="1"
+        value={DEFAULT_REFERENCE}
+        data-ref-range
+        aria-label="A4 reference pitch in hertz"
+        class="mt-2 w-full accent-fuchsia-600 dark:accent-fuchsia-400"
+      />
+      <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">A4 tuning reference</p>
+    </div>
+  </div>
+
+  <div data-strings-wrap class="mt-5">
+    <p class={labelClass}>Strings</p>
+    <p class="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+      Tap a string to hear its target note.
+    </p>
+    <div class="mt-2 flex flex-wrap gap-1.5" data-strings>
+      {
+        instrument.strings.map((string) => (
+          <button
+            type="button"
+            data-string={string.midi}
+            class="rounded-full border border-zinc-300 px-3 py-1 text-sm font-semibold tabular-nums text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100 data-[active]:border-fuchsia-500 data-[active]:bg-fuchsia-50 dark:data-[active]:border-fuchsia-500/60 dark:data-[active]:bg-fuchsia-950/40"
+          >
+            {string.label}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="mt-6 flex flex-col items-center gap-2">
+    <button
+      type="button"
+      data-share
+      class="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+    >
+      Copy link
+    </button>
+    <p class="max-w-md text-center text-xs text-zinc-500 dark:text-zinc-400">
+      Audio is analysed locally with the Web Audio API. Nothing is recorded and
+      nothing leaves your browser.
+    </p>
+  </div>
+</div>
+
+<script>
+  import '../scripts/tuner';
+</script>

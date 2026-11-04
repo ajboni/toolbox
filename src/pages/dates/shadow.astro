@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SolarCompassWidget from '../../components/SolarCompassWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/dates/shadow/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Shadow Length Calculator & Solar Compass',
+    description:
+      'See how long a shadow is at any time, date and latitude, and drag the sun across the sky to watch it turn.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Dates & Time', path: '/dates/' },
+    { name: 'Shadow Length', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Shadow Length Calculator · Solar Compass & Sundial"
+  description="Find out how long a shadow is right now, or pick any date, time and latitude. Drag the sun, scrub the year and watch the shadow turn. Free and shareable."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/dates/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Dates &amp; Time</a>
+    <span class="mx-2">/</span>
+    <span>Shadow Length</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Shadow length &amp; solar compass
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Drag the sun across the dial to see how long a shadow gets and which way it
+    points. Scrub the outer ring to travel through the year. Everything is
+    computed in your browser, and the whole state lives in the URL.
+  </p>
+
+  <div class="mt-8">
+    <SolarCompassWidget />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      The dial runs on the NOAA solar position equations. For the chosen day the
+      tool derives the solar declination and the equation of time, then turns the
+      clock time and the longitude into an hour angle. Latitude, declination and
+      hour angle give the sun's height above the horizon and its compass
+      bearing. A shadow cast by an object of height <em>h</em> is then
+      <em>h</em> / tan(elevation) long and points exactly away from the sun.
+    </p>
+    <p class="text-sm leading-relaxed">
+      The centre of the dial is straight up and the rim is the horizon, so the
+      sun's distance from the centre is its angular distance from the zenith. Its
+      angle around the dial is the compass bearing, with north at the top. The
+      grey line runs from the centre in the opposite direction: that is where the
+      shadow falls.
+    </p>
+    <p class="text-sm leading-relaxed">
+      The outer ring has one tick per day of the year, and each tick's length is
+      that day's daylight. Drag it and the seasons unfold: long ticks in summer,
+      short ones in winter, and a gap at high latitudes during the polar night.
+      A faint figure eight sits inside the dial. It is the analemma, the place
+      where the sun hangs at the same clock time on every day of the year; the
+      width comes from the equation of time, which makes solar noon drift by up
+      to a quarter of an hour either side of the clock.
+    </p>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Reading the numbers</h2>
+    <ul class="list-disc space-y-2 pl-5 text-sm leading-relaxed">
+      <li>
+        <strong>Sun height</strong> is the elevation above the horizon. At 45°
+        the shadow is exactly as long as the object is tall.
+      </li>
+      <li>
+        <strong>Shadow ratio</strong> is the one photographers care about: 2.0×
+        means the shadow is twice the height of the object.
+      </li>
+      <li>
+        <strong>Shadow points</strong> is a compass bearing. In the northern
+        hemisphere the shadow points north at solar noon; in the southern
+        hemisphere it points south.
+      </li>
+      <li>
+        Times are local clock times for the chosen time zone, so they already
+        include daylight saving. Daylight itself uses the official 90.833°
+        horizon, which accounts for refraction and the size of the sun's disc.
+      </li>
+      <li>
+        Drag the person up and down in the little scene to change the object
+        height. The dial itself is keyboard friendly too: focus it and use the
+        arrow keys.
+      </li>
+    </ul>
+  </section>
+
+  <section class="mt-10 text-sm">
+    <a
+      href="/dates/sunrise-sunset/"
+      class="text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+    >
+      Need the exact sunrise and sunset times? Use the sunrise calculator →
+    </a>
+  </section>
+
+  <RelatedTools category="dates" current={canonicalPath} />
+</BaseLayout>

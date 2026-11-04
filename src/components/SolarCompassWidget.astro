@@ -1,0 +1,371 @@
+---
+import { CITIES, DEFAULT_CITY } from '../data/cities';
+import {
+  COMPASS_RADIUS,
+  COMPASS_VIEWBOX,
+  RING_INNER,
+  SCENE_VIEWBOX,
+  buildSolarView,
+  monthLabels,
+  readoutsFor,
+} from '../lib/solarView';
+import { dayOfYearFor, offsetForDay } from '../lib/solar';
+
+const PRESETS = ['madrid', 'london', 'new-york', 'tokyo', 'sydney', 'reykjavik'];
+const presetCities = PRESETS.map((slug) => CITIES.find((city) => city.slug === slug)!).filter(
+  Boolean,
+);
+
+const now = new Date();
+const year = now.getFullYear();
+const dayOfYear = dayOfYearFor(year, now.getMonth() + 1, now.getDate());
+const minutes = Math.round((now.getHours() * 60 + now.getMinutes()) / 5) * 5;
+const tz = DEFAULT_CITY.tz;
+const offsetMinutes = offsetForDay(dayOfYear, year, tz);
+const height = 1.8;
+
+const input = {
+  year,
+  dayOfYear,
+  minutes,
+  latitude: DEFAULT_CITY.lat,
+  longitude: DEFAULT_CITY.lon,
+  offsetMinutes,
+  height,
+};
+const view = buildSolarView(input);
+const readout = readoutsFor(view, input);
+const months = monthLabels(year);
+
+const cardClass =
+  'rounded-xl border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900';
+const labelClass = 'text-xs font-medium text-zinc-500 dark:text-zinc-400';
+const valueClass = 'tabular-nums font-semibold text-zinc-900 dark:text-zinc-100';
+const chipClass =
+  'rounded-full border border-zinc-300 px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100';
+const activeChipClass =
+  'data-[active]:border-violet-500 data-[active]:bg-violet-50 data-[active]:text-violet-700 dark:data-[active]:border-violet-400 dark:data-[active]:bg-violet-950/40 dark:data-[active]:text-violet-300';
+
+const horizonTicks = Array.from({ length: 24 }, (_, index) => {
+  const angle = (index * 15 * Math.PI) / 180;
+  const long = index % 6 === 0;
+  const inner = COMPASS_RADIUS - (long ? 7 : 4);
+  return `M${(inner * Math.sin(angle)).toFixed(1)} ${(-inner * Math.cos(angle)).toFixed(1)}L${(COMPASS_RADIUS * Math.sin(angle)).toFixed(1)} ${(-COMPASS_RADIUS * Math.cos(angle)).toFixed(1)}`;
+}).join('');
+
+const scaleTransform = `translate(${view.scene.figureX} ${view.scene.groundY}) scale(${(view.scene.figureHeight / 100).toFixed(3)})`;
+---
+
+<div
+  data-solar-compass
+  data-default-lat={DEFAULT_CITY.lat}
+  data-default-lon={DEFAULT_CITY.lon}
+  data-default-tz={tz}
+  data-default-height={height}
+  class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50 sm:p-6"
+>
+  <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
+    <div class="min-w-0">
+      <svg
+        data-dial
+        viewBox={COMPASS_VIEWBOX}
+        tabindex="0"
+        role="img"
+        aria-label="Solar compass. Drag the sun to change the time, drag the outer ring to change the date."
+        class="mx-auto w-full max-w-[440px] cursor-crosshair touch-none select-none"
+      >
+        <circle
+          r={RING_INNER}
+          class="fill-none stroke-zinc-200 dark:stroke-zinc-800"
+          stroke-width="0.7"></circle>
+        <path
+          data-part="ring"
+          d={view.ringPath}
+          class="fill-none stroke-amber-500/60 dark:stroke-amber-400/70"
+          stroke-width="1.3"></path>
+        <line
+          data-part="ring-tick"
+          class="stroke-violet-600 dark:stroke-violet-400"
+          stroke-width="2.4"
+          stroke-linecap="round"></line>
+        <circle
+          data-part="ring-knob"
+          r="3.2"
+          class="fill-violet-600 dark:fill-violet-400"></circle>
+
+        {
+          months.map((month) => (
+            <text
+              x={month.x}
+              y={month.y}
+              text-anchor="middle"
+              dominant-baseline="middle"
+              class="fill-zinc-400 text-[7.5px] dark:fill-zinc-500"
+            >
+              {month.label}
+            </text>
+          ))
+        }
+
+        <path
+          d={horizonTicks}
+          class="stroke-zinc-300 dark:stroke-zinc-700"
+          stroke-width="0.6"></path>
+        <circle
+          r={COMPASS_RADIUS}
+          class="fill-none stroke-zinc-300 dark:stroke-zinc-700"
+          stroke-width="0.9"></circle>
+
+        <text x="0" y="-88" text-anchor="middle" class="fill-zinc-500 text-[7px] font-semibold dark:fill-zinc-400">N</text>
+        <text x="88" y="0" text-anchor="middle" dominant-baseline="middle" class="fill-zinc-500 text-[7px] font-semibold dark:fill-zinc-400">E</text>
+        <text x="0" y="88" text-anchor="middle" class="fill-zinc-500 text-[7px] font-semibold dark:fill-zinc-400">S</text>
+        <text x="-88" y="0" text-anchor="middle" dominant-baseline="middle" class="fill-zinc-500 text-[7px] font-semibold dark:fill-zinc-400">W</text>
+
+        <path
+          data-part="analemma"
+          d={view.analemmaPath}
+          class="fill-none stroke-amber-500/35 dark:stroke-amber-400/30"
+          stroke-width="0.8"
+          stroke-dasharray="1.6 2"></path>
+        <path
+          data-part="day-path"
+          d={view.dayPath}
+          class="fill-none stroke-amber-500 dark:stroke-amber-400"
+          stroke-width="2.1"
+          stroke-linejoin="round"
+          stroke-linecap="round"></path>
+
+        <circle data-part="sunrise-mark" r="1.5" class="fill-amber-500/70 dark:fill-amber-400/70"></circle>
+        <circle data-part="sunset-mark" r="1.5" class="fill-amber-500/70 dark:fill-amber-400/70"></circle>
+
+        <line
+          data-part="shadow-ray"
+          class="stroke-zinc-500/50 dark:stroke-zinc-400/40"
+          stroke-width="2.2"
+          stroke-linecap="round"></line>
+
+        <circle r="2.2" class="fill-zinc-500 dark:fill-zinc-400"></circle>
+
+        <circle
+          data-part="sun"
+          r="4.4"
+          class="fill-amber-400 stroke-white outline-none data-[up=0]:fill-zinc-400 data-[up=0]:opacity-60 dark:stroke-zinc-900"
+          stroke-width="1.3"></circle>
+      </svg>
+
+      <div class="mt-1 flex flex-wrap justify-center gap-1.5" data-presets>
+        {
+          presetCities.map((city) => (
+            <button
+              type="button"
+              data-city={city.slug}
+              data-active={city.slug === DEFAULT_CITY.slug ? '1' : undefined}
+              class:list={[chipClass, activeChipClass]}
+            >
+              {city.name}
+            </button>
+          ))
+        }
+        <button type="button" data-now class={chipClass}>Now</button>
+        <button type="button" data-noon class={chipClass} aria-label="Jump to solar noon">
+          Noon
+        </button>
+        <button type="button" data-geo class={chipClass}>My location</button>
+      </div>
+
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        <label class="flex flex-col gap-1">
+          <span class={labelClass}>
+            Latitude
+            <span data-out="latitude" class="ml-1 font-semibold text-zinc-700 tabular-nums dark:text-zinc-300">40.4° N</span>
+          </span>
+          <input
+            type="range"
+            min="-89"
+            max="89"
+            step="0.1"
+            value={DEFAULT_CITY.lat}
+            data-lat-range
+            class="w-full accent-violet-600 dark:accent-violet-400"
+          />
+        </label>
+        <label class="flex flex-col gap-1">
+          <span class={labelClass}>
+            Object height
+            <span data-out="height" class="ml-1 font-semibold text-zinc-700 tabular-nums dark:text-zinc-300">1.8 m</span>
+          </span>
+          <input
+            type="range"
+            min="0.2"
+            max="10"
+            step="0.1"
+            value={height}
+            data-height-range
+            class="w-full accent-amber-500 dark:accent-amber-400"
+          />
+        </label>
+      </div>
+
+      <svg
+        data-scene
+        viewBox={SCENE_VIEWBOX}
+        aria-hidden="true"
+        class="mt-4 w-full touch-none select-none"
+      >
+        <line
+          x1="0"
+          y1={view.scene.groundY}
+          x2="320"
+          y2={view.scene.groundY}
+          class="stroke-zinc-300 dark:stroke-zinc-700"
+          stroke-width="1"></line>
+        <path
+          data-part="scene-shadow"
+          d={view.scene.shadowPath}
+          class="fill-zinc-400/60 dark:fill-zinc-400/45"></path>
+        <line
+          data-part="scene-ray"
+          class="stroke-amber-500/40 dark:stroke-amber-400/30"
+          stroke-width="1"
+          stroke-dasharray="3 3"></line>
+        <circle
+          data-part="scene-sun"
+          r="4.5"
+          class="fill-amber-400 stroke-white dark:stroke-zinc-900"
+          stroke-width="1.2"></circle>
+        <g data-part="figure" transform={scaleTransform}>
+          <circle
+            cx="0"
+            cy="-88"
+            r="10"
+            class="fill-zinc-500 dark:fill-zinc-400"></circle>
+          <path
+            d="M0 -78 L0 -42 M0 -66 L-15 -50 M0 -66 L15 -50 M0 -42 L-15 0 M0 -42 L15 0"
+            class="stroke-zinc-500 dark:stroke-zinc-400"
+            stroke-width="6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            fill="none"></path>
+        </g>
+        <circle
+          data-part="figure-hit"
+          r="15"
+          class="cursor-ns-resize fill-transparent"
+          pointer-events="all"></circle>
+      </svg>
+      <p data-out="scene-note" class="mt-1 text-center text-xs text-zinc-500 dark:text-zinc-400">
+        {readout.sceneNote}
+      </p>
+    </div>
+
+    <div class="min-w-0 space-y-3">
+      <div class={cardClass}>
+        <p class={labelClass}>Local time</p>
+        <p data-out="time" class="text-3xl font-bold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-100">
+          {readout.time}
+        </p>
+        <p data-out="date" class="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+          {readout.date}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div class={cardClass}>
+          <p class={labelClass}>Sun height</p>
+          <p data-out="elevation" class:list={['text-lg', valueClass]}>{readout.elevation}</p>
+        </div>
+        <div class={cardClass}>
+          <p class={labelClass}>Sun azimuth</p>
+          <p data-out="azimuth" class:list={['text-lg', valueClass]}>{readout.azimuth}</p>
+        </div>
+        <div class:list={[cardClass, 'border-amber-300/70 dark:border-amber-500/30']}>
+          <p class={labelClass}>Shadow length</p>
+          <p data-out="shadow" class="text-lg font-semibold tabular-nums text-amber-600 dark:text-amber-400">
+            {readout.shadow}
+          </p>
+        </div>
+        <div class={cardClass}>
+          <p class={labelClass}>Shadow ratio</p>
+          <p data-out="ratio" class:list={['text-lg', valueClass]}>{readout.ratio}</p>
+        </div>
+      </div>
+
+      <div class={cardClass}>
+        <p class={labelClass}>Shadow direction</p>
+        <p data-out="direction" class="text-lg font-semibold tabular-nums text-zinc-900 dark:text-zinc-100">
+          {readout.direction}
+        </p>
+      </div>
+
+      <div class={cardClass}>
+        <dl class="space-y-1.5 text-sm">
+          <div class="flex items-center justify-between gap-2">
+            <dt class="text-zinc-500 dark:text-zinc-400">Sunrise</dt>
+            <dd data-out="sunrise" class={valueClass}>{readout.sunrise}</dd>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <dt class="text-zinc-500 dark:text-zinc-400">Solar noon</dt>
+            <dd data-out="solar-noon" class={valueClass}>{readout.solarNoon}</dd>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <dt class="text-zinc-500 dark:text-zinc-400">Sunset</dt>
+            <dd data-out="sunset" class={valueClass}>{readout.sunset}</dd>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <dt class="text-zinc-500 dark:text-zinc-400">Day length</dt>
+            <dd data-out="day-length" class={valueClass}>{readout.dayLength}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <p
+        data-out="status"
+        class="text-xs font-medium text-amber-600 dark:text-amber-400"
+      >
+        {readout.status}
+      </p>
+
+      <button
+        type="button"
+        data-share
+        class="w-full rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:border-zinc-500 dark:border-zinc-700 dark:hover:border-zinc-500"
+      >
+        Copy link
+      </button>
+    </div>
+  </div>
+
+  <details class="mt-6 text-sm">
+    <summary class="cursor-pointer text-zinc-500 dark:text-zinc-400">Exact values</summary>
+    <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <label class="flex flex-col gap-1">
+        <span class={labelClass}>Date</span>
+        <input type="date" data-input="date" class="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100" />
+      </label>
+      <label class="flex flex-col gap-1">
+        <span class={labelClass}>Time</span>
+        <input type="time" data-input="time" step="60" class="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100" />
+      </label>
+      <label class="flex flex-col gap-1">
+        <span class={labelClass}>Time zone (IANA)</span>
+        <input type="text" autocomplete="off" spellcheck="false" data-input="tz" class="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100" />
+      </label>
+      <label class="flex flex-col gap-1">
+        <span class={labelClass}>Latitude</span>
+        <input type="number" step="any" inputmode="decimal" data-input="lat" class="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100" />
+      </label>
+      <label class="flex flex-col gap-1">
+        <span class={labelClass}>Longitude</span>
+        <input type="number" step="any" inputmode="decimal" data-input="lon" class="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100" />
+      </label>
+      <label class="flex flex-col gap-1">
+        <span class={labelClass}>Height (m)</span>
+        <input type="number" step="0.1" inputmode="decimal" data-input="height" class="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100" />
+      </label>
+    </div>
+  </details>
+</div>
+
+<script>
+  import '../scripts/solarCompass';
+</script>

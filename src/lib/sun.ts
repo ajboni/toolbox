@@ -1,7 +1,9 @@
-const DEG = Math.PI / 180;
-const MINUTES_PER_DAY = 1440;
+import { dayOfYear, MINUTES_PER_DAY, solarGeometry, type PolarState } from './solar';
 
-export type PolarState = 'normal' | 'polar-day' | 'polar-night';
+export { dayOfYear, solarGeometry };
+export type { PolarState };
+
+const DEG = Math.PI / 180;
 
 export interface SunTimes {
   solarNoon: Date;
@@ -23,51 +25,6 @@ export const ZENITH = {
   nautical: 102,
   astronomical: 108,
 } as const;
-
-export function dayOfYear(date: Date): number {
-  const start = Date.UTC(date.getUTCFullYear(), 0, 0);
-  const current = Date.UTC(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-  );
-  return Math.round((current - start) / 86_400_000);
-}
-
-interface SolarGeometry {
-  declination: number;
-  eqTime: number;
-}
-
-export function solarGeometry(date: Date): SolarGeometry {
-  const days = dayOfYear(date);
-  const gamma = ((2 * Math.PI) / 365) * (days - 1);
-  const cos1 = Math.cos(gamma);
-  const sin1 = Math.sin(gamma);
-  const cos2 = Math.cos(2 * gamma);
-  const sin2 = Math.sin(2 * gamma);
-  const cos3 = Math.cos(3 * gamma);
-  const sin3 = Math.sin(3 * gamma);
-
-  const eqTime =
-    229.18 *
-    (0.000075 +
-      0.001868 * cos1 -
-      0.032077 * sin1 -
-      0.014615 * cos2 -
-      0.040849 * sin2);
-
-  const declination =
-    0.006918 -
-    0.399912 * cos1 +
-    0.070257 * sin1 -
-    0.006758 * cos2 +
-    0.000907 * sin2 -
-    0.002697 * cos3 +
-    0.00148 * sin3;
-
-  return { declination, eqTime };
-}
 
 function minutesOnDate(date: Date, minutes: number): Date {
   const midnightUtc = Date.UTC(

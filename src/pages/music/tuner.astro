@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TunerWidget from '../../components/TunerWidget.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/music/tuner/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Online Instrument Tuner',
+    description:
+      'A chromatic tuner for guitar, bass, ukulele, violin and cello that runs entirely in the browser.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Music', path: '/music/' },
+    { name: 'Tuner', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Online Instrument Tuner · Guitar, Bass, Ukulele and More"
+  description="Tune a guitar, bass, ukulele, violin or cello in the browser. Chromatic mode, adjustable A4 reference and string targets. Nothing is uploaded."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/music/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Music</a>
+    <span class="mx-2">/</span>
+    <span>Tuner</span>
+  </nav>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+    Online instrument tuner
+  </h1>
+  <p class="mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
+    Press start, play a note and watch the needle. Pick an instrument to tune
+    string by string, or switch to chromatic mode for any note. The microphone
+    feed never leaves your browser.
+  </p>
+
+  <div class="mt-8">
+    <TunerWidget />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
+    <p class="text-sm leading-relaxed">
+      While the tuner runs, a 4096-sample window of microphone audio is analysed
+      about twenty times a second. The pitch is found with a normalised
+      difference function (the YIN method): the tool looks for the lag at which
+      the waveform best matches itself, normalises the result so quiet notes are
+      not penalised, and refines the winning lag by interpolating between
+      samples. The reciprocal of that lag is the frequency.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Frequencies are compared in cents, a hundredth of a semitone, which is the
+      right unit for tuning because it hears pitch the way the ear does. Zero
+      cents is in tune, positive is sharp and negative is flat. The green band
+      spans plus or minus five cents, and the note turns green within three.
+    </p>
+    <p class="text-sm leading-relaxed">
+      With an instrument selected, the reading is measured against the nearest
+      string rather than the nearest chromatic note, so the display does not
+      flicker between two notes when a string is badly out of tune. The A4
+      reference defaults to 440 Hz and can be moved from 415 to 466 Hz for
+      ensembles that tune elsewhere.
+    </p>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Getting a clean reading</h2>
+    <ul class="list-disc space-y-2 pl-5 text-sm leading-relaxed">
+      <li>Play one string at a time and mute the others with your hand.</li>
+      <li>Pluck and let the note ring instead of picking repeatedly.</li>
+      <li>Move the device closer if the note does not appear at all.</li>
+      <li>
+        Browsers require a click before using the microphone, which is why the
+        tuner has a start button.
+      </li>
+      <li>Browsers only allow microphone access over HTTPS or on localhost.</li>
+    </ul>
+  </section>
+
+  <section class="mt-10 flex flex-col gap-2 text-sm">
+    <a
+      href="/music/chord-finder/"
+      class="text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+    >
+      Looking for a chord shape? Open the scale and chord finder →
+    </a>
+    <a
+      href="/music/metronome/"
+      class="text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+    >
+      Practising? Keep time with the metronome →
+    </a>
+  </section>
+
+  <RelatedTools category="music" current={canonicalPath} />
+</BaseLayout>
