@@ -89,3 +89,50 @@ body {
   white-space: nowrap;
   border: 0;
 }
+
+/* Shared Prism theme for highlighted code blocks. */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  @apply italic text-zinc-500 dark:text-zinc-500;
+}
+
+.token.punctuation,
+.token.operator {
+  @apply text-zinc-500 dark:text-zinc-400;
+}
+
+.token.keyword,
+.token.boolean,
+.token.atrule {
+  @apply font-medium text-sky-700 dark:text-sky-300;
+}
+
+.token.function,
+.token.class-name {
+  @apply text-violet-700 dark:text-violet-300;
+}
+
+.token.number,
+.token.constant {
+  @apply text-amber-700 dark:text-amber-300;
+}
+
+.token.string,
+.token.char,
+.token.attr-value {
+  @apply text-emerald-700 dark:text-emerald-300;
+}
+
+.token.property,
+.token.tag,
+.token.selector,
+.token.attr-name {
+  @apply text-fuchsia-700 dark:text-fuchsia-300;
+}
+
+.token.variable,
+.token.parameter {
+  @apply text-rose-700 dark:text-rose-300;
+}

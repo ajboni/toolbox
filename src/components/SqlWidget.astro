@@ -1,20 +1,14 @@
 ---
-import { accentClasses, type AccentName } from '../data/site';
 import { SQL_DIALECTS, formatSql } from '../lib/sqlFormat';
-
-interface Props {
-  accent?: AccentName;
-}
-
-const { accent = 'sky' } = Astro.props;
-const accentColor = accentClasses(accent).text;
+import { highlightSql } from '../lib/highlightSql';
 
 const defaultValue = `-- Recent orders per active user
 select u.id,u.name,count(o.id) as orders from users u left join orders o on o.user_id=u.id where u.active=1 and o.created_at >= '2026-01-01' and o.status <> 'cancelled' group by u.id,u.name having count(o.id) > 2 order by orders desc limit 10;`;
-const initial = formatSql(defaultValue).output;
+const initial = formatSql(defaultValue).output || defaultValue;
+const initialHtml = highlightSql(initial);
 
 const textareaClass =
-  'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+  'h-80 w-full resize-y rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm leading-6 text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
 const selectClass =
   'rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
 const fieldClass =
@@ -61,8 +55,8 @@ const fieldClass =
     </label>
   </div>
 
-  <div class="mt-4 grid gap-4">
-    <label class="flex flex-col gap-1">
+  <div class="mt-4 grid gap-4 lg:grid-cols-2">
+    <label class="flex min-w-0 flex-col gap-1">
       <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Input</span>
       <textarea
         data-sql-input
@@ -73,16 +67,15 @@ const fieldClass =
         class={textareaClass}>{defaultValue}</textarea
       >
     </label>
-    <label class="flex flex-col gap-1">
+    <div class="flex min-w-0 flex-col gap-1">
       <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Output</span>
-      <textarea
-        readonly
+      <pre
         data-sql-output
-        rows="12"
-        spellcheck="false"
-        class:list={[textareaClass, accentColor]}>{initial}</textarea
-      >
-    </label>
+        aria-label="Formatted SQL"
+        tabindex="0"
+        class="h-80 w-full resize-y overflow-auto whitespace-pre rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm leading-6 text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+      ><code set:html={initialHtml}></code></pre>
+    </div>
   </div>
 
   <p data-status class="mt-2 text-xs text-zinc-500 dark:text-zinc-500" aria-live="polite"></p>

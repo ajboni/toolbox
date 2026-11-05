@@ -17,6 +17,9 @@ importers:
       astro:
         specifier: ^7.3.5
         version: 7.3.5(@types/node@24.19.0)(jiti@2.7.0)(yaml@2.9.1)
+      prismjs:
+        specifier: ^1.30.0
+        version: 1.30.0
       sql-formatter:
         specifier: ^15.9.0
         version: 15.9.0
@@ -27,6 +30,9 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.0
         version: 0.9.10(@emnapi/runtime@1.11.3)(prettier@3.9.9)(typescript@5.9.3)
+      '@types/prismjs':
+        specifier: ^1.26.6
+        version: 1.26.6
       typescript:
         specifier: ^5.9.0
         version: 5.9.3
@@ -863,6 +869,9 @@ packages:
 
   '@types/node@24.19.0':
     resolution: {integrity: sha512-zY+5tKxXdhGh1PYI0ac+7juvEu4OI6vWtVVoj5i2m42jxAY1U+zHGt6QCyOFwykdP62sM3MJ9stoYYUw5aCWew==}
+
+  '@types/prismjs@1.26.6':
+    resolution: {integrity: sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw==}
 
   '@types/sax@1.2.7':
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
@@ -2722,6 +2731,8 @@ snapshots:
   '@types/node@24.19.0':
     dependencies:
       undici-types: 7.24.6
+
+  '@types/prismjs@1.26.6': {}
 
   '@types/sax@1.2.7':
     dependencies:

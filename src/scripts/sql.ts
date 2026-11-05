@@ -1,4 +1,5 @@
 import { readStoredState, writeStoredState } from '../lib/persistedState';
+import { highlightSql } from '../lib/highlightSql';
 import {
   SQL_DIALECTS,
   SQL_INDENTS,
@@ -49,7 +50,7 @@ function isKeywordCase(value: unknown): value is SqlKeywordCase {
 
 function initRoot(root: HTMLElement): void {
   const input = root.querySelector<HTMLTextAreaElement>('[data-sql-input]');
-  const output = root.querySelector<HTMLTextAreaElement>('[data-sql-output]');
+  const output = root.querySelector<HTMLElement>('[data-sql-output]');
   const modeSelect = root.querySelector<HTMLSelectElement>('[data-mode-select]');
   const dialectSelect = root.querySelector<HTMLSelectElement>('[data-dialect-select]');
   const caseSelect = root.querySelector<HTMLSelectElement>('[data-case-select]');
@@ -103,7 +104,7 @@ function initRoot(root: HTMLElement): void {
     const result =
       mode === 'min' ? minifySql(input.value, options) : formatSql(input.value, options);
 
-    output.value = result.output;
+    output.innerHTML = result.ok ? highlightSql(result.output) : '';
 
     if (statusEl) {
       statusEl.textContent = result.ok ? '' : `Could not parse SQL: ${result.error}`;

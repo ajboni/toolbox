@@ -26,6 +26,7 @@ const jsonLd = [
   description="Format or minify SQL in your browser. Pick a dialect, keyword case and indentation. Strings stay intact and your query never leaves the tab."
   canonicalPath={canonicalPath}
   jsonLd={jsonLd}
+  wide
 >
   <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
     <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
@@ -44,19 +45,20 @@ const jsonLd = [
   </p>
 
   <div class="mt-8">
-    <SqlWidget accent="sky" />
+    <SqlWidget />
   </div>
 
-  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+  <section class="mt-12 max-w-3xl space-y-3 text-zinc-700 dark:text-zinc-300">
     <h2 class="text-xl font-semibold tracking-tight">How it works</h2>
     <p class="text-sm leading-relaxed">
       Formatting uses a SQL parser for the selected dialect, so pick the one that
       matches your database. It changes whitespace and keyword case only: it does
-      not validate the query against a schema or a server. If the parser cannot
-      read the query, the output stays empty and the status line points to the
-      line and column. Minify removes ordinary comments but keeps optimizer hints
-      such as <code>/*+ ... */</code>. The query is kept in this tab so a reload
-      does not lose it, and it is never added to the URL.
+      not validate the query against a schema or a server. The output is
+      syntax-highlighted in the browser. If the parser cannot read the query, the
+      output stays empty and the status line points to the line and column.
+      Minify removes ordinary comments but keeps optimizer hints such as
+      <code>/*+ ... */</code>. The query is kept in this tab so a reload does not
+      lose it, and it is never added to the URL.
     </p>
   </section>
 

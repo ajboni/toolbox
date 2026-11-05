@@ -26,6 +26,8 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Decode Base64 into real files and download them, or encode a local file to Base64.',
       'Add a command palette with recent tools, plus a search page with category filters.',
       'Add a SQL formatter with dialect, keyword case and indentation options, plus a minify mode that drops comments.',
+      'Highlight the formatted SQL output with colors for keywords, strings, comments and numbers.',
+      'Show the SQL input and output side by side on wide screens.',
     ],
   },
   {
