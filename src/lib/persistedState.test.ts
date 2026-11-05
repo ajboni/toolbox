@@ -2,8 +2,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   BOARD_STORAGE_KEY,
   clearStoredState,
+  readStoredJson,
   readStoredState,
   resolveBoardState,
+  writeStoredJson,
   writeStoredState,
   type BoardState,
 } from './persistedState';
@@ -114,6 +116,34 @@ describe('storage areas', () => {
 
     expect(readStoredState('json:content', 'session')).toBeNull();
     expect(readStoredState('json:content')).toEqual({ in: 'local' });
+  });
+});
+
+describe('readStoredJson', () => {
+  const parse = (value: unknown): { count: number } | null => {
+    if (typeof value !== 'object' || value === null) return null;
+    const count = (value as { count?: unknown }).count;
+    return typeof count === 'number' ? { count } : null;
+  };
+
+  it('round-trips structured values in the requested area', () => {
+    writeStoredJson('padel:test', { count: 3 }, 'session');
+    expect(readStoredJson('padel:test', parse, 'session')).toEqual({ count: 3 });
+    expect(readStoredJson('padel:test', parse)).toBeNull();
+  });
+
+  it('returns null for missing, corrupt or rejected data', () => {
+    expect(readStoredJson('padel:test', parse, 'session')).toBeNull();
+    sessionStorage.setItem('padel:test', '{broken');
+    expect(readStoredJson('padel:test', parse, 'session')).toBeNull();
+    sessionStorage.setItem('padel:test', JSON.stringify({ count: 'three' }));
+    expect(readStoredJson('padel:test', parse, 'session')).toBeNull();
+  });
+
+  it('is a no-op when storage is unavailable', () => {
+    delete (globalThis as { sessionStorage?: Storage }).sessionStorage;
+    expect(readStoredJson('padel:test', parse, 'session')).toBeNull();
+    expect(() => writeStoredJson('padel:test', { count: 1 }, 'session')).not.toThrow();
   });
 });
 

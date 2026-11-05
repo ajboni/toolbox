@@ -42,13 +42,89 @@ body {
   display: none;
 }
 
+:root[data-focus] [data-focus-enter] {
+  display: none;
+}
+
 :root[data-focus] [data-focus-exit] {
   display: inline-flex;
 }
 
-@media (max-width: 1023px) {
+@media (min-width: 1024px) {
+  :root[data-focus] [data-app-shell] {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  :root[data-focus] [data-main-column] {
+    min-height: 0;
+  }
+
   :root[data-focus] #main {
-    padding-top: 3rem;
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  :root[data-focus] #main > div {
+    margin-top: 0;
+  }
+
+  :root[data-focus] #main[data-focus-fill] {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  :root[data-focus] #main[data-focus-fill] > div {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  :root[data-focus] [data-sql-widget],
+  :root[data-focus] [data-json-widget],
+  :root[data-focus] [data-diff-widget] {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  :root[data-focus] [data-sql-layout],
+  :root[data-focus] [data-json-layout] {
+    flex: 1;
+    min-height: 0;
+    grid-auto-rows: minmax(0, 1fr);
+  }
+
+  :root[data-focus] [data-sql-layout] > *,
+  :root[data-focus] [data-json-layout] > * {
+    min-height: 0;
+  }
+
+  :root[data-focus] [data-sql-input],
+  :root[data-focus] [data-sql-output],
+  :root[data-focus] [data-json-input],
+  :root[data-focus] [data-json-output] {
+    height: auto;
+    flex: 1;
+    min-height: 0;
+    resize: none;
+  }
+
+  :root[data-focus] [data-diff-inputs] {
+    flex: 0 0 auto;
+  }
+
+  :root[data-focus] [data-diff-a],
+  :root[data-focus] [data-diff-b] {
+    height: 16rem;
+    resize: none;
+  }
+
+  :root[data-focus] [data-diff-split],
+  :root[data-focus] [data-diff-unified] {
+    flex: 1;
+    min-height: 0;
   }
 }
 

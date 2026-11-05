@@ -71,6 +71,31 @@ tasks/                  # todo / done / ideas notes
   `description` and `canonicalPath`.
 - Do not add comments unless they explain non-obvious intent.
 
+### Focus mode
+
+Focus mode hides the site shell and leaves only the tool. Tools that grow with
+the viewport (textareas, code views, diff results) can fill the remaining
+height:
+
+- Pass `focusFill` to `BaseLayout`.
+- Mark the widget's main content area with a `data-*` hook.
+- Under `@media (min-width: 1024px)` and `:root[data-focus]`, make the widget
+  root and its content area `flex: 1; min-height: 0`, and let the scrollable
+  boxes use `height: auto; flex: 1; min-height: 0`.
+- Keep controls, status and action buttons at their natural height.
+- Only opt in for tools that grow. Calculators, dials, boards and games stay
+  content-sized.
+- On smaller screens, focus mode keeps the normal layout and page scroll.
+
+The fullscreen entry is rendered by `BaseLayout` for every focusable page as a
+small icon at the top right of the breadcrumb row on desktop. Do not add it per
+tool. The mobile header keeps its own icon.
+
+The exit button is fixed at the top right. Focus mode uses 24px of top padding
+and 16px on the sides and bottom; the button sits in the top padding and its
+bottom edge lines up with the start of the tool content. Do not reserve a row
+for it.
+
 ## Adding a new tool
 
 1. Create the route under `src/pages/<category>/<tool>.astro`.
@@ -111,6 +136,10 @@ chat previews.
   text directly.
 - **SEO rule:** `canonical` and the sitemap must never include query strings.
   Query params are for sharing settings only; they are not meant to be indexed.
+- Exception: a tool may include free-text input in a shared link only when the
+  user explicitly opts in, the link uses the fragment (not the query string) so
+  it is not sent to the server, and the interface warns that the data travels
+  in the URL. The padel scoreboard uses this for optional team names.
 - Example: `/dates/days-until/?date=2026-12-25`.
 
 ### Pending migration

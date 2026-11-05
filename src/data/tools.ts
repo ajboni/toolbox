@@ -308,6 +308,15 @@ const CORE_TOOLS: Tool[] = [
     path: '/security/password/',
     added: '2026-10-09',
   },
+  {
+    slug: 'padel-score',
+    category: 'sports',
+    title: 'Padel Scoreboard',
+    description:
+      'Keep a padel match score with sets, tie-breaks, serve, team names and a match timer.',
+    path: '/sports/padel-score/',
+    added: '2026-11-05',
+  },
 ];
 
 const CONVERTER_TOOLS: Tool[] = CONVERTER_PAGES.map((page) => ({

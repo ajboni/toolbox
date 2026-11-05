@@ -127,6 +127,12 @@ export const CATEGORIES: Category[] = [
     accent: 'fuchsia',
   },
   {
+    slug: 'sports',
+    name: 'Sports',
+    description: 'Scoreboards and match helpers for padel and other racket sports.',
+    accent: 'amber',
+  },
+  {
     slug: 'text',
     name: 'Text & Code',
     description: 'Format, transform and inspect text, strings and code snippets.',

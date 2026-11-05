@@ -17,9 +17,18 @@ interface Props {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
   wide?: boolean;
+  focusFill?: boolean;
 }
 
-const { title, description, canonicalPath, jsonLd, noindex, wide = false } = Astro.props;
+const {
+  title,
+  description,
+  canonicalPath,
+  jsonLd,
+  noindex,
+  wide = false,
+  focusFill = false,
+} = Astro.props;
 const toolPath = TOOLS.some((tool) => tool.path === canonicalPath) ? canonicalPath : undefined;
 const focusable = TOOLS.some(
   (tool) => canonicalPath === tool.path || canonicalPath.startsWith(tool.path),
@@ -61,7 +70,7 @@ const focusable = TOOLS.some(
       Skip to content
     </a>
 
-    <div class="lg:flex">
+    <div class="lg:flex" data-app-shell>
       <Header focusable={focusable} />
       <div
         data-sidebar-overlay
@@ -69,15 +78,29 @@ const focusable = TOOLS.some(
         class="fixed inset-0 z-30 bg-zinc-950/50 lg:hidden"
       >
       </div>
-      <Sidebar focusable={focusable} />
-      <div class="flex min-w-0 flex-1 flex-col">
+      <Sidebar />
+      <div class="flex min-w-0 flex-1 flex-col" data-main-column>
         <main
           id="main"
+          data-focus-fill={focusFill ? '' : undefined}
           class:list={[
-            'mx-auto w-full flex-1 px-4 pb-10 pt-6 sm:px-8 sm:py-10',
+            'relative mx-auto w-full flex-1 px-4 pb-10 pt-6 sm:px-8 sm:py-10',
             wide ? 'max-w-6xl' : 'max-w-4xl',
           ]}
         >
+          {
+            focusable && (
+              <button
+                type="button"
+                data-focus-toggle
+                data-focus-enter
+                aria-label="Full screen"
+                class="absolute right-4 top-6 z-10 hidden rounded-lg border border-zinc-200 p-2 text-zinc-600 transition hover:bg-zinc-100 lg:inline-flex sm:right-8 sm:top-10 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+              >
+                <FullscreenIcon class="h-5 w-5" />
+              </button>
+            )
+          }
           <slot />
         </main>
         <Footer wide={wide} />
@@ -93,10 +116,10 @@ const focusable = TOOLS.some(
           data-focus-toggle
           data-focus-exit
           aria-label="Exit full screen"
-          class="fixed right-4 top-4 z-50 hidden items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-3 py-2 text-sm font-medium text-zinc-700 shadow-sm backdrop-blur transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-200 dark:hover:bg-zinc-800"
+          class="fixed right-4 top-3.5 z-50 hidden items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-3 py-1.5 text-sm font-medium text-zinc-700 shadow-sm backdrop-blur transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-200 dark:hover:bg-zinc-800"
         >
           <FullscreenIcon exit class="h-4 w-4" />
-          Exit
+          <span class="hidden sm:inline">Exit</span>
         </button>
       )
     }

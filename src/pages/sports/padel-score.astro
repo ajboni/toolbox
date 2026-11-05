@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PadelScoreboardWidget from '../../components/PadelScoreboardWidget.astro';
+import { breadcrumbs, webApplication } from '../../lib/jsonld';
+
+const canonicalPath = '/sports/padel-score/';
+
+const jsonLd = [
+  webApplication({
+    name: 'Padel Scoreboard',
+    description:
+      'Track a padel match point by point with sets, tie-breaks, golden point, serve indicator and a match timer.',
+    path: canonicalPath,
+  }),
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Sports', path: '/sports/' },
+    { name: 'Padel Scoreboard', path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Padel Scoreboard · Sets, tie-breaks and match timer"
+  description="Track a padel match point by point: sets, games, tie-breaks, golden point, serve indicator, team names and a match timer. Share the score with a link. Free and browser-based."
+  canonicalPath={canonicalPath}
+  jsonLd={jsonLd}
+>
+  <nav class="text-sm text-zinc-500 dark:text-zinc-400" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/sports/" class="hover:text-zinc-900 dark:hover:text-zinc-100">Sports</a>
+    <span class="mx-2">/</span>
+    <span>Padel Scoreboard</span>
+  </nav>
+
+  <h1 class="mt-3 text-3xl font-bold tracking-tight sm:mt-4 sm:text-4xl">
+    Padel Scoreboard
+  </h1>
+  <p class="mt-2 max-w-xl text-zinc-600 sm:mt-3 dark:text-zinc-400">
+    Keep the score of a padel match, from the first point to the final set. Tap a
+    team to add a point, follow the serve, and share the result with a link. Team
+    names, colours and the match timer stay with you.
+  </p>
+
+  <div class="mt-6 sm:mt-8">
+    <PadelScoreboardWidget />
+  </div>
+
+  <section class="mt-12 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">How padel scoring works</h2>
+    <p class="text-sm leading-relaxed">
+      A game is first to four points: 0, 15, 30 and 40. At 40-40 the tool uses a
+      golden point by default, so the next point wins the game. Switch to
+      advantage scoring if your court plays the traditional way, where a team
+      must win two points in a row from 40-40.
+    </p>
+    <p class="text-sm leading-relaxed">
+      A set is first to six games with a two-game lead. At 6-6 the set goes to a
+      tie-break to seven points, still with a two-point lead. A match is usually
+      best of three sets; the tool also supports a single set, best of five and
+      a stand-alone tie-break.
+    </p>
+    <p class="text-sm leading-relaxed">
+      The serve alternates every game. In a tie-break the first server plays one
+      point, then each team serves two points in turn. The team that received
+      first in the tie-break serves first in the next set.
+    </p>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">The match timer</h2>
+    <p class="text-sm leading-relaxed">
+      The clock starts when you record the first point. You can pause it at any
+      time, and it stops by itself when the match ends. On a phone or tablet you
+      can keep the screen on from the match settings, so the scoreboard stays
+      visible between points.
+    </p>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Sharing the score</h2>
+    <p class="text-sm leading-relaxed">
+      Copy match link puts the score in the URL fragment. The fragment is not
+      sent to the server, so the score does not appear in request logs. It is a
+      snapshot of the moment you copy it, not a live feed: copy a new link after
+      the next point if you want to send an update.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Team names are left out by default. If you tick the box in the Share
+      panel, the names travel in the link, where anyone who has it can read
+      them. They may also appear in browser history or chat previews. The
+      "Copy result" button gives you a plain text summary with the names, which
+      is handy for a club chat.
+    </p>
+    <p class="text-sm leading-relaxed">
+      The score and names are stored in this tab only. A reload keeps them,
+      closing the tab clears them, and nothing is sent to a server.
+    </p>
+  </section>
+
+  <section class="mt-10 space-y-3 text-zinc-700 dark:text-zinc-300">
+    <h2 class="text-xl font-semibold tracking-tight">Common questions</h2>
+    <ul class="list-disc space-y-2 pl-5 text-sm leading-relaxed">
+      <li>
+        <strong>How many sets are in a padel match?</strong> Most matches are
+        best of three. Some tournaments use best of five, and casual games are
+        often a single set or a tie-break.
+      </li>
+      <li>
+        <strong>What is a golden point?</strong> At 40-40 the next point wins
+        the game. It is common in amateur padel and is the default here.
+      </li>
+      <li>
+        <strong>Who serves next?</strong> The team that did not serve the last
+        game serves the next one. During a tie-break the rotation is one point,
+        then two points each.
+      </li>
+      <li>
+        <strong>Can I correct a mistake?</strong> Yes. Undo removes the last
+        point, and you can keep undoing back to the start of the match.
+      </li>
+      <li>
+        <strong>Does the timer keep running if I reload?</strong> Yes. The
+        clock uses a saved start time, so it catches up when the page loads
+        again.
+      </li>
+    </ul>
+  </section>
+</BaseLayout>

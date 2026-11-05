@@ -2,6 +2,23 @@ import type { ChangelogEntry } from '../lib/changelog';
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: '2026-11-05',
+    notes: [
+      'Let the SQL formatter, JSON formatter and diff checker fill the window in full screen mode on desktop.',
+      'Tighten the full screen padding for every tool and align the exit button with the tool content.',
+      'Move the full screen entry from the sidebar to a small icon in the tool header on desktop.',
+    ],
+  },
+  {
+    date: '2026-11-05',
+    tools: ['/sports/padel-score/'],
+    notes: [
+      'Add a padel scoreboard with sets, tie-breaks, golden point, serve tracking, team names and a match timer.',
+      'Share a match as a link, with team names included only when you opt in.',
+      'Start padel scoreboards with a blue team and a red team by default.',
+    ],
+  },
+  {
     date: '2026-11-04',
     notes: [
       'Add a full screen mode to every tool, so the tool fills the window with the navigation and the page intro out of the way.',

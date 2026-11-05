@@ -67,6 +67,36 @@ export function clearStoredState(key: string, area: StorageArea = 'local'): void
   }
 }
 
+export function readStoredJson<T>(
+  key: string,
+  parse: (value: unknown) => T | null,
+  area: StorageArea = 'local',
+): T | null {
+  const store = storage(area);
+  if (!store) return null;
+  try {
+    const raw = store.getItem(key);
+    if (!raw) return null;
+    return parse(JSON.parse(raw) as unknown);
+  } catch {
+    return null;
+  }
+}
+
+export function writeStoredJson(
+  key: string,
+  value: unknown,
+  area: StorageArea = 'local',
+): void {
+  const store = storage(area);
+  if (!store) return;
+  try {
+    store.setItem(key, JSON.stringify(value));
+  } catch {
+    return;
+  }
+}
+
 export function resolveBoardState(
   url: Record<string, string | number>,
   stored: StoredState | null,
