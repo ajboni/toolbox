@@ -4,6 +4,18 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-11-05',
     notes: [
+      'Move the full screen exit into a bar above the tool, with its name, and leave full screen with Escape.',
+    ],
+  },
+  {
+    date: '2026-11-05',
+    notes: [
+      'Show a proper link preview when a tool is shared: the tool name, its description and a preview image.',
+    ],
+  },
+  {
+    date: '2026-11-05',
+    notes: [
       'Let the SQL formatter, JSON formatter and diff checker fill the window in full screen mode on desktop.',
       'Tighten the full screen padding for every tool and align the exit button with the tool content.',
       'Move the full screen entry from the sidebar to a small icon in the tool header on desktop.',

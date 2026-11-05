@@ -5,7 +5,10 @@ import LatestTools from '../components/LatestTools.astro';
 import CategoryGrid from '../components/CategoryGrid.astro';
 import ToolDirectory from '../components/ToolDirectory.astro';
 import { SITE } from '../data/site';
+import { TOOLS } from '../data/tools';
 import { breadcrumbs, webApplication } from '../lib/jsonld';
+
+const toolCount = TOOLS.length;
 
 const jsonLd = [
   webApplication({
@@ -24,10 +27,17 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <section>
-    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{SITE.name}</h1>
+    <div class="flex flex-wrap items-center gap-3">
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{SITE.name}</h1>
+      <span
+        class="rounded-full border border-zinc-200 px-2.5 py-0.5 text-xs font-medium text-zinc-500 dark:border-zinc-800 dark:text-zinc-400"
+      >
+        {toolCount} {toolCount === 1 ? 'tool' : 'tools'}
+      </span>
+    </div>
     <p class="mt-4 max-w-xl text-zinc-600 dark:text-zinc-400">
-      {SITE.tagline} Every tool lives on its own page: open it, get your answer,
-      close it.
+      A pile of {toolCount} small, useful web tools. Every tool lives on its own
+      page: open it, get your answer, close it.
     </p>
     <a
       href="/search/"

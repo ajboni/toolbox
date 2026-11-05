@@ -1,11 +1,14 @@
 ---
 import { CATEGORIES, accentClasses } from '../data/site';
-import { toolsInCategory } from '../data/tools';
+import { TOOLS, toolsInCategory } from '../data/tools';
 ---
 
 <section class="mt-12">
   <div class="flex items-baseline justify-between gap-4">
-    <h2 class="text-lg font-semibold tracking-tight">All tools</h2>
+    <h2 class="text-lg font-semibold tracking-tight">
+      All tools
+      <span class="font-normal text-zinc-400 dark:text-zinc-500">· {TOOLS.length}</span>
+    </h2>
     <a
       href="/search/"
       class="text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"

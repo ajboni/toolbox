@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../data/site';
+import { shortDescription } from '../lib/seo';
 
 interface Props {
   title: string;
@@ -12,8 +13,13 @@ interface Props {
 const { title, description, canonicalPath, jsonLd, noindex = false } = Astro.props;
 
 const canonical = new URL(canonicalPath, Astro.site ?? SITE.url).href;
-const ogImage = new URL('/og-default.svg', Astro.site ?? SITE.url).href;
+const ogImage = new URL('/og-default.png', Astro.site ?? SITE.url).href;
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+const ogTitle = title.includes(SITE.name)
+  ? title.replace(new RegExp(`\\s*[|·–-]\\s*${SITE.name}$`), '')
+  : title;
+const ogDescription = shortDescription(description);
+const ogImageAlt = `${SITE.name}: ${SITE.tagline}`;
 const jsonLdBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
@@ -25,15 +31,20 @@ const jsonLdBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content={SITE.name} />
-<meta property="og:title" content={fullTitle} />
-<meta property="og:description" content={description} />
+<meta property="og:title" content={ogTitle} />
+<meta property="og:description" content={ogDescription} />
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={ogImageAlt} />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={fullTitle} />
-<meta name="twitter:description" content={description} />
+<meta name="twitter:title" content={ogTitle} />
+<meta name="twitter:description" content={ogDescription} />
 <meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={ogImageAlt} />
 
 {
   jsonLdBlocks.map((block) => (

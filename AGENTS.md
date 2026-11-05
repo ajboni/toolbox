@@ -91,10 +91,12 @@ The fullscreen entry is rendered by `BaseLayout` for every focusable page as a
 small icon at the top right of the breadcrumb row on desktop. Do not add it per
 tool. The mobile header keeps its own icon.
 
-The exit button is fixed at the top right. Focus mode uses 24px of top padding
-and 16px on the sides and bottom; the button sits in the top padding and its
-bottom edge lines up with the start of the tool content. Do not reserve a row
-for it.
+The exit button lives in a 36px focus bar rendered by `BaseLayout` above the
+tool, sticky at the top, with the category and tool name on the left. Every
+tool shares it: never render or position the exit button inside a tool. The
+tool content starts 12px below the bar, with 16px on the sides and bottom.
+`Escape` also leaves focus mode, except while a dialog or the mobile drawer is
+open.
 
 ## Adding a new tool
 
